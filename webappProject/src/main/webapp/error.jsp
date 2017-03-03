@@ -7,7 +7,7 @@
 
 <jsp:include page="common/top.jsp" flush="true" />
 
-<title>error!</title>
+<title>系统错误</title>
 
 
 <style type="text/css">
