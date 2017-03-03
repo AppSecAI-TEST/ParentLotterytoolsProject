@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+        <!-- 注解组件扫描 -->
+        <context:component-scan base-package="com.byl.bsManager.wechatPn">
+            <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        </context:component-scan>
+
+        <aop:aspectj-autoproxy proxy-target-class="true" />
+
+        <!-- 开启注解事务只对当前配置文件有效 -->
+        <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+        <jpa:repositories base-package="com.BYL.lotteryTools.backstage" repository-impl-postfix="Impl"
+        entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"  factory-class="com.BYL.lotteryTools.common.repository.DefaultRepositoryFactoryBean"></jpa:repositories>
+
+        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="packagesToScan" value="com.BYL.lotteryTools.backstage" />
+            <property name="persistenceProvider">
+                <bean class="org.hibernate.ejb.HibernatePersistence" />
+            </property>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                    <property name="generateDdl" value="false" />
+                    <property name="database" value="MYSQL" />
+                    <property name="databasePlatform" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+                    <property name="showSql" value="false" /><!-- 配置是否显示sql -->
+                </bean>
+            </property>
+            <property name="jpaDialect">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+            </property>
+            <property name="jpaPropertyMap">
+                <map>
+                    <entry key="hibernate.query.substitutions" value="true 1, false 0" />
+                    <entry key="hibernate.default_batch_fetch_size" value="16" />
+                    <entry key="hibernate.max_fetch_depth" value="2" />
+                    <entry key="hibernate.generate_statistics" value="true" />
+                    <entry key="hibernate.bytecode.use_reflection_optimizer" value="true" />
+                    <entry key="hibernate.cache.use_second_level_cache" value="false" />
+                    <entry key="hibernate.cache.use_query_cache" value="false" />
+                    <entry key="hibernate.hbm2ddl.auto" value="update" /><!-- 这个标签是用来基于你配置好了实体间的关系，然后可以自动生成表的 -->
+                </map>
+            </property>
+        </bean>
+        
+        
+
+        <!--事务管理器配置 -->
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory" />
+        </bean>
+
+        <!-- 数据源 -->
+        <bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+            <property name="driverClassName">
+                <value>org.gjt.mm.mysql.Driver</value>
+            </property>
+            <property name="url">
+                <!-- <value>jdbc:mysql://182.92.153.8:3306/echart4?useUnicode=true&amp;amp;characterEncoding=utf-8</value> -->
+                <value>jdbc:mysql://127.0.0.1:3306/lotteryTools?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
+                <!-- <value>jdbc:mysql://123.56.231.50:3306/echart4?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
+            -->
+		 </property>
+            <!-- <property name="username" value="root" />
+            <property name="password" value="root" /> -->
+            <!-- <property name="username" value="analysis" />
+            <property name="password" value="34songJIA$#" /> -->
+			 <property name="username" value="root" />
+            <property name="password" value="root" />
+            <!--maxIdle: 最大空闲连接,连接池中容许保持空闲状态的最大连接数量,超过的空闲连接将被释放,如果设置为负数表示不限制-->
+            <property name="maxIdle" value="10"/>
+
+            <!--minIdle: 最小空闲连接,连接池中容许保持空闲状态的最小连接数量,低于这个数量将创建新的连接,如果设置为0则不创建-->
+            <property name="minIdle" value="5"/>
+
+            <!--maxActive: 最大连接数量-->
+            <property name="maxActive" value="2000"/>
+
+            <!--removeAbandoned: 是否自动回收超时连接-->
+            <property name="removeAbandoned" value="true"/>
+
+            <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+            <property name="removeAbandonedTimeout" value="10000"/>
+
+            <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+            <property name="maxWait" value="3000"/>
+
+            <!-- SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录 -->
+            <property name="validationQuery">
+                <value>SELECT 1</value>
+            </property>
+
+            <!-- 指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个. -->
+            <property name="testOnBorrow">
+                <value>true</value>
+            </property>
+        </bean>
+        
+       
+
+      
+
+    </beans>
