@@ -196,6 +196,31 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 区域彩种管理菜单
+	 * @return
+	 */
+	@RequestMapping(value = "/areaLottery.action", method = RequestMethod.GET)
+	public String areaLottery()
+	{
+		String indexPage = "lotteryTools/lotteryManage/lotteryPlayManage";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * 基础彩种管理菜单
+	 * @return
+	 */
+	@RequestMapping(value = "/baseLottery.action", method = RequestMethod.GET)
+	public String baseLottery()
+	{
+		String indexPage = "lotteryTools/lotteryManage/lotteryPlayBuluPlanManage";
+		
+		
+		return indexPage;
+	}
 	
 	
 	/**
