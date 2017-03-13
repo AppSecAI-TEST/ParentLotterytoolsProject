@@ -13,5 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/lotteryManage")
 public class LotteryManageController 
 {
-	
+	public void save()
+	{
+		
+	}
 }
