@@ -5,7 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 
 /**
@@ -22,6 +27,19 @@ public class LotteryBuyerOrExpertController
 	
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
+	
+	@RequestMapping(value="/getDetailLborExpert" , method = RequestMethod.GET)
+	public @ResponseBody LotterybuyerOrExpertDTO getDetailLborExpert(
+			@RequestParam(value="id",required=true) String id)
+	{
+		LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO = new LotterybuyerOrExpertDTO();
+		
+		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(id);
+		
+		lotterybuyerOrExpertDTO = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+		
+		return lotterybuyerOrExpertDTO;
+	}
 	
 	
 	
