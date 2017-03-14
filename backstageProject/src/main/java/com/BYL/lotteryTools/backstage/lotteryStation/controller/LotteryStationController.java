@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
 
+/**
+ * 
+* @Description: TODO(彩票站控制类) 
+* @author banna
+* @date 2017年3月14日 上午9:53:09
+ */
 @Controller
 @RequestMapping("/lotteryStation")
 public class LotteryStationController
