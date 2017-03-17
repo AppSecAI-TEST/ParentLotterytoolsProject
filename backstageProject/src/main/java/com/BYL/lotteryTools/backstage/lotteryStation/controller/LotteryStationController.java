@@ -153,8 +153,8 @@ public class LotteryStationController
 	}
 	
 	
-	@RequestMapping(value = "/saveOrUpdateLotteryPlay", method = RequestMethod.GET)
-	public @ResponseBody ResultBean saveOrUpdateLotteryPlay(
+	@RequestMapping(value = "/saveOrUpdateLotteryStaion", method = RequestMethod.GET)
+	public @ResponseBody ResultBean saveOrUpdateLotteryStaion(
 			LotteryStationDTO lotteryStationDTO,
 			/*@RequestParam(value="id",required=false) String id,
 			@RequestParam(value="stationOwner",required=false) String stationOwner,
@@ -223,36 +223,37 @@ public class LotteryStationController
 	@RequestMapping(value = "/deleteLotteryStations", method = RequestMethod.POST)
 	public @ResponseBody ResultBean  deleteLotteryStations(
 			@RequestParam(value="ids",required=false) String[] ids,
-			ModelMap model,HttpSession httpSession) throws Exception {
+			ModelMap model,HttpSession httpSession) throws Exception 
+	{
 	 
-	 ResultBean resultBean = new ResultBean();
-	 
-	 LotteryStation lotteryStation;
-	 for (String id : ids) 
-		{
-		 	lotteryStation	 = lotteryStationService.getLotteryStationById(id);
-		 	if(null != lotteryStation)
-		 	{
-		 		lotteryStation.setIsDeleted("0");
-		 		lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
-		 		lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
-		 		
-		 		
-		 		lotteryStationService.update(lotteryStation);
-		 		
-		 		 //日志输出
-				 logger.info("删除彩票站数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
-			   
-		 	}
-		}
-	 String returnMsg = "删除成功!";
-	 resultBean.setStatus("success");
-	 resultBean.setMessage(returnMsg);
-	 
-	 return resultBean;
+		 ResultBean resultBean = new ResultBean();
+		 
+		 LotteryStation lotteryStation;
+		 for (String id : ids) 
+			{
+			 	lotteryStation	 = lotteryStationService.getLotteryStationById(id);
+			 	if(null != lotteryStation)
+			 	{
+			 		lotteryStation.setIsDeleted("0");
+			 		lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
+			 		lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			 		
+			 		
+			 		lotteryStationService.update(lotteryStation);
+			 		
+			 		 //日志输出
+					 logger.info("删除彩票站数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+				   
+			 	}
+			}
+		 String returnMsg = "删除成功!";
+		 resultBean.setStatus("success");
+		 resultBean.setMessage(returnMsg);
+		 
+		 return resultBean;
 			 
 	 
- }
+	}
 	
 	
 }
