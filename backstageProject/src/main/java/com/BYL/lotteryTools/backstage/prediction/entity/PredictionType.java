@@ -42,6 +42,20 @@ public class PredictionType extends BaseEntity
 	@ManyToOne  
     @JoinColumn(name = "PREDICTION_TYPE_ID", referencedColumnName = "id")
 	private LotteryPlay lotteryPlay;
+	
+	//排序规则---中奖率计算规则表分母
+	@Column(name="ORDER_RULE", length=10)
+	private Integer orderRule;//规定取多少条数据作为计算中奖率的基础分母
+	
+	
+
+	public Integer getOrderRule() {
+		return orderRule;
+	}
+
+	public void setOrderRule(Integer orderRule) {
+		this.orderRule = orderRule;
+	}
 
 	public String getId() {
 		return id;
