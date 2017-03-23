@@ -36,18 +36,76 @@ public class PredictionType extends BaseEntity
 	private String predictionCode;//预测类型编码
 	
 	@Column(name="PREDICTION_TABLE", length=45)
-	private String predictionTable;//预测方案表（一个预测类型对应一张预测方案表，例如11选5的预测类型1则对应11选5预测类型1方案表的表名）
+	private String predictionTable;//预测方案表（一个预测类型对应一张预测方案表，例如11选5的预测类型1则对应11选5预测类型1方案表的表名,每个省份的预测方案结果表各自独立）
 	
 	//多个预测类型可以对应一个彩种
 	@ManyToOne  
-    @JoinColumn(name = "PREDICTION_TYPE_ID", referencedColumnName = "id")
+    @JoinColumn(name = "LOTTERYPLAY_ID", referencedColumnName = "id")
 	private LotteryPlay lotteryPlay;
 	
 	//排序规则---中奖率计算规则表分母
 	@Column(name="ORDER_RULE", length=10)
 	private Integer orderRule;//规定取多少条数据作为计算中奖率的基础分母
 	
+	@ManyToOne  
+    @JoinColumn(name = "BASE_PREDICTION_TYPE_ID", referencedColumnName = "id")
+	private BasePredictionType basePredictionType;
 	
+	
+	@Column(name="LIANGMA_TABLE_NAME", length=10)
+	private String liangmaTableName;//两码基础表表名
+	
+	@Column(name="SANMA_TABLE_NAME", length=10)
+	private String sanmaTableName;//三码基础表表名
+	
+	@Column(name="SIMA_TABLE_NAME", length=10)
+	private String simaTableName;//四码基础表表名
+	
+	@Column(name="LIUMA_TABLE_NAME", length=10)
+	private String liumaTableName;//六码基础表表名
+	
+	
+	
+
+	public String getLiangmaTableName() {
+		return liangmaTableName;
+	}
+
+	public void setLiangmaTableName(String liangmaTableName) {
+		this.liangmaTableName = liangmaTableName;
+	}
+
+	public String getSanmaTableName() {
+		return sanmaTableName;
+	}
+
+	public void setSanmaTableName(String sanmaTableName) {
+		this.sanmaTableName = sanmaTableName;
+	}
+
+	public String getSimaTableName() {
+		return simaTableName;
+	}
+
+	public void setSimaTableName(String simaTableName) {
+		this.simaTableName = simaTableName;
+	}
+
+	public String getLiumaTableName() {
+		return liumaTableName;
+	}
+
+	public void setLiumaTableName(String liumaTableName) {
+		this.liumaTableName = liumaTableName;
+	}
+
+	public BasePredictionType getBasePredictionType() {
+		return basePredictionType;
+	}
+
+	public void setBasePredictionType(BasePredictionType basePredictionType) {
+		this.basePredictionType = basePredictionType;
+	}
 
 	public Integer getOrderRule() {
 		return orderRule;

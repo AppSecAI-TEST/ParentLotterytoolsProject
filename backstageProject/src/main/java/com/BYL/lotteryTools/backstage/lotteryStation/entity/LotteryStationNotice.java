@@ -36,7 +36,7 @@ public class LotteryStationNotice extends BaseEntity
 	
 	//多个彩票站公告对应一个彩票站
 	@ManyToOne  
-    @JoinColumn(name = "LOTTERYSTATION_NOTICE_ID", referencedColumnName = "id")
+    @JoinColumn(name = "LS_ID", referencedColumnName = "id")
 	private LotteryStation lotteryStation;
 
 	public String getId() {

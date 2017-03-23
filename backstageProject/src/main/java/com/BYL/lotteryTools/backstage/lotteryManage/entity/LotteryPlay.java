@@ -67,7 +67,7 @@ public class LotteryPlay extends BaseEntity implements Serializable
 	
 	//与“补录方案表”关联
 	@ManyToOne  
-    @JoinColumn(name = "LP_ID", referencedColumnName = "id")
+    @JoinColumn(name = "LP_BF_ID", referencedColumnName = "id")
 	private LotteryPlayBulufangan lotteryPlayBulufangan;
 	
 	//一个彩种可以对应多个预测类型数据
