@@ -40,12 +40,19 @@ public class OriginDataRule extends BaseEntity
 	@Column(name="LOCATION_OR_CONTAIN", length=45)
 	private String locationOrContain;//0:定位1：包含
 	
-	@Column(name="LOCATION_NUMBER", length=45)
-	private String locationNumber;//需要定位的位置，若要取第一位则是1，若要取第一位和第二位开奖号码，则要填写1,2
+	@Column(name="CI_LOCATION_NUMBER", length=45)
+	private String ciLocationNumber;//需要定位的位置，若要取第一位则是1，若要取第一位和第二位开奖号码，则要填写1,2
 	
 	
-	@Column(name="RULE_FILED", length=45)
-	private String ruleFiled;//筛选条件字段，同彩种维护中需要计算字段的维护方式，筛选的字段用","间隔
+	@Column(name="CI_RULE_FILED", length=45)
+	private String ciRuleFiled;//筛选条件字段，同彩种维护中需要计算字段的维护方式，筛选的字段用","间隔
+	
+	@Column(name="LI_LOCATION_NUMBER", length=45)
+	private String liLocationNumber;//上期需要定位的位置，若要取第一位则是1，若要取第一位和第二位开奖号码，则要填写1,2
+	
+	
+	@Column(name="LI_RULE_FILED", length=45)
+	private String liRuleFiled;//上期筛选条件字段，同彩种维护中需要计算字段的维护方式，筛选的字段用","间隔
 	
 	@Column(name="CYCLE", length=45)
 	private String cycle;//周期，间隔周期获取同样期号的开奖数据
@@ -54,6 +61,38 @@ public class OriginDataRule extends BaseEntity
 	private List<BasePredictionType> basePredictionTypes;
 	
 	
+
+	public String getCiLocationNumber() {
+		return ciLocationNumber;
+	}
+
+	public void setCiLocationNumber(String ciLocationNumber) {
+		this.ciLocationNumber = ciLocationNumber;
+	}
+
+	public String getCiRuleFiled() {
+		return ciRuleFiled;
+	}
+
+	public void setCiRuleFiled(String ciRuleFiled) {
+		this.ciRuleFiled = ciRuleFiled;
+	}
+
+	public String getLiLocationNumber() {
+		return liLocationNumber;
+	}
+
+	public void setLiLocationNumber(String liLocationNumber) {
+		this.liLocationNumber = liLocationNumber;
+	}
+
+	public String getLiRuleFiled() {
+		return liRuleFiled;
+	}
+
+	public void setLiRuleFiled(String liRuleFiled) {
+		this.liRuleFiled = liRuleFiled;
+	}
 
 	public List<BasePredictionType> getBasePredictionTypes() {
 		return basePredictionTypes;
@@ -95,21 +134,6 @@ public class OriginDataRule extends BaseEntity
 		this.locationOrContain = locationOrContain;
 	}
 
-	public String getLocationNumber() {
-		return locationNumber;
-	}
-
-	public void setLocationNumber(String locationNumber) {
-		this.locationNumber = locationNumber;
-	}
-
-	public String getRuleFiled() {
-		return ruleFiled;
-	}
-
-	public void setRuleFiled(String ruleFiled) {
-		this.ruleFiled = ruleFiled;
-	}
 
 	public String getCycle() {
 		return cycle;
