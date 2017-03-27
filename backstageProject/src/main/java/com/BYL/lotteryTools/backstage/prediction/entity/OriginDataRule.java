@@ -31,7 +31,7 @@ public class OriginDataRule extends BaseEntity
 	private String id;
 	
 	@Column(name="RULE_NAME", length=45)
-	private String ruleName;//预测类型名称
+	private String ruleName;//源码规则名称
 	
 	@Column(name="TYPE", length=45)
 	private String type;//:0：当前开奖号码1:关联期号方式2.期号方式
@@ -41,7 +41,7 @@ public class OriginDataRule extends BaseEntity
 	private String locationOrContain;//0:定位1：包含
 	
 	@Column(name="CI_LOCATION_NUMBER", length=45)
-	private String ciLocationNumber;//需要定位的位置，若要取第一位则是1，若要取第一位和第二位开奖号码，则要填写1,2
+	private String ciLocationNumber;//当前期需要定位的位置，若要取第一位则是1，若要取第一位和第二位开奖号码，则要填写1,2
 	
 	
 	@Column(name="CI_RULE_FILED", length=45)

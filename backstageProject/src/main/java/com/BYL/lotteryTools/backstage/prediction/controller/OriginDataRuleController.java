@@ -149,8 +149,8 @@ public class OriginDataRuleController {
 	 * @return ResultBean    返回类型 
 	 * @throws
 	  */
-	 @RequestMapping(value = "/saveOrUpdateLotteryPlay", method = RequestMethod.GET)
-		public @ResponseBody ResultBean saveOrUpdateLotteryPlay(OriginDataRuleDTO originDataRuleDTO,
+	 @RequestMapping(value = "/saveOrUpdateOriginRule", method = RequestMethod.GET)
+		public @ResponseBody ResultBean saveOrUpdateOriginRule(OriginDataRuleDTO originDataRuleDTO,
 				HttpSession session)
 		{
 		 	ResultBean resultBean = new ResultBean();
@@ -171,6 +171,8 @@ public class OriginDataRuleController {
 				originDataRuleService.update(originDataRule);
 				
 				logger.info("修改源码生成规则数据，id="+originDataRule.getId());
+				
+				resultBean.setMessage("修改成功");
 		 		
 		 	}
 		 	else
@@ -188,6 +190,8 @@ public class OriginDataRuleController {
 					originDataRuleService.save(originDataRule);
 					
 					logger.info("添加源码生成规则数据，ruleName="+originDataRule.getRuleName());
+					
+					resultBean.setMessage("添加成功");
 				} 
 		 		catch (Exception e)
 		 		{

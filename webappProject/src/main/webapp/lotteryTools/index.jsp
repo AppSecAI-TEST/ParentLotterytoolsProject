@@ -4,7 +4,7 @@
 <html>
   <head>
     
-    <title>后台数据管理平台</title>
+    <title>彩民工具管理平台</title>
 	 <jsp:include page="../common/top.jsp" flush="true" /> 
 	   <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico">
 	   <script type="text/javascript" src="<%=request.getContextPath() %>/js/index.js"></script>

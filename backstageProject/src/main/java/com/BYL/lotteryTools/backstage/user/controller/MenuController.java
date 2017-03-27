@@ -222,6 +222,25 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 源码规则管理菜单
+	* @Title: orderRule 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年3月27日 下午4:42:37 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/orderRule.action", method = RequestMethod.GET)
+	public String orderRule()
+	{
+		String indexPage = "lotteryTools/orderRule/orderRuleManage";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页
