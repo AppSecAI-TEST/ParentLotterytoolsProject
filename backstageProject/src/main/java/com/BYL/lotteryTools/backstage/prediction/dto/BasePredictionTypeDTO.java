@@ -6,7 +6,6 @@ public class BasePredictionTypeDTO {
 
 	private String id;
 	
-	private OriginDataRule originDataRule;
 	
 	private String originDataSize;//源码数据量要求
 	
@@ -24,9 +23,13 @@ public class BasePredictionTypeDTO {
 	private String originDataRuleId;
 	
 	private String creator;//创建人
+	
+	
+	
 
 	
 	
+
 	public String getOriginDataRuleId() {
 		return originDataRuleId;
 	}
@@ -43,13 +46,6 @@ public class BasePredictionTypeDTO {
 		this.id = id;
 	}
 
-	public OriginDataRule getOriginDataRule() {
-		return originDataRule;
-	}
-
-	public void setOriginDataRule(OriginDataRule originDataRule) {
-		this.originDataRule = originDataRule;
-	}
 
 	public String getOriginDataSize() {
 		return originDataSize;

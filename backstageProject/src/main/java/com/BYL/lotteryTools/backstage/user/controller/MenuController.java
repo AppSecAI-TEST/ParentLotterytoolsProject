@@ -241,6 +241,25 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 基本预测类型菜单
+	* @Title: basePtype 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年3月28日 上午10:51:59 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/basePtype.action", method = RequestMethod.GET)
+	public String basePtype()
+	{
+		String indexPage = "lotteryTools/basePredictionType/basePredictionType";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页

@@ -178,19 +178,22 @@ public class PredictionTypeController {
 		 	
 		 	if(null != basePredictionType)
 		 	{
-		 		basePredictionType.setOriginDataRule(basePredictionTypeDTO.getOriginDataRule());
 		 		basePredictionType.setOriginDataSize(basePredictionTypeDTO.getOriginDataSize());
 		 		basePredictionType.setnPlan(basePredictionType.getnPlan());
 		 		basePredictionType.setBasePredictionName(basePredictionTypeDTO.getBasePredictionName());
 		 		basePredictionType.setMethodName(basePredictionType.getMethodName());
 		 		basePredictionType.setModify(LoginUtils.getAuthenticatedUserCode(session));
 		 		basePredictionType.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		 		basePredictionType.setFlowDataSize((Integer.parseInt(basePredictionTypeDTO.getOriginDataSize())*
+		 				Integer.parseInt(basePredictionTypeDTO.getnPlan()))+"");
 		 		
-		 		OriginDataRule originDataRule = originDataRuleService.getOriginDataRuleById(basePredictionTypeDTO.getId());
+		 		OriginDataRule originDataRule = originDataRuleService.getOriginDataRuleById(basePredictionTypeDTO.getOriginDataRuleId());
 				basePredictionType.setOriginDataRule(originDataRule);
 				
 				
 				basePredictionTypeService.update(basePredictionType);
+				
+				resultBean.setMessage("修改成功");
 				
 				logger.info("修改基础预测类型数据，id="+basePredictionType.getId());
 		 		
@@ -207,12 +210,14 @@ public class PredictionTypeController {
 					basePredictionType.setModify(LoginUtils.getAuthenticatedUserCode(session));
 					basePredictionType.setModifyTime(new Timestamp(System.currentTimeMillis()));
 					
-					OriginDataRule originDataRule = originDataRuleService.getOriginDataRuleById(basePredictionTypeDTO.getId());
+					OriginDataRule originDataRule = originDataRuleService.getOriginDataRuleById(basePredictionTypeDTO.getOriginDataRuleId());
 					basePredictionType.setOriginDataRule(originDataRule);
 					
 					basePredictionTypeService.save(basePredictionType);
 					
 					logger.info("添加基础数据类型数据，ruleName="+basePredictionType.getBasePredictionName());
+					
+					resultBean.setMessage("添加成功");
 				} 
 		 		catch (Exception e)
 		 		{
@@ -254,7 +259,7 @@ public class PredictionTypeController {
 			 		basePredictionType.setIsDeleted(Constants.IS_DELETED);
 			 		basePredictionType.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 			 		basePredictionType.setModifyTime(new Timestamp(System.currentTimeMillis()));
-			 		
+			 		basePredictionType.setOriginDataRule(null);
 			 		
 			 		basePredictionTypeService.update(basePredictionType);
 			 		
@@ -271,6 +276,39 @@ public class PredictionTypeController {
 				 
 		 
 	 }
+	 
+	 /**
+	  * 获取基本预测类型对应的源码规则id
+	 * @Title: getOrderRuleId 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param @param id
+	 * @param @param model
+	 * @param @param httpSession
+	 * @param @return
+	 * @param @throws Exception    设定文件 
+	 * @author banna
+	 * @date 2017年3月28日 上午10:30:46 
+	 * @return Map<String,Object>    返回类型 
+	 * @throws
+	  */
+	 @RequestMapping(value = "/getOrderRuleId", method = RequestMethod.GET)
+		public @ResponseBody Map<String,Object> getOrderRuleId(@RequestParam(value="id",required=false) String id,
+				ModelMap model,HttpSession httpSession) throws Exception
+		{
+		 	Map<String,Object> result = new HashMap<String, Object>();
+			BasePredictionType basePredictionType = basePredictionTypeService.getBasePredictionTypeById(id);
+			
+			if(null != basePredictionType && null != basePredictionType.getOriginDataRule())
+			{
+				result.put("lpBuluId", basePredictionType.getOriginDataRule().getId());
+			}
+			else
+			{
+				result.put("lpBuluId", "");
+			}
+			
+			return result;
+		}
 	 
 	 
 	 /**2、预测类型方法**/
@@ -400,6 +438,8 @@ public class PredictionTypeController {
 					predictionTypeService.update(predictionType);
 					
 					logger.info("修改预测类型数据，id="+predictionType.getId());
+					
+					resultBean.setMessage("修改成功");
 			 		
 			 	}
 			 	else
@@ -425,6 +465,8 @@ public class PredictionTypeController {
 						predictionTypeService.toDTO(predictionType);
 						
 						logger.info("添加数据类型数据，predictionName="+predictionType.getPredictionName());
+						
+						resultBean.setMessage("添加成功");
 					} 
 			 		catch (Exception e)
 			 		{

@@ -213,6 +213,9 @@ function submitAddOrderRule()
 	    	
 	    	//添加角色后刷新数据列表
 	    	$('#ff').form('clear');//清空表单内容
+	    	
+	    	$("#typeA").combobox('setValue',0);
+	    	$("#locationOrContainA").combobox('setValue',0);
 	    	initDatagrid();
 	    	
 	    	

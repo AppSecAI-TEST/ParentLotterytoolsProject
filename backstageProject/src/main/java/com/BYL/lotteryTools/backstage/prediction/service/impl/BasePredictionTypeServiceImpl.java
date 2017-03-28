@@ -63,6 +63,11 @@ public class BasePredictionTypeServiceImpl implements BasePredictionTypeService 
 					dto.setCreateTime(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
 				}
 				
+				if(null != entity.getOriginDataRule())
+				{
+					dto.setOriginDataRuleId(entity.getOriginDataRule().getId());
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
