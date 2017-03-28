@@ -470,6 +470,7 @@ public class PredictionTypeController {
 			 		catch (Exception e)
 			 		{
 						e.printStackTrace();
+						resultBean.setMessage("添加失败");
 					}
 			 	}
 			 		

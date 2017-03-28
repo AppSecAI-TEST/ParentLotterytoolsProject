@@ -89,7 +89,9 @@ function initDatagrid()
 function addPredictionType()
 {
 	$("#addPredictionType").dialog('open');
+	$("#basePTypeU").datagrid('loadData', { total: 0, rows: [] });  
 	initBasePtypeDatagrid('basePTypeA','');
+	$("#lotteryPlayU").datagrid('loadData', { total: 0, rows: [] });  
 	initLotteryPlayDatagrid('lotteryPlayA', '');
 }
 
@@ -123,8 +125,10 @@ function updatePredictionType(id)
 					orderRule:data.orderRule
 					
 				});
-				
+				//在加载修改的数据时要对添加的表格中数据情况，因为使用的是自定义的radio，所以获取时会获取到添加功能的选择列表中的数据
+				$("#basePTypeA").datagrid('loadData', { total: 0, rows: [] });
 				initBasePtypeDatagrid('basePTypeU', data.id);
+				$("#lotteryPlayA").datagrid('loadData', { total: 0, rows: [] });
 				initLotteryPlayDatagrid('lotteryPlayU', data.id);
         	
         },

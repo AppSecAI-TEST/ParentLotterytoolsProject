@@ -52,16 +52,16 @@ public class PredictionType extends BaseEntity
 	private BasePredictionType basePredictionType;
 	
 	
-	@Column(name="LIANGMA_TABLE_NAME", length=10)
+	@Column(name="LIANGMA_TABLE_NAME", length=100)
 	private String liangmaTableName;//两码基础表表名
 	
-	@Column(name="SANMA_TABLE_NAME", length=10)
+	@Column(name="SANMA_TABLE_NAME", length=100)
 	private String sanmaTableName;//三码基础表表名
 	
-	@Column(name="SIMA_TABLE_NAME", length=10)
+	@Column(name="SIMA_TABLE_NAME", length=100)
 	private String simaTableName;//四码基础表表名
 	
-	@Column(name="LIUMA_TABLE_NAME", length=10)
+	@Column(name="LIUMA_TABLE_NAME", length=100)
 	private String liumaTableName;//六码基础表表名
 	
 	
