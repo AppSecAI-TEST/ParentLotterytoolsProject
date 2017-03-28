@@ -260,6 +260,25 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 预测类型菜单
+	* @Title: ptype 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年3月28日 下午2:17:24 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/ptype.action", method = RequestMethod.GET)
+	public String ptype()
+	{
+		String indexPage = "lotteryTools/predictionType/predictionType";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页

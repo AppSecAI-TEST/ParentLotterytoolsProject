@@ -461,8 +461,7 @@ public class PredictionTypeController {
 				 				getBasePredictionTypeById(predictionTypeDTO.getBasePredictionTypeId());
 				 		predictionType.setBasePredictionType(basePredictionType);
 				 		
-						
-						predictionTypeService.toDTO(predictionType);
+				 		predictionTypeService.save(predictionType);
 						
 						logger.info("添加数据类型数据，predictionName="+predictionType.getPredictionName());
 						
@@ -525,6 +524,71 @@ public class PredictionTypeController {
 					 
 			 
 		 }
-	 
+		 
+		 /**
+		  * 获取区域预测类型对应的基本预测类型id
+		 * @Title: getBaseptypeId 
+		 * @Description: TODO(这里用一句话描述这个方法的作用) 
+		 * @param @param id
+		 * @param @param model
+		 * @param @param httpSession
+		 * @param @return
+		 * @param @throws Exception    设定文件 
+		 * @author banna
+		 * @date 2017年3月28日 下午1:58:51 
+		 * @return Map<String,Object>    返回类型 
+		 * @throws
+		  */
+		 @RequestMapping(value = "/getBaseptypeId", method = RequestMethod.GET)
+			public @ResponseBody Map<String,Object> getBaseptypeId(@RequestParam(value="id",required=false) String id,
+					ModelMap model,HttpSession httpSession) throws Exception
+			{
+			 	Map<String,Object> result = new HashMap<String, Object>();
+				PredictionType predictionType = predictionTypeService.getPredictionTypeById(id);
+				
+				if(null != predictionType && null != predictionType.getBasePredictionType())
+				{
+					result.put("lpBuluId", predictionType.getBasePredictionType().getId());
+				}
+				else
+				{
+					result.put("lpBuluId", "");
+				}
+				
+				return result;
+			}
+		 
+		 /**
+		  * 获取区域预测类型的区域彩种id
+		 * @Title: getLotteryPlayIdOfPtype 
+		 * @Description: TODO(这里用一句话描述这个方法的作用) 
+		 * @param @param id
+		 * @param @param model
+		 * @param @param httpSession
+		 * @param @return
+		 * @param @throws Exception    设定文件 
+		 * @author banna
+		 * @date 2017年3月28日 下午2:00:18 
+		 * @return Map<String,Object>    返回类型 
+		 * @throws
+		  */
+		 @RequestMapping(value = "/getLotteryPlayIdOfPtype", method = RequestMethod.GET)
+			public @ResponseBody Map<String,Object> getLotteryPlayIdOfPtype(@RequestParam(value="id",required=false) String id,
+					ModelMap model,HttpSession httpSession) throws Exception
+			{
+			 	Map<String,Object> result = new HashMap<String, Object>();
+				PredictionType predictionType = predictionTypeService.getPredictionTypeById(id);
+				
+				if(null != predictionType && null != predictionType.getLotteryPlay())
+				{
+					result.put("lpidOfptype", predictionType.getLotteryPlay().getId());
+				}
+				else
+				{
+					result.put("lpidOfptype", "");
+				}
+				
+				return result;
+			}
 		
 }

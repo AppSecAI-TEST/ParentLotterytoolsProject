@@ -60,6 +60,16 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				{
 					dto.setCreateTime(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
 				}
+				
+				if(null != entity.getLotteryPlay())
+				{
+					dto.setLotteryPlayName(entity.getLotteryPlay().getName());
+				}
+				
+				if(null != entity.getBasePredictionType())
+				{
+					dto.setBasePredictionTypeName(entity.getBasePredictionType().getBasePredictionName());
+				}
 			}
 			catch (Exception e) 
 			{

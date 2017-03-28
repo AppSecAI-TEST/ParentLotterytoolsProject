@@ -30,9 +30,30 @@ public class PredictionTypeDTO {
 	
 	private String basePredictionTypeId;
 	
+	private String lotteryPlayName;//区域彩种名称
+	
+	private String basePredictionTypeName;//基础预测类型名称
 	
 	
 	
+	
+	
+
+	public String getLotteryPlayName() {
+		return lotteryPlayName;
+	}
+
+	public void setLotteryPlayName(String lotteryPlayName) {
+		this.lotteryPlayName = lotteryPlayName;
+	}
+
+	public String getBasePredictionTypeName() {
+		return basePredictionTypeName;
+	}
+
+	public void setBasePredictionTypeName(String basePredictionTypeName) {
+		this.basePredictionTypeName = basePredictionTypeName;
+	}
 
 	public String getLotteryPlayId() {
 		return lotteryPlayId;

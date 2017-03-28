@@ -308,7 +308,7 @@ function submitAddLotteryPlay()
 						}
 					else
 						{
-							$.messager.alert('提示', "请选择补录方案!");
+							$.messager.alert('提示', "请选择源码规则!");
 						}
 				}
 			return flag;
@@ -348,7 +348,7 @@ function submitUpdateLotteryPlay()
 					}
 					else
 					{
-						$.messager.alert('提示', "请选择补录方案!");
+						$.messager.alert('提示', "请选择源码规则!");
 					}
 				}
 			return flag;
