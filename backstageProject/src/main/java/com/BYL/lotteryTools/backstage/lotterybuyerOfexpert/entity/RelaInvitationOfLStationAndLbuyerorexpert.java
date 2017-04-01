@@ -16,7 +16,7 @@ import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.common.entity.BaseEntity;
 
 /**
- * 彩票站邀请专家成为驻店专家关联表
+ * 移除功能：彩票站邀请专家成为驻店专家关联表
 * @Description: TODO(这里用一句话描述这个方法的作用) 
 * @author banna
 * @date 2017年2月28日 下午4:38:41

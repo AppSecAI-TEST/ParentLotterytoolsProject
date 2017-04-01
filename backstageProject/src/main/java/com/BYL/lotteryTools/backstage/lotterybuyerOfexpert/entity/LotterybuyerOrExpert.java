@@ -65,8 +65,8 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private String coordinate;//坐标
 	
 	
-	@Column(name="IS_LOTTERY_BUYER")
-	private String isLotteryBuyer;//是否为彩民 1：彩民 0：非彩民
+	@Column(name="RONGYUN_ID")
+	private String rongyunId;//融云id,即时通讯使用
 	
 	@Column(name="IS_EXPERT")
 	private String isExpert;//是否为彩民 1：彩民 0：非彩民
@@ -76,6 +76,9 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	@Column(name="COLOR_COINS")
 	private BigDecimal colorCoins;//彩币余额
+	
+	@Column(name="IS_LOTTERY_BUYER")
+	private String isLotteryBuyer;//是否为彩民 1：彩民 0：非彩民
 	
 	//一个用户可以进行多次彩金、彩币的充值
 	@OneToMany(mappedBy="lotterybuyerOrExpert" , fetch=FetchType.LAZY)
@@ -105,6 +108,14 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	
 	
+	public String getRongyunId() {
+		return rongyunId;
+	}
+
+	public void setRongyunId(String rongyunId) {
+		this.rongyunId = rongyunId;
+	}
+
 	public List<RelaHistoryPurchasePredictionOfLotterybuyer> getRelaHistoryPurchasePredictionOfLotterybuyers() {
 		return relaHistoryPurchasePredictionOfLotterybuyers;
 	}

@@ -209,6 +209,8 @@ public class PredictionTypeController {
 					basePredictionType.setCreateTime(new Timestamp(System.currentTimeMillis()));
 					basePredictionType.setModify(LoginUtils.getAuthenticatedUserCode(session));
 					basePredictionType.setModifyTime(new Timestamp(System.currentTimeMillis()));
+					basePredictionType.setFlowDataSize((Integer.parseInt(basePredictionTypeDTO.getOriginDataSize())*
+			 				Integer.parseInt(basePredictionTypeDTO.getnPlan()))+"");
 					
 					OriginDataRule originDataRule = originDataRuleService.getOriginDataRuleById(basePredictionTypeDTO.getOriginDataRuleId());
 					basePredictionType.setOriginDataRule(originDataRule);

@@ -49,7 +49,7 @@ public class BasePredictionType extends BaseEntity
 	@Column(name="BASE_PREDICTION_NAME", length=10)
 	private String basePredictionName;//基础预测类型名称
 	
-	@Column(name="METHOD_NAME", length=10)
+	@Column(name="METHOD_NAME", length=45)
 	private String methodName;//预测方法池中对应的预测方法名称
 	
 	//一个基础预测类型下可以有n个扩展的预测类型数据
