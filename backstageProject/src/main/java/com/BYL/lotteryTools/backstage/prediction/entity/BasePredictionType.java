@@ -46,7 +46,7 @@ public class BasePredictionType extends BaseEntity
 	private String flowDataSize;//流码数据量要求是根据源码需求和n期计划计算出的，根据源码和N期计划计算出的最大结果
 
 	
-	@Column(name="BASE_PREDICTION_NAME", length=10)
+	@Column(name="BASE_PREDICTION_NAME", length=45)
 	private String basePredictionName;//基础预测类型名称
 	
 	@Column(name="METHOD_NAME", length=45)

@@ -179,9 +179,9 @@ public class PredictionTypeController {
 		 	if(null != basePredictionType)
 		 	{
 		 		basePredictionType.setOriginDataSize(basePredictionTypeDTO.getOriginDataSize());
-		 		basePredictionType.setnPlan(basePredictionType.getnPlan());
+		 		basePredictionType.setnPlan(basePredictionTypeDTO.getnPlan());
 		 		basePredictionType.setBasePredictionName(basePredictionTypeDTO.getBasePredictionName());
-		 		basePredictionType.setMethodName(basePredictionType.getMethodName());
+		 		basePredictionType.setMethodName(basePredictionTypeDTO.getMethodName());
 		 		basePredictionType.setModify(LoginUtils.getAuthenticatedUserCode(session));
 		 		basePredictionType.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		 		basePredictionType.setFlowDataSize((Integer.parseInt(basePredictionTypeDTO.getOriginDataSize())*
