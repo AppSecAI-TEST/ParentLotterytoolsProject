@@ -151,22 +151,22 @@
 				        <div class="ftitle">
 				            <label for="priceA">两码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="liangmaTableNameA" name="liangmaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				              ></input>
 				        </div>
 				         <div class="ftitle">
 				            <label for="priceA">三码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="sanmaTableNameA" name="sanmaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				               ></input>
 				        </div>
 				         <div class="ftitle">
 				            <label for="priceA">四码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="simaTableNameA" name="simaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				              ></input>
 				        </div>
 				         <div class="ftitle">
 				            <label for="priceA">六码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="liumaTableNameA" name="liumaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				               ></input>
 				        </div>
 				       </form>
 	    	 	</div>
@@ -231,22 +231,22 @@
 				        <div class="ftitle">
 				            <label for="priceA">两码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="liangmaTableNameU" name="liangmaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				             ></input>
 				        </div>
 				         <div class="ftitle">
 				            <label for="priceA">三码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="sanmaTableNameU" name="sanmaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				              ></input>
 				        </div>
 				         <div class="ftitle">
 				            <label for="priceA">四码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="simaTableNameU" name="simaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				              ></input>
 				        </div>
 				         <div class="ftitle">
 				            <label for="priceA">六码基础表:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="liumaTableNameU" name="liumaTableName" style="width:200px"  
-				             data-options="required:true"   ></input>
+				              ></input>
 				        </div>
 				       </form>
 	    	 	</div>
