@@ -1,7 +1,10 @@
 package com.BYL.lotteryTools.backstage.outer.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -10,9 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
+import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayRepository;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcfivedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
+import com.BYL.lotteryTools.backstage.user.entity.Province;
+import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("outerInterfaceService")
@@ -21,6 +28,12 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 {
 	@Autowired
 	private SrcfivedataDTORepository srcfivedataDTORepository;
+	
+	@Autowired
+	private LotteryPlayRepository lotteryPlayRepository;
+	
+	@Autowired
+	private ProvinceService provinceService;
 
 	public List<SrcfivedataDTO> getLotteryList(String tbName,String maxIssueId, String minIssueId) 
 	{
@@ -56,6 +69,29 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		list = queryResult.getResultList();
 		
 		return list;
+	}
+
+	public List<Province> getLotteryPlayListOfProvince()
+	{
+		
+		List<LotteryPlay> lotteryPlays = lotteryPlayRepository.getLotteryPlayList();
+		Set<String> provinceset = new HashSet<String>();
+		List<Province> provinceList = new ArrayList<Province>();
+		
+		for (LotteryPlay lotteryPlay : lotteryPlays)
+		{
+			provinceset.add(lotteryPlay.getProvince());
+		}
+		
+		Iterator<String> it = provinceset.iterator();
+		
+		while(it.hasNext())
+		{
+			Province province = provinceService.getProvinceByPcode(it.next());
+			provinceList.add(province);
+		}
+		
+		return provinceList;
 	}
 	
 	

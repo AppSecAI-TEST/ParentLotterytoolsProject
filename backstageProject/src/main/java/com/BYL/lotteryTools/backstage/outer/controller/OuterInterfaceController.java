@@ -106,12 +106,11 @@ public class OuterInterfaceController
 	 */
 	@RequestMapping(value="/getProvinceOfZST",method=RequestMethod.GET)
 	public @ResponseBody List<Province> getProvinceOfZST(
-			@RequestParam(value="id",required=true) String id)
+			@RequestParam(value="id",required=false) String id)
 	{
 		List<Province> list = new ArrayList<Province>();
 		
-		
-		
+		list = outerInterfaceService.getLotteryPlayListOfProvince();
 		
 		return list;
 	}
