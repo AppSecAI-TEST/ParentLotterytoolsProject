@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
+import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.dto.SrcFiveDataBean;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
@@ -81,13 +82,14 @@ public class OuterInterfaceController
 	* @throws
 	 */
 	@RequestMapping(value="/getLotteryPlayListOfProvince",method=RequestMethod.GET)
-	public @ResponseBody List<LotteryPlayDTO> getLotteryPlayListOfProvince(
-			@RequestParam(value="id",required=true) String lotteryTypeId,
+	public @ResponseBody List<LotteryPlayOfProvince> getLotteryPlayListOfProvince(
+			@RequestParam(value="id",required=false) String lotteryTypeId,
 			@RequestParam(value="provinceCode",required=false) String provinceCode)
 	{
-		List<LotteryPlayDTO> list = new ArrayList<LotteryPlayDTO>();
+		List<LotteryPlayOfProvince> list = new ArrayList<LotteryPlayOfProvince>();
 		
 		
+		list = outerInterfaceService.getLotteryPlayOfProvince(provinceCode);
 		
 		
 		return list;

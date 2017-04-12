@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayRepository;
+import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcfivedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
@@ -92,6 +93,29 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		}
 		
 		return provinceList;
+	}
+
+	public List<LotteryPlayOfProvince> getLotteryPlayOfProvince(String province) 
+	{
+		List<LotteryPlay> lotteryPlays = lotteryPlayRepository.getLotteryPlayByProvince(province);
+		
+		List<LotteryPlayOfProvince> list = new ArrayList<LotteryPlayOfProvince>();
+		
+		for (LotteryPlay lotteryPlay : lotteryPlays) 
+		{
+			LotteryPlayOfProvince lotteryPlayOfProvince = new LotteryPlayOfProvince();
+			
+			lotteryPlayOfProvince.setLotteryPlayId(lotteryPlay.getId());
+			lotteryPlayOfProvince.setLotteryPlayName(lotteryPlay.getName());
+			lotteryPlayOfProvince.setLotteryType(lotteryPlay.getLotteryType());
+			lotteryPlayOfProvince.setNumberLength(lotteryPlay.getLotteryPlayBulufangan().getEndNumber());
+			lotteryPlayOfProvince.setProvinceCode(lotteryPlay.getProvince());
+			lotteryPlayOfProvince.setLotteryTypeName(lotteryPlay.getLotteryType().equals("1")?"体彩":"福彩");
+			
+			list.add(lotteryPlayOfProvince);
+		}
+		
+		return list;
 	}
 	
 	
