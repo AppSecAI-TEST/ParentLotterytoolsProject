@@ -26,6 +26,7 @@ function reset()
 {
 	
 	$("#basePredictionNameC").val("");
+	$("#yuceFenleiC").combobox('setValue','');
 	
 }
 
@@ -38,6 +39,7 @@ function initDatagrid()
 	
 	var params = new Object();
 	params.basePredictionName = $("#basePredictionNameC").val().trim();//获取模糊查询条件“应用名称”
+	params.yuceFenlei = $("#yuceFenleiC").combobox('getValue');
 	
 	$('#datagrid').datagrid({
 		singleSelect:false,
@@ -114,10 +116,11 @@ function updateBasePredictionType(id)
 					originDataSize:data.originDataSize,
 					nPlan:data.nPlan,
 					basePredictionName:data.basePredictionName,
-					methodName:data.methodName
+					methodName:data.methodName,
+					yuceFenlei:data.yuceFenlei
 					
 				});
-				
+//				 $("#yuceFenleiU").combobox('setValue',data.yuceFenlei);
 				initOrderRuleDatagrid('orderRuleU',id);
         	
         },

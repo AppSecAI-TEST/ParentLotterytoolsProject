@@ -1,6 +1,5 @@
 package com.BYL.lotteryTools.backstage.prediction.dto;
 
-import com.BYL.lotteryTools.backstage.prediction.entity.OriginDataRule;
 
 public class BasePredictionTypeDTO {
 
@@ -25,10 +24,20 @@ public class BasePredictionTypeDTO {
 	private String creator;//创建人
 	
 	
+	private String yuceFenlei;//预测分类
+	
 	
 
 	
 	
+
+	public String getYuceFenlei() {
+		return yuceFenlei;
+	}
+
+	public void setYuceFenlei(String yuceFenlei) {
+		this.yuceFenlei = yuceFenlei;
+	}
 
 	public String getOriginDataRuleId() {
 		return originDataRuleId;

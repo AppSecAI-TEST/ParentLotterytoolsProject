@@ -110,6 +110,7 @@ public class PredictionTypeController {
 				@RequestParam(value="page",required=false) int page,
 				@RequestParam(value="rows",required=false) int rows,
 				@RequestParam(value="basePredictionName",required=false) String basePredictionName,
+				@RequestParam(value="yuceFenlei",required=false) String yuceFenlei,
 				ModelMap model,HttpSession httpSession) throws Exception
 		{
 		 	Map<String,Object> returnData = new HashMap<String, Object>();
@@ -132,6 +133,12 @@ public class PredictionTypeController {
 			{
 				params.add("%"+basePredictionName+"%");
 				buffer.append(" and basePredictionName like ?").append(params.size());
+			}
+			
+			if(null != yuceFenlei&&!"".equals(yuceFenlei.trim()))
+			{
+				params.add(yuceFenlei);
+				buffer.append(" and yuceFenlei = ?").append(params.size());
 			}
 			
 		 	
@@ -184,6 +191,7 @@ public class PredictionTypeController {
 		 		basePredictionType.setMethodName(basePredictionTypeDTO.getMethodName());
 		 		basePredictionType.setModify(LoginUtils.getAuthenticatedUserCode(session));
 		 		basePredictionType.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		 		basePredictionType.setYuceFenlei(basePredictionTypeDTO.getYuceFenlei());
 		 		basePredictionType.setFlowDataSize((Integer.parseInt(basePredictionTypeDTO.getOriginDataSize())*
 		 				Integer.parseInt(basePredictionTypeDTO.getnPlan()))+"");
 		 		

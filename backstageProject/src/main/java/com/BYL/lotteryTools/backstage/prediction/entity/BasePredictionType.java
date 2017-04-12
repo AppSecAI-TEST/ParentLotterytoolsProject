@@ -52,11 +52,22 @@ public class BasePredictionType extends BaseEntity
 	@Column(name="METHOD_NAME", length=45)
 	private String methodName;//预测方法池中对应的预测方法名称
 	
+	@Column(name="YUCE_FENLEI", length=45)
+	private String yuceFenlei;//预测分类
+	
 	//一个基础预测类型下可以有n个扩展的预测类型数据
 	@OneToMany(mappedBy="basePredictionType" ,fetch=FetchType.LAZY)
 	private List<PredictionType> predictionTypes;
 	
 	
+
+	public String getYuceFenlei() {
+		return yuceFenlei;
+	}
+
+	public void setYuceFenlei(String yuceFenlei) {
+		this.yuceFenlei = yuceFenlei;
+	}
 
 	public List<PredictionType> getPredictionTypes() {
 		return predictionTypes;

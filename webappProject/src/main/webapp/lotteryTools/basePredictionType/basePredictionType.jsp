@@ -88,7 +88,19 @@
 		    		<td width="15%">
 		    			<input id="basePredictionNameC" class="input_border"  type="text" name="basePredictionNameC"  />  
 		    		</td>
-		    		
+		    		<td width="7%" class="td_font">预测分类：</td>
+		    		<td width="15%">
+				            	   <select class="easyui-combobox" id="yuceFenleiC" name="yuceFenleiC" style="width:200px;">
+				            	   <option value="">全部</option>
+									<option value="1">前三胆杀</option>
+									<option value="2">任胆杀</option>
+									<option value="3">前三六码复式</option>
+									<option value="4">乐选4期计划</option>
+									<option value="5">两码三期计划</option>
+									<option value="6">任三精选6组</option>
+									</select>
+					        
+		    		</td>
 		    		<td class="td_font" width="12%">
 		    			<input style="cursor:pointer;background-color: #e0ecff;border-radius:5px;float:left" type="button" value="查询" onclick="initDatagrid()">
 		    			<input style="cursor:pointer;background-color: #e0ecff;border-radius:5px;float:left;margin-left:5px;" type="button" value="重置" onclick="reset()">
@@ -144,6 +156,18 @@
 				             data-options="required:true"   ></input>
 				        </div>
 				        <div class="ftitle">
+				            <label for="numOrCharA">预测分类:</label>
+				            	   <select class="easyui-combobox" id="yuceFenleiA" name="yuceFenlei" style="width:200px;">
+									<option value="1">前三胆杀</option>
+									<option value="2">任胆杀</option>
+									<option value="3">前三六码复式</option>
+									<option value="4">乐选4期计划</option>
+									<option value="5">两码三期计划</option>
+									<option value="6">任三精选6组</option>
+									</select>
+					        
+				        </div>
+				        <div class="ftitle">
 				            <label for="priceA">对应预测方法名称:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="methodNameA" name="methodName" style="width:200px"  
 				             data-options="required:true"   ></input>
@@ -197,6 +221,18 @@
 				            <label for="basePredictionNameU">基本预测类型名称:</label>
 				            <input class="easyui-validatebox commonInput" type="text" id="basePredictionNameU" name="basePredictionName" style="width:200px"  
 				             data-options="required:true"   ></input>
+				        </div>
+				         <div class="ftitle">
+				            <label for="yuceFenleiU">预测分类:</label>
+				            	   <select class="easyui-combobox" id="yuceFenleiU" name="yuceFenlei" style="width:200px;">
+									<option value="1">前三胆杀</option>
+									<option value="2">任胆杀</option>
+									<option value="3">前三六码复式</option>
+									<option value="4">乐选4期计划</option>
+									<option value="5">两码三期计划</option>
+									<option value="6">任三精选6组</option>
+									</select>
+					        
 				        </div>
 				        <div class="ftitle">
 				            <label for="methodNameU">对应预测方法名称:</label>
