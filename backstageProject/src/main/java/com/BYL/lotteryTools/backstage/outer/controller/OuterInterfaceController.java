@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
-import com.BYL.lotteryTools.backstage.outer.dto.SrcFiveDataBean;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
+import com.BYL.lotteryTools.backstage.user.entity.City;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
+import com.BYL.lotteryTools.backstage.user.entity.Region;
+import com.BYL.lotteryTools.backstage.user.service.CityService;
+import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
+import com.BYL.lotteryTools.backstage.user.service.RegionService;
 
 @Controller
 @RequestMapping("/outer")
@@ -33,6 +36,16 @@ public class OuterInterfaceController
 	
 	@Autowired
 	private OuterInterfaceService outerInterfaceService;
+	
+	@Autowired
+	private ProvinceService provinceService;
+	
+	@Autowired
+	private CityService cityService;
+	
+	@Autowired
+	private RegionService regionService;
+	
 	
 	
 	
@@ -116,4 +129,47 @@ public class OuterInterfaceController
 		
 		return list;
 	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 根据省份表生成安卓需要的地区结构文件
+	* @Title: generate 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param     设定文件 
+	* @author banna
+	* @date 2017年4月12日 下午3:56:32 
+	* @return void    返回类型 
+	* @throws
+	 */
+	/*@RequestMapping(value="/generate",method=RequestMethod.GET)
+	public void  generate()
+	{
+		List<Province> provinces = provinceService.findAll();
+		
+		for (Province province : provinces)
+		{
+			System.out.println("<province name='"+province.getPname()+"' pcode='"+province.getPcode()+"'>");
+			List<City> cities = cityService.findCitiesOfProvice(province.getPcode());
+			for (City city : cities) 
+			{
+				System.out.println("<city name='"+city.getCname()+"' ccode='"+city.getCcode()+"'>");
+				List<Region> regions = regionService.findRegionsOfCity(city.getCcode());
+				
+				for (Region region : regions) 
+				{
+					System.out.println("<district name='"+region.getAname()+"' rcode='"+region.getAcode()+"'/>");
+				}
+				
+				System.out.println("</city >");
+			}
+			System.out.println("</province>");
+		}
+	}*/
+	
+	
 }
