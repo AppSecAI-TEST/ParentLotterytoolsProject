@@ -35,6 +35,13 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	
 	@Autowired
 	private ProvinceService provinceService;
+	
+	public SrcfivedataDTO getSrcfivedataDTOByIssueNumber(String issueNumber)
+	{
+		SrcfivedataDTO dto = srcfivedataDTORepository.getSrcfivedataDTOByIssueNumber(issueNumber);
+		
+		return dto;
+	}
 
 	public List<SrcfivedataDTO> getLotteryList(String tbName,String maxIssueId, String minIssueId) 
 	{
@@ -70,6 +77,39 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		list = queryResult.getResultList();
 		
 		return list;
+	}
+	
+	public SrcfivedataDTO getMaxLottery(String tbName,String maxIssueId) 
+	{
+		List<SrcfivedataDTO> list = new ArrayList<SrcfivedataDTO>();
+		SrcfivedataDTO dto = null;
+		int limit = 1;
+		
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 from "+tbName+" ");
+		if(null != maxIssueId &&!"".equals(maxIssueId))
+		{
+			sql.append(" where ISSUE_NUMBER>"+maxIssueId+"  order by ISSUE_NUMBER asc  ");
+		}
+		else
+		{
+			sql.append(" order by ISSUE_NUMBER desc ");
+		}
+		
+		
+		
+		Pageable pageable = new PageRequest(0,limit);
+		QueryResult<SrcfivedataDTO> queryResult = srcfivedataDTORepository.
+				getScrollDataByGroupBySql(SrcfivedataDTO.class, sql.toString(), null,pageable );
+		list = queryResult.getResultList();
+		if(null != list &&list.size()>0)
+		{
+			dto = list.get(0);
+		}
+		
+		return dto;
 	}
 
 	public List<Province> getLotteryPlayListOfProvince()

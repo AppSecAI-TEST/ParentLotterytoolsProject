@@ -30,6 +30,18 @@ public interface LotteryPlayService
 	public LotteryPlay getLotteryPlayById(String id);
 	
 	/**
+	 * 获取所有有效的区域彩种数据
+	* @Title: getAllLotteryPlays 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月18日 上午10:20:10 
+	* @return List<LotteryPlay>    返回类型 
+	* @throws
+	 */
+	public List<LotteryPlay> getAllLotteryPlays();
+	
+	/**
 	 * 获取当前可以进行补录的省份数据
 	 * @param entityClass
 	 * @param whereJpql

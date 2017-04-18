@@ -5,11 +5,15 @@ import io.netty.handler.codec.http.HttpMethod;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import net.sf.json.JSONArray;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.google.gson.JsonArray;
 
 import cn.jiguang.common.ClientConfig;
 import cn.jiguang.common.ServiceHelper;
@@ -44,7 +48,7 @@ public class PushController
      
      // 使用 NettyHttpClient 异步接口发送请求
      @RequestMapping("/sendPush")
-     public static void testSendPushWithCallback(@RequestParam(value="tagsand",required=false) String[] tagsand,
+     public static void sendPushWithCallback(@RequestParam(value="tagsand",required=false) String[] tagsand,
     		 @RequestParam(value="alias",required=false) String[] alias,
      		@RequestParam(value="msgContent",required=false) String msgContent,
      		@RequestParam(value="province",required=false) String province) 
@@ -76,11 +80,12 @@ public class PushController
     		@RequestParam String msgContent,@RequestParam String province) {
         return PushPayload.newBuilder()
                 .setPlatform(Platform.all())
-                .setAudience(Audience.all()
-//                		Audience.newBuilder()
-//                        .addAudienceTarget(AudienceTarget.tag_and(tagsand))//标签，and关系
+                .setAudience(
+//                		Audience.all()
+                		Audience.newBuilder()
+                        .addAudienceTarget(AudienceTarget.tag_and(tagsand))//标签，and关系
 //                        .addAudienceTarget(AudienceTarget.alias(alias))//别名，or关系
-//                        .build()
+                        .build()
                         )
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)

@@ -13,4 +13,8 @@ public interface OuterInterfaceService
 	public List<Province> getLotteryPlayListOfProvince();
 	
 	public List<LotteryPlayOfProvince> getLotteryPlayOfProvince(String province);
+	
+	public SrcfivedataDTO getMaxLottery(String tbName,String maxIssueId) ;
+	
+	public SrcfivedataDTO getSrcfivedataDTOByIssueNumber(String issueNumber);
 }

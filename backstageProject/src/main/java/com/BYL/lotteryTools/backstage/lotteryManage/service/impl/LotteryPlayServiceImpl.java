@@ -58,6 +58,11 @@ public class LotteryPlayServiceImpl implements LotteryPlayService
 		return qResult;
 	}
 	
+	public List<LotteryPlay> getAllLotteryPlays()
+	{
+		return lotteryPlayRepository.getLotteryPlayList();
+	}
+	
 	
 	public QueryResult<LotteryPlay> getProvinceOfLotteryPlayList(Class<LotteryPlay> entityClass, String whereJpql, Object[] queryParams, 
 			LinkedHashMap<String, String> orderby, Pageable pageable)
