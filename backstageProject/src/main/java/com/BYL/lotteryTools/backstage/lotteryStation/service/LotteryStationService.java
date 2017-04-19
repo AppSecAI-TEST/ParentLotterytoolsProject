@@ -23,4 +23,5 @@ public interface LotteryStationService {
 	public LotteryStationDTO toDTO(LotteryStation entity);
 	
 	public List<LotteryStationDTO> toDTOs(List<LotteryStation> entities);
+	public LotteryStation getLotteryStationByStationNumber(String stationNumber);
 }

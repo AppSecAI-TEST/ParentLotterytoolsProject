@@ -105,5 +105,10 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 		
 		return dtos;
 	}
+
+	public LotteryStation getLotteryStationByStationNumber(String stationNumber)
+	{
+		return lotteryStationRepository.getLotteryStationByStationNumber(stationNumber);
+	}
 	
 }

@@ -9,4 +9,7 @@ public interface LotteryStationRepository extends GenericRepository<LotteryStati
 {
 	@Query("select u from LotteryStation u where  u.isDeleted = 1 and u.id=?1")
 	public LotteryStation getLotteryStationById(String id);
+	
+	@Query("select u from LotteryStation u where  u.isDeleted = 1 and u.stationNumber=?1")
+	public LotteryStation getLotteryStationByStationNumber(String stationNumber);
 }

@@ -2,6 +2,8 @@ package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto;
 
 import java.math.BigDecimal;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class LotterybuyerOrExpertDTO {
 
 	private String id;
@@ -10,11 +12,15 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String name;//姓名
 	
+	private String touXiang;//头像
+	
 	private String password;//密码
 	
 	private String telephone;
 	
 	private String isPhone;//是否为手机用户（0：手机用户 1：其他用户）
+	
+	private String isStationOwner;//是否为站主1：是0:不是
 	
 	private String provinceCode;
 	
@@ -36,8 +42,113 @@ public class LotterybuyerOrExpertDTO {
 
 	private String createTimeStr;
 	
+	private String yanzhengma;//验证码
+	
+	private String idNumberFrontImgId;//身份证正面图片id
+	
+	private String idNumberBackImgId;//身份证反面图片id
+	
+	private MultipartFile idNumberFrontImg;//身份证正面图片
+	
+	private MultipartFile idNumberBackImg;//身份证背面图片
+	
+	private String token;//用户融云token
+	
+	private String cailiaoName;//彩聊名
+	
+	private String sex;//性别
+	
+	private String signature;//个性签名
 	
 	
+	
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getCailiaoName() {
+		return cailiaoName;
+	}
+
+	public void setCailiaoName(String cailiaoName) {
+		this.cailiaoName = cailiaoName;
+	}
+
+	public String getTouXiang() {
+		return touXiang;
+	}
+
+	public void setTouXiang(String touXiang) {
+		this.touXiang = touXiang;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getIdNumberFrontImgId() {
+		return idNumberFrontImgId;
+	}
+
+	public void setIdNumberFrontImgId(String idNumberFrontImgId) {
+		this.idNumberFrontImgId = idNumberFrontImgId;
+	}
+
+	public String getIdNumberBackImgId() {
+		return idNumberBackImgId;
+	}
+
+	public void setIdNumberBackImgId(String idNumberBackImgId) {
+		this.idNumberBackImgId = idNumberBackImgId;
+	}
+
+	public MultipartFile getIdNumberFrontImg() {
+		return idNumberFrontImg;
+	}
+
+	public void setIdNumberFrontImg(MultipartFile idNumberFrontImg) {
+		this.idNumberFrontImg = idNumberFrontImg;
+	}
+
+	public MultipartFile getIdNumberBackImg() {
+		return idNumberBackImg;
+	}
+
+	public void setIdNumberBackImg(MultipartFile idNumberBackImg) {
+		this.idNumberBackImg = idNumberBackImg;
+	}
+
+	public String getYanzhengma() {
+		return yanzhengma;
+	}
+
+	public void setYanzhengma(String yanzhengma) {
+		this.yanzhengma = yanzhengma;
+	}
+
+	public String getIsStationOwner() {
+		return isStationOwner;
+	}
+
+	public void setIsStationOwner(String isStationOwner) {
+		this.isStationOwner = isStationOwner;
+	}
 
 	public String getCreateTimeStr() {
 		return createTimeStr;

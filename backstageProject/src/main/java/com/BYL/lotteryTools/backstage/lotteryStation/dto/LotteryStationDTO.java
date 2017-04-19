@@ -1,5 +1,8 @@
 package com.BYL.lotteryTools.backstage.lotteryStation.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
+
 
 public class LotteryStationDTO 
 {
@@ -7,6 +10,11 @@ public class LotteryStationDTO
 	
 	private String stationOwner;//站主
 	
+	private String isBylStation;//是否为佰艺霖用户1：是0：不是
+	
+	private String bylStationCode;//佰艺霖通行证号
+	
+	private String lotteryType;//彩种类型，1：体彩2：福彩
 	
 	private String telephone;//站主手机
 	
@@ -33,6 +41,76 @@ public class LotteryStationDTO
 	private String closeDoorTimeStr;//停止营业时间
 	
 	private String createTimeStr;
+	
+	private String approvalStatus;//审批状态（1：审批完成0：审批中）
+	
+	private String status;//彩票站信息审批状态（0：未通过1:通过）
+	
+	private String notAllowReason;//未批准原因
+	
+	private MultipartFile daixiaoImgFile;//代销证图片
+	
+	
+	
+	
+
+
+	public String getNotAllowReason() {
+		return notAllowReason;
+	}
+
+	public void setNotAllowReason(String notAllowReason) {
+		this.notAllowReason = notAllowReason;
+	}
+
+	public String getLotteryType() {
+		return lotteryType;
+	}
+
+	public void setLotteryType(String lotteryType) {
+		this.lotteryType = lotteryType;
+	}
+
+	
+	public MultipartFile getDaixiaoImgFile() {
+		return daixiaoImgFile;
+	}
+
+	public void setDaixiaoImgFile(MultipartFile daixiaoImgFile) {
+		this.daixiaoImgFile = daixiaoImgFile;
+	}
+
+	public String getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getIsBylStation() {
+		return isBylStation;
+	}
+
+	public void setIsBylStation(String isBylStation) {
+		this.isBylStation = isBylStation;
+	}
+
+	public String getBylStationCode() {
+		return bylStationCode;
+	}
+
+	public void setBylStationCode(String bylStationCode) {
+		this.bylStationCode = bylStationCode;
+	}
 
 	public String getId() {
 		return id;

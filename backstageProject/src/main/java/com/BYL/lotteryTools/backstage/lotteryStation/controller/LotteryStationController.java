@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.service.UploadfileService;
+import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.LoginUtils;
 import com.BYL.lotteryTools.common.util.QueryResult;
@@ -43,6 +47,9 @@ public class LotteryStationController
 	
 	@Autowired
 	private LotteryStationService lotteryStationService;
+	
+	@Autowired
+	private UploadfileService uploadfileService;
 	
 	/**
 	 * 
@@ -179,9 +186,12 @@ public class LotteryStationController
 	   
 	   if(null != lotteryStation)
 	   {
+		   lotteryStation.setStatus(lotteryStationDTO.getStatus());//更新彩票站信息审批状态
+		   lotteryStation.setApprovalStatus(lotteryStationDTO.getApprovalStatus());
+		   //TODO：后台可以改变彩票站信息吗?
 		   
-		                 
-		   
+		   lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		   lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 		   logger.info("修改彩票站--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 		   
 		   resultBean.setMessage("添加彩票站数据成功!");
@@ -190,7 +200,12 @@ public class LotteryStationController
 	   else
 	   {
 		   lotteryStation = new LotteryStation();
+		   BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
 		   
+		   lotteryStation.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		   lotteryStation.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
+		   lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		   lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 		   logger.info("添加彩票站--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 		   
 		   resultBean.setMessage("添加彩票站数据成功!");
@@ -206,6 +221,101 @@ public class LotteryStationController
 	
 	}
 	
+	/**
+	 * 更新提交认证彩票站的状态
+	* @Title: updateRenzhengStatusLotteryStaion 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryStationDTO
+	* @param @param request
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月19日 下午3:09:14 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/updateRenzhengStatusLotteryStaion", method = RequestMethod.GET)
+	public @ResponseBody ResultBean updateRenzhengStatusLotteryStaion(
+				LotteryStationDTO lotteryStationDTO,HttpServletRequest request)
+	{
+		ResultBean resultBean = new ResultBean();
+		
+		LotteryStation lotteryStation  = lotteryStationService.getLotteryStationById(lotteryStationDTO.getId());
+		
+		if(null != lotteryStation)
+		{
+			lotteryStation.setStatus(lotteryStationDTO.getStatus());
+			lotteryStation.setApprovalStatus(lotteryStationDTO.getApprovalStatus());
+			lotteryStation.setNotAllowReason(lotteryStationDTO.getNotAllowReason());
+			
+			lotteryStationService.update(lotteryStation);
+			resultBean.setStatus("success");
+			resultBean.setMessage("更改成功");
+		}
+		resultBean.setStatus("error");
+		resultBean.setMessage("更改失败");
+		
+		
+		return resultBean;
+	}
+	
+	/**
+	 * 保存用户在app端输入的彩票站信息
+	* @Title: saveFromAppLotteryStaion 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryStationDTO
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月19日 上午11:12:58 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/submitFromAppLotteryStaion", method = RequestMethod.GET)
+	public @ResponseBody ResultBean submitFromAppLotteryStaion(
+				LotteryStationDTO lotteryStationDTO,HttpServletRequest request)
+	{
+		ResultBean resultBean  = new ResultBean();
+		try
+		{
+			//1.判断当前彩票站是否已经认证过
+			LotteryStation lotteryStation = lotteryStationService.
+					getLotteryStationByStationNumber(lotteryStationDTO.getStationNumber());
+			
+			if(null == lotteryStation)
+			{
+				//2.新建彩票站信息
+				lotteryStation = new LotteryStation();
+				BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
+				
+				lotteryStation.setApprovalStatus("0");//审核中
+				
+				//上传彩票站的营业执照图片文件
+				Uploadfile daixiaoImg = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request);
+				if(null != daixiaoImg)
+				{
+					lotteryStation.setDaixiaoImg(daixiaoImg.getNewsUuid());
+				}
+				
+				lotteryStationService.save(lotteryStation);
+				resultBean.setStatus("success");
+				resultBean.setMessage("提交成功");
+			}
+			else
+			{
+				resultBean.setExist(true);
+				resultBean.setStatus("error");
+				resultBean.setMessage("当前彩票站已认证");
+			}
+			
+		}
+		catch(Exception e)
+		{
+			logger.error("error:", e);
+		}
+		
+		
+		return resultBean;
+	}
+
 	/**
 	 * 
 	* @Title: deleteLotteryStations 

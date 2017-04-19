@@ -6,16 +6,15 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
+import com.BYL.lotteryTools.backstage.lotteryStation.entity.RelaBuyLotteryOfLotterybuyer;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.RelaHistoryPurchasePredictionOfLotterybuyer;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.RelaPurchasePredictionRecordOfLotteryBuyer;
-import com.BYL.lotteryTools.backstage.lotteryStation.entity.RelaBuyLotteryOfLotterybuyer;
 import com.BYL.lotteryTools.common.entity.BaseEntity;
 
 /**
@@ -30,15 +29,19 @@ public class LotterybuyerOrExpert extends BaseEntity
 {
 	@Id
 	@Column(name="ID", nullable=false, length=45)
-	@GenericGenerator(name="idGenerator", strategy="uuid")//uuid由机器生成的主键
-	@GeneratedValue(generator="idGenerator")	
 	private String id;
 	
 	@Column(name="CODE")
-	private String code;//用户名
+	private String code;//用户名，昵称
+	
+	@Column(name="TOU_XIANG",length=45)
+	private String touXiang;//头像
 	
 	@Column(name="NAME")
 	private String name;//姓名
+	
+	@Column(name="CAILIAO_NAME")
+	private String cailiaoName;//彩聊名
 	
 	@Column(name="PASSWORD")
 	private String password;//密码
@@ -61,6 +64,13 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="ADDRESS")
 	private String address;
 	
+	
+	@Column(name="SEX")
+	private String sex;//性别
+	
+	@Column(name="SIGNATURE")
+	private String signature;//个性签名
+	
 	@Column(name="COORDINATE")
 	private String coordinate;//坐标
 	
@@ -71,6 +81,9 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="IS_EXPERT")
 	private String isExpert;//是否为彩民 1：彩民 0：非彩民
 	
+	@Column(name="IS_STATION_OWNER")
+	private String isStationOwner;//是否为站主1：是0:不是
+	
 	@Column(name="HANDSEL")
 	private BigDecimal handSel;//彩金余额
 	
@@ -79,6 +92,18 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	@Column(name="IS_LOTTERY_BUYER")
 	private String isLotteryBuyer;//是否为彩民 1：彩民 0：非彩民
+	
+	@Column(name="ID_NUMBER",length=45)
+	private String idNumber;//身份证号
+	
+	@Column(name="ID_NUMBER_FRONT_IMG",length=45)
+	private String idNumberFrontImg;//身份证正面图片
+	
+	@Column(name="ID_NUMBER_BACK_IMG",length=45)
+	private String idNumberBackImg;//身份证反面图片
+	
+	@Column(name="TOKEN",length=45)
+	private String token;//用户融云token
 	
 	//一个用户可以进行多次彩金、彩币的充值
 	@OneToMany(mappedBy="lotterybuyerOrExpert" , fetch=FetchType.LAZY)
@@ -104,10 +129,104 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@OneToMany(mappedBy="lotterybuyerOrExpert" ,fetch=FetchType.LAZY)
 	private List<RelaHistoryPurchasePredictionOfLotterybuyer> relaHistoryPurchasePredictionOfLotterybuyers;
 	
+	//一个用户可以成为多个彩票站的站主
+	@OneToMany(mappedBy="lotteryBuyerOrExpert",fetch=FetchType.LAZY)
+	private List<LotteryStation> lotteryStations;
+	
+	@OneToMany(mappedBy="lotteryBuyerOrExpert",fetch=FetchType.LAZY)
+	private List<LotteryGroup> lotteryGroups;//一个用户可以成为多个群的群主
 	
 	
 	
 	
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getCailiaoName() {
+		return cailiaoName;
+	}
+
+	public void setCailiaoName(String cailiaoName) {
+		this.cailiaoName = cailiaoName;
+	}
+
+	public String getTouXiang() {
+		return touXiang;
+	}
+
+	public void setTouXiang(String touXiang) {
+		this.touXiang = touXiang;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public List<LotteryGroup> getLotteryGroups() {
+		return lotteryGroups;
+	}
+
+	public void setLotteryGroups(List<LotteryGroup> lotteryGroups) {
+		this.lotteryGroups = lotteryGroups;
+	}
+
+	public String getIdNumber() {
+		return idNumber;
+	}
+
+	public void setIdNumber(String idNumber) {
+		this.idNumber = idNumber;
+	}
+
+	public String getIdNumberFrontImg() {
+		return idNumberFrontImg;
+	}
+
+	public void setIdNumberFrontImg(String idNumberFrontImg) {
+		this.idNumberFrontImg = idNumberFrontImg;
+	}
+
+	public String getIdNumberBackImg() {
+		return idNumberBackImg;
+	}
+
+	public void setIdNumberBackImg(String idNumberBackImg) {
+		this.idNumberBackImg = idNumberBackImg;
+	}
+
+	public String getIsStationOwner() {
+		return isStationOwner;
+	}
+
+	public void setIsStationOwner(String isStationOwner) {
+		this.isStationOwner = isStationOwner;
+	}
+
+	public List<LotteryStation> getLotteryStations() {
+		return lotteryStations;
+	}
+
+	public void setLotteryStations(List<LotteryStation> lotteryStations) {
+		this.lotteryStations = lotteryStations;
+	}
+
 	public String getRongyunId() {
 		return rongyunId;
 	}

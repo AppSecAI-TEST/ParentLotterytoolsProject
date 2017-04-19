@@ -8,11 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaBindOfLbuyerorexpertAndLStation;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaInvitationOfLStationAndLbuyerorexpert;
 import com.BYL.lotteryTools.common.entity.BaseEntity;
@@ -46,6 +49,16 @@ public class LotteryStation extends BaseEntity
 	@Column(name="CODE",length=45)
 	private String code;//登录名
 	
+	@Column(name="LOTTERYTYPE",length=45)
+	private String lotteryType;//彩种类型，1：体彩2：福彩
+	
+	@Column(name="IS_BYL_STATION",length=45)
+	private String isBylStation;//是否为佰艺霖用户1：是0：不是
+	
+	@Column(name="STATION_CODE",length=45)
+	private String bylStationCode;//佰艺霖通行证号
+	
+	
 	@Column(name="PASSWORD",length=45)
 	private String password;//密码
 	
@@ -61,17 +74,34 @@ public class LotteryStation extends BaseEntity
 	@Column(name="COORDINATE",length=45)
 	private String coordinate;//坐标
 	
+	@Column(name="DAIXIAO_IMG",length=45)
+	private String daixiaoImg;//代销证图片
+	
+	
 	@Column(name="ADDDRESS",length=100)
 	private String address;//详细地址
 	
 	@Column(name="STATION_INTERVIEW",length=100)
 	private String stationInterview;//彩站介绍
 	
+	@Column(name="APPROVAL_STATUS",length=45)
+	private String approvalStatus;//审批状态（1：审批完成0：审批中）
+	
+	@Column(name="STATUS",length=45)
+	private String status;//彩票站信息审批状态（0：未通过1:通过）
+	
+	@Column(name="NOT_ALLOW_REASON")
+	private String notAllowReason;//未批准原因
+	
 	@Column(name="OPENDOOR_TIME",length=100)
 	private Timestamp openDoorTime;//开始营业时间
 	
 	@Column(name="CLOSEDOOR_TIME",length=100)
 	private Timestamp closeDoorTime;//停止营业时间
+	
+	@ManyToOne
+	@JoinColumn(name="managerId",referencedColumnName="id")
+	private LotterybuyerOrExpert lotteryBuyerOrExpert;
 	
 	//一个彩票站可以发布多个彩票站公告
 	@OneToMany(mappedBy = "lotteryStation", fetch = FetchType.LAZY) 
@@ -94,6 +124,72 @@ public class LotteryStation extends BaseEntity
 	
 	
 	
+
+	public String getNotAllowReason() {
+		return notAllowReason;
+	}
+
+	public void setNotAllowReason(String notAllowReason) {
+		this.notAllowReason = notAllowReason;
+	}
+
+	public String getLotteryType() {
+		return lotteryType;
+	}
+
+	public void setLotteryType(String lotteryType) {
+		this.lotteryType = lotteryType;
+	}
+
+	public String getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	
+	public String getDaixiaoImg() {
+		return daixiaoImg;
+	}
+
+	public void setDaixiaoImg(String daixiaoImg) {
+		this.daixiaoImg = daixiaoImg;
+	}
+
+	public String getIsBylStation() {
+		return isBylStation;
+	}
+
+	public void setIsBylStation(String isBylStation) {
+		this.isBylStation = isBylStation;
+	}
+
+	public String getBylStationCode() {
+		return bylStationCode;
+	}
+
+	public void setBylStationCode(String bylStationCode) {
+		this.bylStationCode = bylStationCode;
+	}
+
+	public LotterybuyerOrExpert getLotteryBuyerOrExpert() {
+		return lotteryBuyerOrExpert;
+	}
+
+	public void setLotteryBuyerOrExpert(LotterybuyerOrExpert lotteryBuyerOrExpert) {
+		this.lotteryBuyerOrExpert = lotteryBuyerOrExpert;
+	}
+
 	public List<RelaBuyLotteryOfLotterybuyer> getRelaRecordOfLotterybuyers() {
 		return relaRecordOfLotterybuyers;
 	}
