@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -330,11 +331,6 @@ public class OuterLotteryBuyerOrExpertController
 		}
 		
 		
-		//修改彩聊号
-		if("".equals(lotterybuyerOrExpert.getCailiaoName())|| null == lotterybuyerOrExpert.getCailiaoName())
-		{//之前的彩聊号没填写过才可以进行填写
-			lotterybuyerOrExpert.setCailiaoName(lotterybuyerOrExpertDTO.getCailiaoName());//添加彩聊号
-		}
 		
 		//添加城市，省份和市
 		if(null != lotterybuyerOrExpertDTO.getProvinceCode() && !"".equals(lotterybuyerOrExpertDTO.getProvinceCode()))
@@ -347,7 +343,10 @@ public class OuterLotteryBuyerOrExpertController
 		}
 		
 		//性别，0：女 1：男
-		lotterybuyerOrExpert.setSex(lotterybuyerOrExpertDTO.getSex());
+		if(null != lotterybuyerOrExpertDTO.getSex() && !"".equals(lotterybuyerOrExpertDTO.getSex()))
+		{
+			lotterybuyerOrExpert.setSex(lotterybuyerOrExpertDTO.getSex());
+		}
 		
 		
 		//个人简介
@@ -375,19 +374,44 @@ public class OuterLotteryBuyerOrExpertController
 			lotterybuyerOrExpert.setPostCode(lotterybuyerOrExpertDTO.getPostCode());
 		}
 		
-		lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
-		try 
-		{
-			BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
+		//修改彩聊号
+		boolean caiFlag = true;
+		if("".equals(lotterybuyerOrExpert.getCailiaoName())|| null == lotterybuyerOrExpert.getCailiaoName())
+		{//之前的彩聊号没填写过才可以进行填写
+			//判断彩聊号是否唯一
+			//根据彩聊号获取用户专家数据，若有返回数据，则彩聊号当前已存在，不可以被更新
+			List<LotterybuyerOrExpert> list = lotterybuyerOrExpertService.
+					getLotterybuyerOrExpertByCailiaoName(lotterybuyerOrExpertDTO.getCailiaoName());
+			if(null != list&& list.size()>0)
+			{
+				caiFlag = false;
+			}
 			
-			map.put("flag", true);
-			map.put("message", "修改成功");
-			map.put("userDto", lotterybuyerOrExpertDTO);
-		} catch (Exception e) {
-			logger.error("error:", e);
-			map.put("flag", false);
-			map.put("message", "修改失败");
+			lotterybuyerOrExpert.setCailiaoName(lotterybuyerOrExpertDTO.getCailiaoName());//添加彩聊号
 		}
+		
+		if(caiFlag)
+		{//若彩聊号唯一，则可以进行修改操作
+			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+			try 
+			{
+				BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
+				
+				map.put("flag", true);
+				map.put("message", "修改成功");
+				map.put("userDto", lotterybuyerOrExpertDTO);
+			} catch (Exception e) {
+				logger.error("error:", e);
+				map.put("flag", false);
+				map.put("message", "修改失败");
+			}
+		}
+		else
+		{
+			map.put("flag", false);
+			map.put("message", "彩聊号不唯一");
+		}
+		
 		
 		
 		return map;

@@ -94,4 +94,9 @@ public class LotterybuyerOrExpertServiceImpl implements
 	{
 		return lotterybuyerOrExpertRepository.getLotterybuyerOrExpertByTelephone(telephone);
 	}
+	
+	public List<LotterybuyerOrExpert> getLotterybuyerOrExpertByCailiaoName(String cailiaoName)
+	{
+		return lotterybuyerOrExpertRepository.getLotterybuyerOrExpertByCailiaoName(cailiaoName);
+	}
 }

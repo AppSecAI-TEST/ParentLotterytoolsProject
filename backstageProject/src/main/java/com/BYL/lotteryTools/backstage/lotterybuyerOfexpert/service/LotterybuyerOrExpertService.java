@@ -25,4 +25,6 @@ public interface LotterybuyerOrExpertService {
 	public LotterybuyerOrExpert getLotterybuyerOrExpertById(String id);
 	
 	public LotterybuyerOrExpert getLotterybuyerOrExpertByTelephone(String telephone);
+	
+	public List<LotterybuyerOrExpert> getLotterybuyerOrExpertByCailiaoName(String cailiaoName);
 }
