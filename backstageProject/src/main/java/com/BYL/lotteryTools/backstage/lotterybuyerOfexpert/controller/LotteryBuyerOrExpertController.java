@@ -176,7 +176,8 @@ public class LotteryBuyerOrExpertController
 	 */
 	@RequestMapping(value="/saveOrupdateFromBackStage" , method = RequestMethod.GET)
 	public @ResponseBody ResultBean saveOrupdateFromBackStage(
-			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,HttpSession httpSession) 
+			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,HttpSession httpSession,
+			HttpServletRequest request) 
 	{
 		ResultBean resultBean = new ResultBean();
 		
@@ -190,6 +191,30 @@ public class LotteryBuyerOrExpertController
 				//比较用户名是否修改
 				lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
 				//TODO:确认可以在后台修改用户的哪些信息
+				
+				//更改头像
+				StringBuffer imguri = new StringBuffer();//头像uri
+				Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
+				if(null != uploadfile)
+				{
+					imguri.append(request.getContextPath()).
+					append(uploadfile.getUploadfilepath()).
+					append(uploadfile.getUploadRealName());
+					logger.info("touxiang",imguri);//输出头像
+					
+					//刷新融云的用户头像
+					String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
+							lotterybuyerOrExpert.getName(), imguri.toString());
+					lotterybuyerOrExpert.setToken(token);
+				}
+				
+				lotterybuyerOrExpert.setColorCoins(lotterybuyerOrExpertDTO.getColorCoins());
+				lotterybuyerOrExpert.setHandSel(lotterybuyerOrExpertDTO.getHandSel());
+				lotterybuyerOrExpert.setIsRobot(lotterybuyerOrExpertDTO.getIsRobot());
+				lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
+				lotterybuyerOrExpert.setIsPhone(lotterybuyerOrExpertDTO.getIsPhone());
+				lotterybuyerOrExpert.setAddress(lotterybuyerOrExpertDTO.getAddress());
+				//TODO：后续根据需要更新需要后台维护的用户信息
 				
 				lotterybuyerOrExpert.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 				lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
@@ -205,12 +230,21 @@ public class LotteryBuyerOrExpertController
 				BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
 				lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
 				
-				String imguri = "";//头像uri
+				StringBuffer imguri = new StringBuffer();//头像uri
+				Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
+				if(null != uploadfile)
+				{
+					imguri.append(request.getContextPath()).
+					append(uploadfile.getUploadfilepath()).
+					append(uploadfile.getUploadRealName());
+					logger.info("touxiang",imguri);//输出头像
+				}
 				//创建融云用户id
 				String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
-						lotterybuyerOrExpert.getName(), imguri);
+						lotterybuyerOrExpert.getName(), imguri.toString());
 				lotterybuyerOrExpert.setToken(token);
 				
+				lotterybuyerOrExpert.setFromApp("0");//非app注册入口进入则为非app用户
 				lotterybuyerOrExpert.setIsDeleted(Constants.IS_NOT_DELETED);
 				lotterybuyerOrExpert.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
 				lotterybuyerOrExpert.setCreateTime(new Timestamp((System.currentTimeMillis())));
@@ -288,5 +322,105 @@ public class LotteryBuyerOrExpertController
 	 
 	}
 	
-	
+	/**
+	 * 保存附件
+	* @Title: saveFujian 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param realname
+	* @param @param filename
+	* @param @param uplId
+	* @param @param model
+	* @param @param httpSession
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年4月21日 下午5:42:24 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/saveFujian", method = RequestMethod.GET)
+	public @ResponseBody ResultBean  saveFujian(
+			@RequestParam(value="realname",required=false) String realname,
+			@RequestParam(value="filename",required=false) String filename,
+			@RequestParam(value="uplId",required=false) String uplId,
+			ModelMap model,HttpSession httpSession) throws Exception {
+	 
+			 ResultBean resultBean = new ResultBean();
+			 String type=getExt(filename);
+			 String uploadfilepath = "/upload/";
+			 
+			 Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(uplId);
+			 
+			 //因为一个应用只能有一个图片附件，所以当这个upId有数据的话就进行修改操作，如果没有数据就创建数据
+			 if(null != uploadfile && !realname.equals(uploadfile.getUploadRealName()))//新添加的realname与原来的附件的realname不同时进行删除操作，为了避免同一方法被重复调用
+			 {
+				 //①：因为广告图片只有一个附件，所以在上传其他附件替换上一个附件时，要先把上一个附件文件删除
+				 String savePath = httpSession.getServletContext().getRealPath("");//获取项目根路径
+			     savePath = savePath +File.separator+ "upload"+File.separator;
+			     //删除附件文件相关s
+				 File dirFile = null;
+				 boolean deleteFlag = false;//删除附件flag
+				//2.删除附件
+		 		dirFile = new File(savePath+uploadfile.getUploadRealName());
+		 		logger.info("待删除文件路径："+dirFile);
+		        // 如果dir对应的文件不存在，或者不是一个目录，则退出
+		    	deleteFlag = dirFile.delete();
+		    	if(deleteFlag)
+		    	{//删除附件(清空附件关联newsUuid)
+		    		logger.info("saveFujian==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+		    	}
+		    	else
+		    	{
+		    		logger.error("saveFujian ERROR==没有找到要删除的附件文件或删除失败，附件路径为="+savePath+";File.exists="+dirFile.exists());
+		    	}
+			    //删除附件e
+				 
+				 //②：保存新的附件文件
+				 uploadfile.setUploadFileName(filename);
+				 uploadfile.setUploadRealName(realname);
+				 uploadfile.setUploadfilepath(uploadfilepath);
+				 uploadfile.setUploadContentType(type);
+				 
+				 //添加修改时间跟踪
+				 uploadfile.setModify(uploadfile.getNewsUuid());//放置附件关联uuid
+				 uploadfile.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				 
+				 uploadfileService.update(uploadfile);
+			 }
+			 else
+				 if(null == uploadfile)
+				 {
+						 uploadfile = new Uploadfile();
+						 uploadfile.setNewsUuid(uplId);
+						 uploadfile.setUploadFileName(filename);
+						 uploadfile.setUploadRealName(realname);
+						 uploadfile.setUploadfilepath(uploadfilepath);
+						 uploadfile.setUploadContentType(type);
+						
+						 //添加修改时间跟踪
+						 uploadfile.setCreator(uploadfile.getNewsUuid());//放置附件关联uuid
+						 uploadfile.setModify(uploadfile.getNewsUuid());//放置附件关联uuid
+						 uploadfile.setCreateTime(new Timestamp(System.currentTimeMillis()));
+						 uploadfile.setModifyTime(new Timestamp(System.currentTimeMillis()));
+						 uploadfile.setIsDeleted(Constants.IS_NOT_DELETED);
+						 
+						 uploadfileService.save(uploadfile);
+				 }
+			 
+			 resultBean.setStatus("success");
+			 
+			 return resultBean;
+			 
+		 }
+			
+	 /**
+	  * 
+	  * @Title: getExt
+	  * @Description: TODO
+	  * @author:banna
+	  * @return: String
+	  */
+	 private String getExt(String fileName) {
+			return fileName.substring(fileName.lastIndexOf("."));
+		}
 }

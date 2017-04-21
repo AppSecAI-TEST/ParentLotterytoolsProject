@@ -39,6 +39,9 @@ public class LotteryStation extends BaseEntity
 	@Column(name="STATION_OWNER",length=45)
 	private String stationOwner;//站主
 	
+	@Column(name="STATION_NAME")
+	private String stationName;//彩票站名称
+	
 	
 	@Column(name="TELEPHONE",length=45)
 	private String telephone;//站主手机
@@ -47,7 +50,7 @@ public class LotteryStation extends BaseEntity
 	private String stationNumber;//站点号
 	
 	@Column(name="CODE",length=45)
-	private String code;//登录名
+	private String code;//站主的真实姓名
 	
 	@Column(name="LOTTERYTYPE",length=45)
 	private String lotteryType;//彩种类型，1：体彩2：福彩
@@ -93,6 +96,9 @@ public class LotteryStation extends BaseEntity
 	@Column(name="INVITE_CODE",length=45)
 	private String inviteCode;//邀请码
 	
+	@Column(name="FROM_APP",length=45)
+	private String fromApp;//app数据录入1:app 0:非app
+	
 	@Column(name="NOT_ALLOW_REASON")
 	private String notAllowReason;//未批准原因
 	
@@ -127,6 +133,22 @@ public class LotteryStation extends BaseEntity
 	
 	
 	
+
+	public String getFromApp() {
+		return fromApp;
+	}
+
+	public void setFromApp(String fromApp) {
+		this.fromApp = fromApp;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
 
 	public String getInviteCode() {
 		return inviteCode;

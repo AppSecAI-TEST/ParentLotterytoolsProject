@@ -32,7 +32,7 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private String id;
 	
 	@Column(name="CODE")
-	private String code;//用户名
+	private String code;//如果是站主，则存储站主姓名
 	
 	@Column(name="TOU_XIANG",length=45)
 	private String touXiang;//头像
@@ -88,7 +88,10 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private String isExpert;//是否为彩民 1：彩民 0：非彩民
 	
 	@Column(name="IS_STATION_OWNER")
-	private String isStationOwner;//是否为站主1：是0:不是
+	private String isStationOwner;//是否为站主1：是0:不是（在有认证成功的彩票站时则认证为站主）
+	
+	@Column(name="FROM_APP",length=45)
+	private String fromApp;//app数据录入1:app 0:非app
 	
 	@Column(name="HANDSEL")
 	private BigDecimal handSel;//彩金余额
@@ -100,7 +103,7 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private BigDecimal colorCoins;//彩币余额
 	
 	@Column(name="IS_VIRTUAL")
-	private String isVirtual;//是否为彩民 1：彩民 0：非彩民(是否为真实用户，非真实用户是用来绑定专家预测的)，区分是否为真实专家使用，在分配给平板随机专家时不分配真实的专家
+	private String isVirtual;//是否为彩民 1：彩民 0：非彩民(是否为真实用户，非真实用户是用来绑定专家预测的)，区分是否为真实专家使用，在分配给平板随机专家时不分配真实的专家，而且虚拟专家肯定是后台进行添加的
 	
 	@Column(name="ID_NUMBER",length=45)
 	private String idNumber;//身份证号
@@ -148,6 +151,14 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	
 	
+	public String getFromApp() {
+		return fromApp;
+	}
+
+	public void setFromApp(String fromApp) {
+		this.fromApp = fromApp;
+	}
+
 	public String getInviteCode() {
 		return inviteCode;
 	}

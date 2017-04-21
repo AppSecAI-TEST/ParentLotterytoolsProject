@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
@@ -67,12 +69,24 @@ public class OuterLotteryBuyerOrExpertController
 	* @throws
 	 */
 	@RequestMapping(value="/getYanzhengmaForRegister" , method = RequestMethod.GET)
-	public ResultBean getYanzhengmaForRegister(@RequestParam(value="telephone",required=false) String telephone)
+	public ResultBean getYanzhengmaForRegister(@RequestParam(value="telephone",required=false) String telephone,
+			HttpSession httpSession)
 	{
 		//TODO:调用第三方api给用户发送信息
 		//判断当前手机号是否已经注册过
 		ResultBean resultBean = new ResultBean();
-		
+		String templateId = "";//设置模板id
+		try {
+			SMSSendCodeResult result = rongyunImService.sendCode(telephone, templateId, "86", null, null);
+			httpSession.setAttribute(telephone, result.getSessionId());//放置sessionid
+			httpSession.setMaxInactiveInterval(15*60);//15min后过期
+			resultBean.setFlag(true);
+			resultBean.setMessage("发送成功");
+		} catch (Exception e) {
+			logger.error("error:", e);
+			resultBean.setFlag(false);
+			resultBean.setMessage("发送失败,请稍候再试");
+		}
 		
 		
 		return resultBean;
@@ -93,7 +107,7 @@ public class OuterLotteryBuyerOrExpertController
 	@RequestMapping(value="/saveFromApp", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> saveFromApp(
 			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
-			HttpServletRequest request)
+			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> result = new HashMap<String, Object>();
 		//app端传的保存参数中，图片是file类型的文件，而后台是存储之后的图片id
@@ -108,39 +122,63 @@ public class OuterLotteryBuyerOrExpertController
 			}
 			else
 			{//当前手机号未被注册
-				//注册时彩币、彩金的金额都是null
-				lotterybuyerOrExpert = new LotterybuyerOrExpert();
-				lotterybuyerOrExpertDTO.setHandSel(new BigDecimal(0));
-				lotterybuyerOrExpertDTO.setColorCoins(new BigDecimal(0));
-				BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
-				lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
-				//对密码进行加密
-				lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
+				//根据手机号获取sessionid
+				/*String sessionId = (String) httpSession.getAttribute(lotterybuyerOrExpertDTO.getTelephone());
+				SMSVerifyCodeResult yanzhengma = rongyunImService.verifyCode(sessionId, lotterybuyerOrExpertDTO.getYanzhengma());
 				
-				String imguri = "";//头像uri
-				//创建融云用户id
-				String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
-						lotterybuyerOrExpert.getName(), imguri);
-				lotterybuyerOrExpert.setToken(token);
+				if(yanzhengma.getSuccess())
+				{*/
+					//注册时彩币、彩金的金额都是null
+					lotterybuyerOrExpert = new LotterybuyerOrExpert();
+					lotterybuyerOrExpertDTO.setHandSel(new BigDecimal(0));
+					lotterybuyerOrExpertDTO.setColorCoins(new BigDecimal(0));
+					BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
+					lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
+					//对密码进行加密
+					lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
+					
+					Uploadfile uploadfile = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getTouXiangImg(), request);
+					StringBuffer imguri = new StringBuffer();//头像uri
+					if(null != uploadfile)
+					{//若头像不为空，则放置头像的uuid
+						lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());
+						imguri.append(request.getContextPath()).
+								append(uploadfile.getUploadfilepath()).
+								append(uploadfile.getUploadRealName());
+						logger.info("touxiang",imguri);//输出头像
+					}
+					
+					//创建融云用户id
+					String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
+							lotterybuyerOrExpert.getName(), imguri.toString());
+					lotterybuyerOrExpert.setToken(token);
+					
+					lotterybuyerOrExpert.setIsPhone("1");//从app端走注册接口的一定是手机用户
+					lotterybuyerOrExpert.setIsExpert("0");//注册时用户的默认身份是彩民
+					lotterybuyerOrExpert.setIsVirtual("0");//是否为虚拟用户（虚拟用户是由公司来创建的，没有实际意义）
+					lotterybuyerOrExpert.setIsRobot("0");//从app端注册的用户都不是机器人用户
+					lotterybuyerOrExpert.setIsStationOwner("0");//在注册时默认都不是站主
+					lotterybuyerOrExpert.setFromApp("1");//app注册入口进入则为app用户
+					
+					lotterybuyerOrExpert.setIsDeleted(Constants.IS_NOT_DELETED);
+					lotterybuyerOrExpert.setCreator(lotterybuyerOrExpert.getId());
+					lotterybuyerOrExpert.setCreateTime(new Timestamp((System.currentTimeMillis())));
+					lotterybuyerOrExpert.setModify(lotterybuyerOrExpert.getId());
+					lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
+					//保存用户信息
+					lotterybuyerOrExpertService.save(lotterybuyerOrExpert);
+					BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
+					result.put("status", true);
+					result.put("message", "注册成功");
+					result.put("user", lotterybuyerOrExpertDTO);
+				/*}
+				else
+				{//手机验证码验证失败
+					result.put("status", false);
+					result.put("message", yanzhengma.getErrorMessage());//放置验证码错误信息
+				}*/
 				
-				lotterybuyerOrExpert.setIsPhone("1");//从app端走注册接口的一定是手机用户
-				lotterybuyerOrExpert.setIsExpert("0");//注册时用户的默认身份是彩民
-				lotterybuyerOrExpert.setIsVirtual("0");//是否为虚拟用户（虚拟用户是由公司来创建的，没有实际意义）
-				lotterybuyerOrExpert.setIsRobot("0");//从app端注册的用户都不是机器人用户
-				lotterybuyerOrExpert.setIsStationOwner("0");//在注册时默认都不是站主
 				
-				
-				lotterybuyerOrExpert.setIsDeleted(Constants.IS_NOT_DELETED);
-				lotterybuyerOrExpert.setCreator(lotterybuyerOrExpert.getId());
-				lotterybuyerOrExpert.setCreateTime(new Timestamp((System.currentTimeMillis())));
-				lotterybuyerOrExpert.setModify(lotterybuyerOrExpert.getId());
-				lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
-				//保存用户信息
-				lotterybuyerOrExpertService.save(lotterybuyerOrExpert);
-				BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
-				result.put("status", true);
-				result.put("message", "注册成功");
-				result.put("user", lotterybuyerOrExpertDTO);
 			}
 		
 		}

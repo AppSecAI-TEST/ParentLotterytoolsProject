@@ -1,5 +1,8 @@
 package com.BYL.lotteryTools.backstage.outer.service;
 
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
+
 
 /**
  * 调用融云进行交互的service层
@@ -57,5 +60,9 @@ public interface RongyunImService {
 	public String groupDismiss(String userId,String dismissGroupId);
 	
 	public String createGroup(String[] joinUserId,String groupId,String groupName);
+	
+	public SMSSendCodeResult sendCode(String mobile, String templateId, String region, String verifyId, String verifyCode) throws Exception;
+	
+	public SMSVerifyCodeResult verifyCode(String sessionId, String code) throws Exception;
 	
 }

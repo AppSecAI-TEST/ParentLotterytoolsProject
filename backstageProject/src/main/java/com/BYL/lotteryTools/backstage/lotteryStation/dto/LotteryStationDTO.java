@@ -12,6 +12,8 @@ public class LotteryStationDTO
 	
 	private String stationOwner;//站主
 	
+	private String stationName;//彩票站名称
+	
 	private String isBylStation;//是否为佰艺霖用户1：是0：不是
 	
 	private String bylStationCode;//佰艺霖通行证号
@@ -22,7 +24,7 @@ public class LotteryStationDTO
 	
 	private String stationNumber;//站点号
 	
-	private String code;//登录名
+	private String code;//站主的真实姓名
 	
 	private String password;//密码
 	
@@ -46,9 +48,15 @@ public class LotteryStationDTO
 	
 	private String approvalStatus;//审批状态（1：审批完成0：审批中）
 	
+	private String approvalStatusName;//审批状态名称
+	
 	private String status;//彩票站信息审批状态（0：未通过1:通过）
 	
+	private String statusName;//彩票站信息审批状态名称
+	
 	private String notAllowReason;//未批准原因
+	
+	private String idNumber;//站主身份证号
 	
 	private MultipartFile daixiaoImgFile;//代销证图片
 	
@@ -58,8 +66,49 @@ public class LotteryStationDTO
 	
 	private String inviteCode;//邀请码
 	
+	private String fromApp;//app数据录入1:app 0:非app
 	
+
 	
+	public String getFromApp() {
+		return fromApp;
+	}
+
+	public void setFromApp(String fromApp) {
+		this.fromApp = fromApp;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+
+	public String getIdNumber() {
+		return idNumber;
+	}
+
+	public void setIdNumber(String idNumber) {
+		this.idNumber = idNumber;
+	}
+
+	public String getApprovalStatusName() {
+		return approvalStatusName;
+	}
+
+	public void setApprovalStatusName(String approvalStatusName) {
+		this.approvalStatusName = approvalStatusName;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
 
 	public String getInviteCode() {
 		return inviteCode;

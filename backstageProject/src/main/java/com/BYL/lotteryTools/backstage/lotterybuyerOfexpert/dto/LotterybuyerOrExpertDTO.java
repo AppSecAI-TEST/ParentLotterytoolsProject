@@ -26,6 +26,8 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String isStationOwner;//是否为站主1：是0:不是
 	
+	private String fromApp;//app数据录入1:app 0:非app
+	
 	private String provinceCode;
 	
 	private String cityCode;
@@ -70,6 +72,14 @@ public class LotterybuyerOrExpertDTO {
 	
 	
 	
+
+	public String getFromApp() {
+		return fromApp;
+	}
+
+	public void setFromApp(String fromApp) {
+		this.fromApp = fromApp;
+	}
 
 	public String getInviteCode() {
 		return inviteCode;

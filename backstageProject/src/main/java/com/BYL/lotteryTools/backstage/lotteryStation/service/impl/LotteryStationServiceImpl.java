@@ -80,6 +80,21 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 					dto.setCloseDoorTimeStr(DateUtil.formatDate(entity.getCloseDoorTime(),DateUtil.FULL_DATE_FORMAT));
 				}
 				
+				if(null != entity.getLotteryBuyerOrExpert())
+				{//放置站主用户id
+					dto.setUserId(entity.getLotteryBuyerOrExpert().getId());
+				}
+				
+				if(null != entity.getApprovalStatus())
+				{
+					dto.setApprovalStatusName(entity.getApprovalStatus().equals("1")?"审核完成":"审核中");
+				}
+				
+				if(null != entity.getStatus())
+				{
+					dto.setStatusName(entity.getStatus().equals("1")?"已认证":"认证失败");
+				}
+				
 			} 
 			catch (Exception e) 
 			{
@@ -109,6 +124,16 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 	public LotteryStation getLotteryStationByStationNumber(String stationNumber)
 	{
 		return lotteryStationRepository.getLotteryStationByStationNumber(stationNumber);
+	}
+	
+	public List<LotteryStation> getLotteryStationByUserId(String userId)
+	{
+		return lotteryStationRepository.getLotteryStationByUserId(userId);
+	}
+	
+	public List<LotteryStation> findAll()
+	{
+		return lotteryStationRepository.findAll();
 	}
 	
 }
