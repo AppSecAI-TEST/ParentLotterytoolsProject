@@ -16,6 +16,8 @@ public class ResultBean
 	
 	private boolean isExist;//褰撳墠鍊兼槸鍚﹀瓨鍦�
 	
+	private boolean flag; 
+	
 	private boolean isProxy;//鏄惁鎷ユ湁浠ｇ悊瑙掕壊
 	
 	private boolean isFinancialManager;//鏄惁鎷ユ湁璐㈡斂绠＄悊鍛樿鑹�
@@ -42,6 +44,14 @@ public class ResultBean
 	
 	
 	
+
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
 
 	public String getLotteryType() {
 		return lotteryType;

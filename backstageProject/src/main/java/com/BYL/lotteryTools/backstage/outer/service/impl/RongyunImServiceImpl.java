@@ -1,5 +1,7 @@
 package com.BYL.lotteryTools.backstage.outer.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +15,29 @@ import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 @Transactional(propagation=Propagation.REQUIRED)
 public class RongyunImServiceImpl implements RongyunImService 
 {
+	private Logger logger = LoggerFactory.getLogger(RongyunImServiceImpl.class);
 	String appKey = "82hegw5u83v8x";//appkey
 	String appSecret = "z2VxpghbOvscFu";//上面key的secret
 	
 	
+	//封禁用户
+	public String blockUser(String userId,Integer minute)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
+		CodeSuccessResult userBlockResult = null;
+		try
+		{
+			userBlockResult = rongCloud.user.block(userId, minute);//minute:封禁多少分钟
+		}
+		catch(Exception e)
+		{
+			logger.error("error:", e);
+		}
+		
+		return userBlockResult.toString();
+	}
+	
+	//新建用户，获取用户token
 	public String getUserToken(String userId,String username,String imguri)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
@@ -59,7 +80,82 @@ public class RongyunImServiceImpl implements RongyunImService
 			e.printStackTrace();
 		}
 		
-		return userGetTokenResult.toString();
+		return userGetTokenResult.getToken();
+	}
+	
+	/**
+	 * 将用户加入到群（加群之前判断当前群是否已经人数超过额度，超过则不可以加入了）
+	* @Title: joinUserInGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupJoinUserId：要加入群的用户数组
+	* @param @param groupId：群id
+	* @param @param groupName：群名称
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月19日 下午4:47:40 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public String joinUserInGroup(String[] groupJoinUserId,String groupId,String groupName)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
+		CodeSuccessResult groupJoinResult = null;
+		try {
+			groupJoinResult = rongCloud.group.join(groupJoinUserId, groupId, groupName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return groupJoinResult.toString();
+	}
+	
+	/**
+	 * 用户从群退出
+	* @Title: quitUserFronGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupQuitUserId：要退出群的用户数组
+	* @param @param groupId：要退出群的群id
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月19日 下午4:51:29 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public String quitUserFronGroup(String[] groupQuitUserId,String groupId)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
+		CodeSuccessResult groupQuitResult = null;
+		try {
+			groupQuitResult = rongCloud.group.quit(groupQuitUserId,groupId);
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return groupQuitResult.toString();
+	}
+	
+	/**
+	 * 删除群
+	* @Title: groupDismiss 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId：操作删除群的用户id
+	* @param @param dismissGroupId：要删除的群的群id
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月19日 下午4:56:23 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public String groupDismiss(String userId,String dismissGroupId)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
+		CodeSuccessResult groupDismissResult = null;
+		try {
+			groupDismissResult = rongCloud.group.dismiss(userId, dismissGroupId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return groupDismissResult.toString();
 	}
 	
 	public String createGroup(String[] joinUserId,String groupId,String groupName)

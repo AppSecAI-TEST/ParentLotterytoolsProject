@@ -8,6 +8,8 @@ public class LotteryStationDTO
 {
 	private String id;
 	
+	private String userId;//站主id
+	
 	private String stationOwner;//站主
 	
 	private String isBylStation;//是否为佰艺霖用户1：是0：不是
@@ -50,10 +52,46 @@ public class LotteryStationDTO
 	
 	private MultipartFile daixiaoImgFile;//代销证图片
 	
+	private MultipartFile idNumberFrontImg;//身份证正面图片
+	
+	private MultipartFile idNumberBackImg;//身份证背面图片
+	
+	private String inviteCode;//邀请码
 	
 	
 	
 
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public MultipartFile getIdNumberFrontImg() {
+		return idNumberFrontImg;
+	}
+
+	public void setIdNumberFrontImg(MultipartFile idNumberFrontImg) {
+		this.idNumberFrontImg = idNumberFrontImg;
+	}
+
+	public MultipartFile getIdNumberBackImg() {
+		return idNumberBackImg;
+	}
+
+	public void setIdNumberBackImg(MultipartFile idNumberBackImg) {
+		this.idNumberBackImg = idNumberBackImg;
+	}
 
 	public String getNotAllowReason() {
 		return notAllowReason;

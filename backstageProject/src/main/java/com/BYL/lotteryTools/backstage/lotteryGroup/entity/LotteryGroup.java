@@ -43,8 +43,8 @@ public class LotteryGroup extends BaseEntity
 	private String touXiang;//头像图片
 	
 	@ManyToOne
-	@JoinColumn(name="groupOwnerId",referencedColumnName="id")
-	private LotterybuyerOrExpert lotterybuyerOrExpert;//群主id
+	@JoinColumn(name="GROUP_OWNER_ID",referencedColumnName="id")
+	private LotterybuyerOrExpert lotteryBuyerOrExpert;//群主id
 	
 	
 
@@ -104,13 +104,14 @@ public class LotteryGroup extends BaseEntity
 		this.touXiang = touXiang;
 	}
 
-	public LotterybuyerOrExpert getLotterybuyerOrExpert() {
-		return lotterybuyerOrExpert;
+	public LotterybuyerOrExpert getLotteryBuyerOrExpert() {
+		return lotteryBuyerOrExpert;
 	}
 
-	public void setLotterybuyerOrExpert(LotterybuyerOrExpert lotterybuyerOrExpert) {
-		this.lotterybuyerOrExpert = lotterybuyerOrExpert;
+	public void setLotteryBuyerOrExpert(LotterybuyerOrExpert lotteryBuyerOrExpert) {
+		this.lotteryBuyerOrExpert = lotteryBuyerOrExpert;
 	}
+
 	
 	
 	

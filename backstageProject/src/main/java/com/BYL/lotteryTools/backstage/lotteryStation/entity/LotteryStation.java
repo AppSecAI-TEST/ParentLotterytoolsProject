@@ -90,6 +90,9 @@ public class LotteryStation extends BaseEntity
 	@Column(name="STATUS",length=45)
 	private String status;//彩票站信息审批状态（0：未通过1:通过）
 	
+	@Column(name="INVITE_CODE",length=45)
+	private String inviteCode;//邀请码
+	
 	@Column(name="NOT_ALLOW_REASON")
 	private String notAllowReason;//未批准原因
 	
@@ -124,6 +127,14 @@ public class LotteryStation extends BaseEntity
 	
 	
 	
+
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
 
 	public String getNotAllowReason() {
 		return notAllowReason;

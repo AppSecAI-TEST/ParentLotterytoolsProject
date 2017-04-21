@@ -3,6 +3,7 @@ package com.BYL.lotteryTools.common.service;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,7 @@ public interface UploadfileService {
 	
 	public void update(Uploadfile entity);
 	
-	public void delete(Uploadfile entity);
+	public void delete(Uploadfile entity,HttpSession httpSession);
 	
 	public Uploadfile getUploadfileById(int id);
 	

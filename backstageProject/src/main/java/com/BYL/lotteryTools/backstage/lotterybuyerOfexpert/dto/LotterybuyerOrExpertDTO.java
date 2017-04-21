@@ -14,11 +14,15 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String touXiang;//头像
 	
+	private MultipartFile touXiangImg;//头像图片
+	
 	private String password;//密码
 	
 	private String telephone;
 	
 	private String isPhone;//是否为手机用户（0：手机用户 1：其他用户）
+	
+	private String isRobot;//是否为机器人用户（0：否 1：是）
 	
 	private String isStationOwner;//是否为站主1：是0:不是
 	
@@ -26,13 +30,17 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String cityCode;
 	
+	private String inviteCode;//邀请码
+	
 	private String regionCode;
 	
 	private String address;
 	
 	private String coordinate;//坐标
 	
-	private String isLotteryBuyer;//是否为彩民 1：彩民 0：非彩民
+	private String postCode;//邮政编码
+	
+	private String isVirtual;//是否为彩民 1：彩民 0：非彩民(是否为真实用户，非真实用户是用来绑定专家预测的)，区分是否为真实专家使用，在分配给平板随机专家时不分配真实的专家
 	
 	private String isExpert;//是否为彩民 1：彩民 0：非彩民
 	
@@ -54,7 +62,7 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String token;//用户融云token
 	
-	private String cailiaoName;//彩聊名
+	private String cailiaoName;//彩聊名(全局唯一)
 	
 	private String sex;//性别
 	
@@ -62,6 +70,39 @@ public class LotterybuyerOrExpertDTO {
 	
 	
 	
+
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
+
+	public String getIsRobot() {
+		return isRobot;
+	}
+
+	public void setIsRobot(String isRobot) {
+		this.isRobot = isRobot;
+	}
+
+	public MultipartFile getTouXiangImg() {
+		return touXiangImg;
+	}
+
+	public void setTouXiangImg(MultipartFile touXiangImg) {
+		this.touXiangImg = touXiangImg;
+	}
+
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
 	public String getSignature() {
 		return signature;
 	}
@@ -246,12 +287,14 @@ public class LotterybuyerOrExpertDTO {
 		this.coordinate = coordinate;
 	}
 
-	public String getIsLotteryBuyer() {
-		return isLotteryBuyer;
+	
+
+	public String getIsVirtual() {
+		return isVirtual;
 	}
 
-	public void setIsLotteryBuyer(String isLotteryBuyer) {
-		this.isLotteryBuyer = isLotteryBuyer;
+	public void setIsVirtual(String isVirtual) {
+		this.isVirtual = isVirtual;
 	}
 
 	public String getIsExpert() {

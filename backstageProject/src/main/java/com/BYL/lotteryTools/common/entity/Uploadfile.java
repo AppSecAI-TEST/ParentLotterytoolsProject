@@ -12,28 +12,44 @@ import javax.persistence.Table;
 @Table(name = "UPLOADFILE")
 public class Uploadfile extends BaseEntity {
 
-	private Integer id;
-	private String newsUuid;
-	private String uploadFileName;
-	private String uploadContentType;
-	private String uploadRealName;
-	private String uploadfilepath;
-	private String des;
-
-
-
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
+	private Integer id;
+	
+	@Column(name = "newsUuid", length = 45)
+	private String newsUuid;
+	
+	@Column(name = "uploadFileName", length = 200)
+	private String uploadFileName;
+	
+	@Column(name = "uploadContentType", length = 20)
+	private String uploadContentType;
+	
+	@Column(name = "uploadRealName", length = 50)
+	private String uploadRealName;
+	
+	@Column(name = "uploadfilepath", length = 50)
+	private String uploadfilepath;
+	
+	@Column(name = "des", length = 100)
+	private String des;
+	
+	@Column(name = "deleteServiceFile")
+	private boolean deleteServiceFile;
+
+
+
+	
+	
 	public Integer getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	@Column(name = "newsUuid", length = 45)
 	public String getNewsUuid() {
 		return this.newsUuid;
 	}
@@ -41,8 +57,19 @@ public class Uploadfile extends BaseEntity {
 	public void setNewsUuid(String newsUuid) {
 		this.newsUuid = newsUuid;
 	}
+	
+	
+	
 
-	@Column(name = "uploadFileName", length = 200)
+	public boolean isDeleteServiceFile() {
+		return deleteServiceFile;
+	}
+
+	public void setDeleteServiceFile(boolean deleteServiceFile) {
+		this.deleteServiceFile = deleteServiceFile;
+	}
+
+	
 	public String getUploadFileName() {
 		return this.uploadFileName;
 	}
@@ -51,7 +78,7 @@ public class Uploadfile extends BaseEntity {
 		this.uploadFileName = uploadFileName;
 	}
 
-	@Column(name = "uploadContentType", length = 20)
+	
 	public String getUploadContentType() {
 		return this.uploadContentType;
 	}
@@ -60,7 +87,7 @@ public class Uploadfile extends BaseEntity {
 		this.uploadContentType = uploadContentType;
 	}
 
-	@Column(name = "uploadRealName", length = 50)
+	
 	public String getUploadRealName() {
 		return this.uploadRealName;
 	}
@@ -69,7 +96,7 @@ public class Uploadfile extends BaseEntity {
 		this.uploadRealName = uploadRealName;
 	}
 
-	@Column(name = "uploadfilepath", length = 50)
+	
 	public String getUploadfilepath() {
 		return this.uploadfilepath;
 	}
@@ -78,7 +105,7 @@ public class Uploadfile extends BaseEntity {
 		this.uploadfilepath = uploadfilepath;
 	}
 
-	@Column(name = "des", length = 100)
+	
 	public String getDes() {
 		return this.des;
 	}

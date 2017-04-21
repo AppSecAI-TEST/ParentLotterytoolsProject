@@ -32,13 +32,13 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private String id;
 	
 	@Column(name="CODE")
-	private String code;//用户名，昵称
+	private String code;//用户名
 	
 	@Column(name="TOU_XIANG",length=45)
 	private String touXiang;//头像
 	
 	@Column(name="NAME")
-	private String name;//姓名
+	private String name;//姓名，昵称
 	
 	@Column(name="CAILIAO_NAME")
 	private String cailiaoName;//彩聊名
@@ -50,7 +50,10 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private String telephone;
 	
 	@Column(name="IS_PHONE")
-	private String isPhone;//是否为手机用户（0：手机用户 1：其他用户）
+	private String isPhone;//是否为手机用户（0：手机用户 1：其他用户）新建pad用户时要选择他属于哪个彩票站（单选）
+	
+	@Column(name="IS_ROBOT")
+	private String isRobot;//是否为机器人用户（0：否 1：是）
 	
 	@Column(name="PROVINCE_CODE")
 	private String provinceCode;
@@ -74,6 +77,9 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="COORDINATE")
 	private String coordinate;//坐标
 	
+	@Column(name="POST_CODE")
+	private String postCode;//邮政编码
+	
 	
 	@Column(name="RONGYUN_ID")
 	private String rongyunId;//融云id,即时通讯使用
@@ -87,11 +93,14 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="HANDSEL")
 	private BigDecimal handSel;//彩金余额
 	
+	@Column(name="INVITE_CODE",length=45)
+	private String inviteCode;//邀请码
+	
 	@Column(name="COLOR_COINS")
 	private BigDecimal colorCoins;//彩币余额
 	
-	@Column(name="IS_LOTTERY_BUYER")
-	private String isLotteryBuyer;//是否为彩民 1：彩民 0：非彩民
+	@Column(name="IS_VIRTUAL")
+	private String isVirtual;//是否为彩民 1：彩民 0：非彩民(是否为真实用户，非真实用户是用来绑定专家预测的)，区分是否为真实专家使用，在分配给平板随机专家时不分配真实的专家
 	
 	@Column(name="ID_NUMBER",length=45)
 	private String idNumber;//身份证号
@@ -102,7 +111,7 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="ID_NUMBER_BACK_IMG",length=45)
 	private String idNumberBackImg;//身份证反面图片
 	
-	@Column(name="TOKEN",length=45)
+	@Column(name="TOKEN")
 	private String token;//用户融云token
 	
 	//一个用户可以进行多次彩金、彩币的充值
@@ -139,6 +148,30 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	
 	
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
+
+	public String getIsRobot() {
+		return isRobot;
+	}
+
+	public void setIsRobot(String isRobot) {
+		this.isRobot = isRobot;
+	}
+
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
 	public String getSignature() {
 		return signature;
 	}
@@ -329,6 +362,14 @@ public class LotterybuyerOrExpert extends BaseEntity
 		this.telephone = telephone;
 	}
 
+	public String getIsVirtual() {
+		return isVirtual;
+	}
+
+	public void setIsVirtual(String isVirtual) {
+		this.isVirtual = isVirtual;
+	}
+
 	public String getIsPhone() {
 		return isPhone;
 	}
@@ -377,13 +418,6 @@ public class LotterybuyerOrExpert extends BaseEntity
 		this.coordinate = coordinate;
 	}
 
-	public String getIsLotteryBuyer() {
-		return isLotteryBuyer;
-	}
-
-	public void setIsLotteryBuyer(String isLotteryBuyer) {
-		this.isLotteryBuyer = isLotteryBuyer;
-	}
 
 	public String getIsExpert() {
 		return isExpert;

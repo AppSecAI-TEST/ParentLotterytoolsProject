@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import com.BYL.lotteryTools.common.repository.UploadfileRepository;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.Constants;
 
-@Service("uploadfileService")
+@Service("/uploadfileService")
 @Transactional(propagation = Propagation.REQUIRED)
 public class UploadfileServiceImpl implements UploadfileService {
 	
@@ -49,8 +50,21 @@ public class UploadfileServiceImpl implements UploadfileService {
 		uploadfileRepository.save(entity);
 	}
 	
-	public void delete(Uploadfile entity) {
-
+	public void delete(Uploadfile entity,HttpSession httpSession) {
+		//删除服务器上的附件文件
+		String savePath = httpSession.getServletContext().getRealPath("upload");//获取项目根路径
+//	    savePath = savePath +File.separator+ "upload"+File.separator;
+		 //删除附件文件相关s
+		 File dirFile = null;
+		 boolean deleteFlag = false;//删除附件flag
+		//2.删除附件
+		dirFile = new File(savePath+entity.getUploadRealName());
+       // 如果dir对应的文件不存在，或者不是一个目录，则退出
+		deleteFlag = dirFile.delete();
+		entity.setDeleteServiceFile(deleteFlag);//放置是否删除服务器附件成功的标记位
+		entity.setIsDeleted(Constants.IS_DELETED);//放置删除标记
+		entity.setModify(entity.getCreator());
+		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		uploadfileRepository.delete(entity);
 	}
 	

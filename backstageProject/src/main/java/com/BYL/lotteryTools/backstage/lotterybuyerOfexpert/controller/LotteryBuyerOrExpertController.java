@@ -1,6 +1,9 @@
 package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
-import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
@@ -37,6 +37,7 @@ import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.LoginUtils;
+import com.BYL.lotteryTools.common.util.MyMD5Util;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 /**
@@ -160,80 +161,7 @@ public class LotteryBuyerOrExpertController
 	}
 	
 	
-	/**
-	 * 获取验证码
-	* @Title: getYanzhengma 
-	* @Description: TODO(这里用一句话描述这个方法的作用) 
-	* @param @return    设定文件 
-	* @author banna
-	* @date 2017年4月18日 下午5:10:32 
-	* @return String    返回类型 
-	* @throws
-	 */
-	@RequestMapping(value="/getYanzhengma" , method = RequestMethod.GET)
-	public void getYanzhengma()
-	{
-		//TODO:调用第三方api给用户发送信息
-		
-	}
 	
-	/**
-	 * 保存或修改来自前端App的信息
-	* @Title: saveFromApp 
-	* @Description: TODO(这里用一句话描述这个方法的作用) 
-	* @param @param lotterybuyerOrExpertDTO
-	* @param @return    设定文件 
-	* @author banna
-	* @date 2017年4月18日 下午5:20:11 
-	* @return ResultBean    返回类型 
-	* @throws
-	 */
-	@RequestMapping(value="/saveFromApp" , method = RequestMethod.GET)
-	public @ResponseBody ResultBean saveFromApp(
-			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
-			HttpServletRequest request)
-	{
-		ResultBean resultBean = new ResultBean();
-		//app端传的保存参数中，图片是file类型的文件，而后台是存储之后的图片id
-		LotterybuyerOrExpert lotterybuyerOrExpert = new LotterybuyerOrExpert();
-		try
-		{
-			BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
-			lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
-			//上传身份证图片调用方法
-			Uploadfile frontImg = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getIdNumberFrontImg(),request);
-			if(null != frontImg)
-			{
-				lotterybuyerOrExpert.setIdNumberFrontImg(frontImg.getNewsUuid());
-			}
-			Uploadfile backImg = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getIdNumberBackImg(),request);
-			if(null != backImg)
-			{
-				lotterybuyerOrExpert.setIdNumberBackImg(backImg.getNewsUuid());
-			}
-			
-			String imguri = "";//头像uri
-			//创建融云用户id
-			String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
-					lotterybuyerOrExpert.getName(), imguri);
-			lotterybuyerOrExpert.setToken(token);
-			
-			lotterybuyerOrExpert.setCreator(lotterybuyerOrExpert.getCode());
-			lotterybuyerOrExpert.setCreateTime(new Timestamp((System.currentTimeMillis())));
-			lotterybuyerOrExpert.setModify(lotterybuyerOrExpert.getCode());
-			lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
-			//保存用户信息
-			lotterybuyerOrExpertService.save(lotterybuyerOrExpert);
-		}
-		catch(Exception e)
-		{
-			logger.error("error:",e);
-		}
-		
-		
-		
-		return resultBean;
-	}
 	
 	/**
 	 * 保存或修改来自后台的信息
@@ -248,7 +176,7 @@ public class LotteryBuyerOrExpertController
 	 */
 	@RequestMapping(value="/saveOrupdateFromBackStage" , method = RequestMethod.GET)
 	public @ResponseBody ResultBean saveOrupdateFromBackStage(
-			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO) 
+			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,HttpSession httpSession) 
 	{
 		ResultBean resultBean = new ResultBean();
 		
@@ -263,7 +191,7 @@ public class LotteryBuyerOrExpertController
 				lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
 				//TODO:确认可以在后台修改用户的哪些信息
 				
-				lotterybuyerOrExpert.setModify(lotterybuyerOrExpert.getCode());
+				lotterybuyerOrExpert.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 				lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
 				
 				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
@@ -273,6 +201,7 @@ public class LotteryBuyerOrExpertController
 			}
 			else
 			{//新建用户
+				lotterybuyerOrExpert = new LotterybuyerOrExpert();
 				BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
 				lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
 				
@@ -282,9 +211,10 @@ public class LotteryBuyerOrExpertController
 						lotterybuyerOrExpert.getName(), imguri);
 				lotterybuyerOrExpert.setToken(token);
 				
-				lotterybuyerOrExpert.setCreator(lotterybuyerOrExpert.getCode());
+				lotterybuyerOrExpert.setIsDeleted(Constants.IS_NOT_DELETED);
+				lotterybuyerOrExpert.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
 				lotterybuyerOrExpert.setCreateTime(new Timestamp((System.currentTimeMillis())));
-				lotterybuyerOrExpert.setModify(lotterybuyerOrExpert.getCode());
+				lotterybuyerOrExpert.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 				lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
 				
 				//保存用户信息

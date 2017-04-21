@@ -89,4 +89,9 @@ public class LotterybuyerOrExpertServiceImpl implements
 	public LotterybuyerOrExpert getLotterybuyerOrExpertById(String id) {
 		return lotterybuyerOrExpertRepository.getLotterybuyerOrExpertById(id);
 	}
+	
+	public LotterybuyerOrExpert getLotterybuyerOrExpertByTelephone(String telephone)
+	{
+		return lotterybuyerOrExpertRepository.getLotterybuyerOrExpertByTelephone(telephone);
+	}
 }

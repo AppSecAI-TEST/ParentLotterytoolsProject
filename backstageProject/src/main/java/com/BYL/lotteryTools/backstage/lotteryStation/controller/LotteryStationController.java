@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
@@ -50,6 +52,9 @@ public class LotteryStationController
 	
 	@Autowired
 	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
 	
 	/**
 	 * 
@@ -202,6 +207,7 @@ public class LotteryStationController
 		   lotteryStation = new LotteryStation();
 		   BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
 		   
+		   lotteryStation.setIsDeleted(Constants.IS_NOT_DELETED);
 		   lotteryStation.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		   lotteryStation.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
 		   lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
@@ -247,6 +253,9 @@ public class LotteryStationController
 			lotteryStation.setApprovalStatus(lotteryStationDTO.getApprovalStatus());
 			lotteryStation.setNotAllowReason(lotteryStationDTO.getNotAllowReason());
 			
+			//TODO:审核通过后生成彩票站邀请码
+			
+			
 			lotteryStationService.update(lotteryStation);
 			resultBean.setStatus("success");
 			resultBean.setMessage("更改成功");
@@ -256,6 +265,15 @@ public class LotteryStationController
 		
 		
 		return resultBean;
+	}
+	//TODO:生成站点邀请码
+	private String generateInviteCode()
+	{
+		StringBuffer buffer = new StringBuffer();
+		
+		
+		
+		return buffer.toString();
 	}
 	
 	/**
@@ -271,7 +289,7 @@ public class LotteryStationController
 	 */
 	@RequestMapping(value = "/submitFromAppLotteryStaion", method = RequestMethod.GET)
 	public @ResponseBody ResultBean submitFromAppLotteryStaion(
-				LotteryStationDTO lotteryStationDTO,HttpServletRequest request)
+				LotteryStationDTO lotteryStationDTO,HttpServletRequest request,HttpSession httpSession)
 	{
 		ResultBean resultBean  = new ResultBean();
 		try
@@ -280,6 +298,10 @@ public class LotteryStationController
 			LotteryStation lotteryStation = lotteryStationService.
 					getLotteryStationByStationNumber(lotteryStationDTO.getStationNumber());
 			
+			//获取彩票站站主信息
+			LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+					getLotterybuyerOrExpertById(lotteryStationDTO.getUserId());
+			
 			if(null == lotteryStation)
 			{
 				//2.新建彩票站信息
@@ -287,6 +309,11 @@ public class LotteryStationController
 				BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
 				
 				lotteryStation.setApprovalStatus("0");//审核中
+				lotteryStation.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				lotteryStation.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
+				lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
+				lotteryStation.setIsDeleted(Constants.IS_NOT_DELETED);
 				
 				//上传彩票站的营业执照图片文件
 				Uploadfile daixiaoImg = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request);
@@ -295,6 +322,23 @@ public class LotteryStationController
 					lotteryStation.setDaixiaoImg(daixiaoImg.getNewsUuid());
 				}
 				
+				//上传身份证图片调用方法
+				Uploadfile frontImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberFrontImg(),request);
+				if(null != frontImg)
+				{
+					lotterybuyerOrExpert.setIdNumberFrontImg(frontImg.getNewsUuid());
+				}
+				Uploadfile backImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberBackImg(),request);
+				if(null != backImg)
+				{
+					lotterybuyerOrExpert.setIdNumberBackImg(backImg.getNewsUuid());
+				}
+				//保存站主信息
+				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+				
+				//将站主和彩票站关联
+				lotteryStation.setLotteryBuyerOrExpert(lotterybuyerOrExpert);
+				//保存彩票站信息
 				lotteryStationService.save(lotteryStation);
 				resultBean.setStatus("success");
 				resultBean.setMessage("提交成功");
