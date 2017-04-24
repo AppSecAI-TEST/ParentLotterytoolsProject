@@ -3,6 +3,7 @@ package com.BYL.lotteryTools.backstage.lotteryGroup.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +26,7 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -32,6 +36,7 @@ import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
+import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Controller
 @RequestMapping("/outerLGroup")
@@ -95,6 +100,127 @@ public class OuterLotteryGroupController
 		lotteryGroupService.update(entity);
 		map.put("message", "删除成功");
 		map.put("flag", true);
+		
+		return map;
+	}
+	
+	/**
+	 * 获取当前群的群成员
+	* @Title: getMembersOfGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupId
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午4:44:23 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getMembersOfGroup", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getMembersOfGroup(
+			String groupId,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
+		//获取当前群和用户的关联关系(TODO:当前方法获取的群成员不包括群主和群内机器人)
+		List<RelaBindOfLbuyerorexpertAndGroup> relalist = group.getRelaBindOfLbuyerorexpertAndGroups();
+		
+		List<LotterybuyerOrExpertDTO> userDtos = new ArrayList<LotterybuyerOrExpertDTO>();
+		
+		try
+		{
+			for (RelaBindOfLbuyerorexpertAndGroup rela : relalist)
+			{
+				LotterybuyerOrExpertDTO dto = new  LotterybuyerOrExpertDTO();
+				BeanUtil.copyBeanProperties(dto, rela.getLotterybuyerOrExpert());
+				userDtos.add(dto);
+			}
+			
+			 map.put("flag", true);
+			 map.put("message", "获取成功");
+			 map.put("memberDtos", userDtos);
+			
+		}
+		catch(Exception e)
+		{
+			logger.error("error:", e);
+			 map.put("flag", false);
+			 map.put("message", "获取失败");
+		}
+		
+		
+		return map;
+	}
+	
+	/**
+	 * 获取群列表
+	* @Title: getGroupList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午5:06:49 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getGroupList", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getGroupList(
+			LotteryGroupDTO dto,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//放置分页参数
+		Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+		
+		//参数
+		StringBuffer buffer = new StringBuffer();
+		List<Object> params = new ArrayList<Object>();
+		
+		//只查询未删除数据
+		params.add("1");//只查询有效的数据
+		buffer.append(" isDeleted = ?").append(params.size());
+		
+		
+		if(null != dto.getProvince() && !"".equals(dto.getProvince())&& !Constants.PROVINCE_ALL.equals(dto.getProvince()))
+		{
+			params.add(dto.getProvince());
+			buffer.append(" and province = ?").append(params.size());
+		}
+		
+		if(null != dto.getCity() && !"".equals(dto.getCity())&& !Constants.CITY_ALL.equals(dto.getCity()))
+		{
+			params.add(dto.getCity());
+			buffer.append(" and city = ?").append(params.size());
+		}
+		
+		if(null != dto.getLotteryType() && !"".equals(dto.getLotteryType()))
+		{
+			params.add(dto.getLotteryType());
+			buffer.append(" and lotteryType = ?").append(params.size());
+		}
+		
+		
+		//排序
+		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
+		orderBy.put("createTime", "desc");
+		
+		QueryResult<LotteryGroup> lQueryResult = lotteryGroupService
+				.getLotteryGroupList(LotteryGroup.class,
+				buffer.toString(), params.toArray(),orderBy, pageable);
+				
+		List<LotteryGroup> list = lQueryResult.getResultList();
+		
+		List<LotteryGroupDTO> dtos = lotteryGroupService.toDTOs(list);
+		
+		map.put("flag", true);
+		map.put("message", "获取成功");
+		map.put("groupDtos", dtos);
 		
 		return map;
 	}
