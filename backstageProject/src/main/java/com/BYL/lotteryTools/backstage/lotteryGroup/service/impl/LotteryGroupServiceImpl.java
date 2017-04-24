@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.BYL.lotteryTools.backstage.lotteryGroup.dto.lotteryGroupDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
@@ -45,9 +45,9 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		return queryResult;
 	}
 	
-	public lotteryGroupDTO toDTO(LotteryGroup entity) {
+	public LotteryGroupDTO toDTO(LotteryGroup entity) {
 		
-		lotteryGroupDTO dto = new lotteryGroupDTO();
+		LotteryGroupDTO dto = new LotteryGroupDTO();
 		
 		if(null != entity)
 		{
@@ -67,14 +67,14 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		return dto;
 	}
 
-	public List<lotteryGroupDTO> toDTOs(
+	public List<LotteryGroupDTO> toDTOs(
 			List<LotteryGroup> entities) {
 		
-		List<lotteryGroupDTO> dtos = new ArrayList<lotteryGroupDTO>();
+		List<LotteryGroupDTO> dtos = new ArrayList<LotteryGroupDTO>();
 		
 		for (LotteryGroup entity : entities) 
 		{
-			lotteryGroupDTO dto = new lotteryGroupDTO();
+			LotteryGroupDTO dto = new LotteryGroupDTO();
 			
 			dto = toDTO(entity);
 			
@@ -82,6 +82,16 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		}
 		
 		return dtos;
+	}
+
+	public List<LotteryGroup> getLotteryGroupByGroupRobotID(String groupRobotID) 
+	{
+		return lotteryGroupRespository.getLotteryGroupByGroupRobotID(groupRobotID);
+	}
+	
+	public LotteryGroup getLotteryGroupById(String id)
+	{
+		return lotteryGroupRespository.getLotteryGroupById(id);
 	}
 	
 	

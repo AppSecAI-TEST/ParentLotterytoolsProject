@@ -1,5 +1,6 @@
 package com.BYL.lotteryTools.common.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,15 +22,13 @@ public class BaseEntity {
 		protected String creator;
 		
 		@Column(name="CREATE_TIME")
-		@Temporal(TemporalType.TIMESTAMP)
-		protected Date createTime;
+		protected Timestamp createTime;
 		
 		@Column(name="MODIFY")
 		protected String 	modify;
 		
 		@Column(name="MODIFY_TIME")
-		@Temporal(TemporalType.TIMESTAMP)
-		protected Date modifyTime;
+		protected Timestamp modifyTime;
 		
 		@Column(name="IS_DELETED")
 		protected String 	isDeleted;
@@ -59,15 +58,17 @@ public class BaseEntity {
 			return createTime;
 		}
 
-		public void setCreateTime(Date createTime) {
-			this.createTime = createTime;
-		}
 
 		public Date getModifyTime() {
 			return modifyTime;
 		}
 
-		public void setModifyTime(Date modifyTime) {
+		
+		public void setCreateTime(Timestamp createTime) {
+			this.createTime = createTime;
+		}
+
+		public void setModifyTime(Timestamp modifyTime) {
 			this.modifyTime = modifyTime;
 		}
 

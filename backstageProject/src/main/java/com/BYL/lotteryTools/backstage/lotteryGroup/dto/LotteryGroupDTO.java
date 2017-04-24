@@ -1,7 +1,9 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.dto;
 
+import org.springframework.web.multipart.MultipartFile;
 
-public class lotteryGroupDTO {
+
+public class LotteryGroupDTO {
 
 	private String id;//群id，群融云id
 	
@@ -15,11 +17,43 @@ public class lotteryGroupDTO {
 	
 	private String touXiang;//头像图片
 	
+	private MultipartFile touXiangImg;//头像图片
+	
 	private String ownerId;//群主id
 	
 	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩
 	
+	private String province;//省
 	
+	private String city;//市
+	
+	
+	
+	
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public MultipartFile getTouXiangImg() {
+		return touXiangImg;
+	}
+
+	public void setTouXiangImg(MultipartFile touXiangImg) {
+		this.touXiangImg = touXiangImg;
+	}
 
 	public String getLotteryType() {
 		return lotteryType;

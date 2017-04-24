@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.RelaBuyLotteryOfLotterybuyer;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.RelaHistoryPurchasePredictionOfLotterybuyer;
@@ -121,9 +122,13 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@OneToMany(mappedBy="lotterybuyerOrExpert" , fetch=FetchType.LAZY)
 	private List<RechargeForHandselOrColorcoins> rechargeForHandselOrColorcoins;
 	
-	//一个用户可以对多个彩票站进行关注，也可以绑定彩票站
+	//一个用户可以对多个彩票站进行关注，也可以绑定彩票站(pad用户绑定彩票站)
 	@OneToMany(mappedBy="lotterybuyerOrExpert" ,fetch=FetchType.LAZY)
 	private List<RelaBindOfLbuyerorexpertAndLStation> relaBindOfLbuyerorexpertAndLStations;
+	
+	//一个用户可以加入多个群，一个群也可以被多个用户加入
+	@OneToMany(mappedBy="lotterybuyerOrExpert" ,fetch=FetchType.LAZY)
+	private List<RelaBindOfLbuyerorexpertAndGroup> relaBindOfLbuyerorexpertAndGroups ;
 	
 	//一个专家可以被多个彩站邀请成为驻店专家
 	@OneToMany(mappedBy="lotterybuyerOrExpert" ,fetch=FetchType.LAZY)
@@ -151,6 +156,15 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	
 	
+	public List<RelaBindOfLbuyerorexpertAndGroup> getRelaBindOfLbuyerorexpertAndGroups() {
+		return relaBindOfLbuyerorexpertAndGroups;
+	}
+
+	public void setRelaBindOfLbuyerorexpertAndGroups(
+			List<RelaBindOfLbuyerorexpertAndGroup> relaBindOfLbuyerorexpertAndGroups) {
+		this.relaBindOfLbuyerorexpertAndGroups = relaBindOfLbuyerorexpertAndGroups;
+	}
+
 	public String getFromApp() {
 		return fromApp;
 	}

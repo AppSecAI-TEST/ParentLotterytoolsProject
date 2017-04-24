@@ -27,4 +27,6 @@ public interface LotterybuyerOrExpertService {
 	public LotterybuyerOrExpert getLotterybuyerOrExpertByTelephone(String telephone);
 	
 	public List<LotterybuyerOrExpert> getLotterybuyerOrExpertByCailiaoName(String cailiaoName);
+	
+	public String createRobotUser(String province,String city,String lotteryType);
 }

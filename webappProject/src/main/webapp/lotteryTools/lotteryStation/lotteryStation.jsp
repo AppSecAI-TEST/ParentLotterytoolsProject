@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>补录信息管理</title>
+    <title>彩票站管理</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link href="<%=request.getContextPath() %>/css/ztree/zTreeStyle.css" rel="stylesheet" type="text/css" />
     <jsp:include page="../../common/top.jsp" flush="true" /> 
-    <script src="<%=request.getContextPath() %>/lotteryTools/lotteryManage/js/lotteryPlayManage.js" type="text/javascript"></script>
+    <script src="<%=request.getContextPath() %>/lotteryTools/lotteryStation/js/lotteryStation.js" type="text/javascript"></script>
     
     <script type="text/javascript">
   	var toolbar = [{

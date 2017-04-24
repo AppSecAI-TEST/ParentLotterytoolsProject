@@ -90,21 +90,24 @@ public class OuterLotteryStationController
 				lotteryStation.setIsDeleted(Constants.IS_NOT_DELETED);
 				
 				//上传彩票站的营业执照图片文件
-				Uploadfile daixiaoImg = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request);
-				if(null != daixiaoImg)
+				
+				if(null != lotteryStationDTO.getDaixiaoImgFile())
 				{
+					Uploadfile daixiaoImg = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request);
 					lotteryStation.setDaixiaoImg(daixiaoImg.getNewsUuid());
 				}
 				
 				//上传身份证图片调用方法
-				Uploadfile frontImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberFrontImg(),request);
-				if(null != frontImg)
+				
+				if(null != lotteryStationDTO.getIdNumberFrontImg())
 				{
+					Uploadfile frontImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberFrontImg(),request);
 					lotterybuyerOrExpert.setIdNumberFrontImg(frontImg.getNewsUuid());
 				}
-				Uploadfile backImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberBackImg(),request);
-				if(null != backImg)
+				
+				if(null != lotteryStationDTO.getIdNumberBackImg())
 				{
+					Uploadfile backImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberBackImg(),request);
 					lotterybuyerOrExpert.setIdNumberBackImg(backImg.getNewsUuid());
 				}
 				//保存站主信息

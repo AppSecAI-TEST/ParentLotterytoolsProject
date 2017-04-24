@@ -104,7 +104,7 @@ public class RongyunImServiceImpl implements RongyunImService
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String joinUserInGroup(String[] groupJoinUserId,String groupId,String groupName)
+	public CodeSuccessResult joinUserInGroup(String[] groupJoinUserId,String groupId,String groupName)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult groupJoinResult = null;
@@ -113,7 +113,7 @@ public class RongyunImServiceImpl implements RongyunImService
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return groupJoinResult.toString();
+		return groupJoinResult;
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public class RongyunImServiceImpl implements RongyunImService
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String quitUserFronGroup(String[] groupQuitUserId,String groupId)
+	public CodeSuccessResult quitUserFronGroup(String[] groupQuitUserId,String groupId)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult groupQuitResult = null;
@@ -139,7 +139,7 @@ public class RongyunImServiceImpl implements RongyunImService
 		{
 			e.printStackTrace();
 		}
-		return groupQuitResult.toString();
+		return groupQuitResult;
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public class RongyunImServiceImpl implements RongyunImService
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String groupDismiss(String userId,String dismissGroupId)
+	public CodeSuccessResult groupDismiss(String userId,String dismissGroupId)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult groupDismissResult = null;
@@ -163,10 +163,22 @@ public class RongyunImServiceImpl implements RongyunImService
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return groupDismissResult.toString();
+		return groupDismissResult;
 	}
 	
-	public String createGroup(String[] joinUserId,String groupId,String groupName)
+	public CodeSuccessResult refreshGroup(String groupId,String groupName)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
+		CodeSuccessResult groupDismissResult = null;
+		try {
+			groupDismissResult = rongCloud.group.refresh(groupId,groupName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return groupDismissResult;
+	}
+	
+	public CodeSuccessResult createGroup(String[] joinUserId,String groupId,String groupName)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult groupCreateResult = null;
@@ -224,7 +236,7 @@ public class RongyunImServiceImpl implements RongyunImService
 		CodeSuccessResult groupDismissResult = rongCloud.group.dismiss("userId1", "groupId1");
 		System.out.println("dismiss:  " + groupDismissResult.toString());*/
 		
-		return groupCreateResult.toString();
+		return groupCreateResult;
 	}
 	
 	

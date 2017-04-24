@@ -75,7 +75,7 @@ public class OuterLotteryBuyerOrExpertController
 		//TODO:调用第三方api给用户发送信息
 		//判断当前手机号是否已经注册过
 		ResultBean resultBean = new ResultBean();
-		String templateId = "";//设置模板id
+		/*String templateId = "";//设置模板id
 		try {
 			SMSSendCodeResult result = rongyunImService.sendCode(telephone, templateId, "86", null, null);
 			httpSession.setAttribute(telephone, result.getSessionId());//放置sessionid
@@ -86,7 +86,7 @@ public class OuterLotteryBuyerOrExpertController
 			logger.error("error:", e);
 			resultBean.setFlag(false);
 			resultBean.setMessage("发送失败,请稍候再试");
-		}
+		}*/
 		
 		
 		return resultBean;
@@ -137,10 +137,10 @@ public class OuterLotteryBuyerOrExpertController
 					//对密码进行加密
 					lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
 					
-					Uploadfile uploadfile = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getTouXiangImg(), request);
 					StringBuffer imguri = new StringBuffer();//头像uri
-					if(null != uploadfile)
+					if(null != lotterybuyerOrExpertDTO.getTouXiangImg())
 					{//若头像不为空，则放置头像的uuid
+						Uploadfile uploadfile = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getTouXiangImg(), request);
 						lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());
 						imguri.append(request.getContextPath()).
 								append(uploadfile.getUploadfilepath()).

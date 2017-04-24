@@ -1,5 +1,6 @@
 package com.BYL.lotteryTools.backstage.outer.service;
 
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
 
@@ -12,8 +13,33 @@ import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.mode
  */
 public interface RongyunImService {
 
+	/**
+	 * 封锁用户
+	* @Title: blockUser 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param minute
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午2:21:07 
+	* @return String    返回类型 
+	* @throws
+	 */
 	public String blockUser(String userId,Integer minute);
 	
+	/**
+	 * 创建用户（获取用户token）
+	* @Title: getUserToken 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param username
+	* @param @param imguri
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午2:21:14 
+	* @return String    返回类型 
+	* @throws
+	 */
 	public String getUserToken(String userId,String username,String imguri);
 	
 	/**
@@ -29,7 +55,7 @@ public interface RongyunImService {
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String joinUserInGroup(String[] groupJoinUserId,String groupId,String groupName);
+	public CodeSuccessResult joinUserInGroup(String[] groupJoinUserId,String groupId,String groupName);
 	
 	/**
 	 * 用户从群退出
@@ -43,7 +69,7 @@ public interface RongyunImService {
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String quitUserFronGroup(String[] groupQuitUserId,String groupId);
+	public CodeSuccessResult quitUserFronGroup(String[] groupQuitUserId,String groupId);
 	
 	/**
 	 * 删除群
@@ -57,12 +83,68 @@ public interface RongyunImService {
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String groupDismiss(String userId,String dismissGroupId);
+	public CodeSuccessResult groupDismiss(String userId,String dismissGroupId);
 	
-	public String createGroup(String[] joinUserId,String groupId,String groupName);
+	/**
+	 * 创建群
+	* @Title: createGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param joinUserId
+	* @param @param groupId
+	* @param @param groupName
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午2:20:59 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult createGroup(String[] joinUserId,String groupId,String groupName);
 	
+	/**
+	 * 发送验证码
+	* @Title: sendCode 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param mobile
+	* @param @param templateId
+	* @param @param region
+	* @param @param verifyId
+	* @param @param verifyCode
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午2:20:52 
+	* @return SMSSendCodeResult    返回类型 
+	* @throws
+	 */
 	public SMSSendCodeResult sendCode(String mobile, String templateId, String region, String verifyId, String verifyCode) throws Exception;
 	
+	/**
+	 * 校验验证码
+	* @Title: verifyCode 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param sessionId
+	* @param @param code
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午2:20:44 
+	* @return SMSVerifyCodeResult    返回类型 
+	* @throws
+	 */
 	public SMSVerifyCodeResult verifyCode(String sessionId, String code) throws Exception;
+	
+	/**
+	 * 刷新群信息
+	* @Title: refreshGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupId
+	* @param @param groupName
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月24日 下午2:20:36 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult refreshGroup(String groupId,String groupName);
 	
 }

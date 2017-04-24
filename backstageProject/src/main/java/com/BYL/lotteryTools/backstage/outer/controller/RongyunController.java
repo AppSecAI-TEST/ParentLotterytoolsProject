@@ -59,7 +59,7 @@ public class RongyunController
 	* @return String    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value="/createGroup",method=RequestMethod.GET)
+	/*@RequestMapping(value="/createGroup",method=RequestMethod.GET)
 	public @ResponseBody String  createGroup(@RequestParam(value="joinUserId",required=false) String[] joinUserId,
 			@RequestParam(value="groupId",required=false) String groupId,
 			@RequestParam(value="groupName",required=false) String groupName)
@@ -67,5 +67,5 @@ public class RongyunController
 		String result = rongyunImService.createGroup(joinUserId, groupId, groupName);
 		
 		return result;
-	}
+	}*/
 }

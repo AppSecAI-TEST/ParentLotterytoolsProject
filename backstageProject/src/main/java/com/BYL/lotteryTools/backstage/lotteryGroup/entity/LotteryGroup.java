@@ -1,13 +1,18 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaBindOfLbuyerorexpertAndLStation;
 import com.BYL.lotteryTools.common.entity.BaseEntity;
 
 /**
@@ -42,11 +47,47 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="TOU_XIANG", length=45)
 	private String touXiang;//头像图片
 	
+	@Column(name="PROVINCE",length=45)
+	private String province;//省
+	
+	@Column(name="CITY",length=45)
+	private String city;//市
+	
+	
 	@ManyToOne
 	@JoinColumn(name="GROUP_OWNER_ID",referencedColumnName="id")
 	private LotterybuyerOrExpert lotteryBuyerOrExpert;//群主id
 	
+	//一个群可以被多个用户加入
+	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
+	private List<RelaBindOfLbuyerorexpertAndGroup> relaBindOfLbuyerorexpertAndGroups ;
 	
+	
+
+	public List<RelaBindOfLbuyerorexpertAndGroup> getRelaBindOfLbuyerorexpertAndGroups() {
+		return relaBindOfLbuyerorexpertAndGroups;
+	}
+
+	public void setRelaBindOfLbuyerorexpertAndGroups(
+			List<RelaBindOfLbuyerorexpertAndGroup> relaBindOfLbuyerorexpertAndGroups) {
+		this.relaBindOfLbuyerorexpertAndGroups = relaBindOfLbuyerorexpertAndGroups;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
 
 	public String getLotteryType() {
 		return lotteryType;
