@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
-import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaBindOfLbuyerorexpertAndLStation;
 import com.BYL.lotteryTools.common.entity.BaseEntity;
 
 /**
@@ -53,6 +52,9 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="CITY",length=45)
 	private String city;//市
 	
+	@Column(name="MEMBER_COUNT")
+	private Integer memberCount;//当前群人数
+	
 	
 	@ManyToOne
 	@JoinColumn(name="GROUP_OWNER_ID",referencedColumnName="id")
@@ -62,7 +64,29 @@ public class LotteryGroup extends BaseEntity
 	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
 	private List<RelaBindOfLbuyerorexpertAndGroup> relaBindOfLbuyerorexpertAndGroups ;
 	
+	//一个群可以对应多个群升级记录
+	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
+	private List<RelaGroupUpLevelRecord> relaGroupUpLevelRecords ;
 	
+	
+	
+
+	public List<RelaGroupUpLevelRecord> getRelaGroupUpLevelRecords() {
+		return relaGroupUpLevelRecords;
+	}
+
+	public void setRelaGroupUpLevelRecords(
+			List<RelaGroupUpLevelRecord> relaGroupUpLevelRecords) {
+		this.relaGroupUpLevelRecords = relaGroupUpLevelRecords;
+	}
+
+	public Integer getMemberCount() {
+		return memberCount;
+	}
+
+	public void setMemberCount(Integer memberCount) {
+		this.memberCount = memberCount;
+	}
 
 	public List<RelaBindOfLbuyerorexpertAndGroup> getRelaBindOfLbuyerorexpertAndGroups() {
 		return relaBindOfLbuyerorexpertAndGroups;

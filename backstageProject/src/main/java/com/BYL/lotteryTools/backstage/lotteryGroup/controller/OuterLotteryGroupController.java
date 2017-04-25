@@ -22,10 +22,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LGroupLevel;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
@@ -58,6 +62,12 @@ public class OuterLotteryGroupController
 	
 	@Autowired
 	private RelaBindbuyerAndGroupService relaBindbuyerAndGroupService;
+	
+	@Autowired
+	private LGroupLevelService lGroupLevelService;
+	
+	@Autowired
+	private RelaGroupUpLevelService relaGroupUpLevelService;
 	
 	public static final String SUCCESS_CODE = "200";//成功返回码
 	
@@ -349,35 +359,50 @@ public class OuterLotteryGroupController
 		
 		//建立群和要加入用户的关联
 		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
+		Integer nowMemberCount = group.getRelaBindOfLbuyerorexpertAndGroups().size();//获取当前群中的群成员人数
+		Integer memberCount = group.getMemberCount();//获取群成员可以加入的人数
 		
-		LotterybuyerOrExpert user = null;
-		for (String userId : joinUsers) 
+		//若要加入的人数和现在的人数的总和小于群可以加入的人数，则可以继续添加，否则无法添加
+		int overplusMember= memberCount-nowMemberCount-joinUsers.length;//获取可以加入的人数
+		if(overplusMember>=0)
 		{
-			user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
-			RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
-			rela.setIsDeleted(Constants.IS_NOT_DELETED);
-			rela.setIsReceive("1");
-			rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
-			rela.setLotterybuyerOrExpert(user);
-			rela.setLotteryGroup(group);
-			rela.setCreator(groupId);
-			rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			rela.setCreator(groupId);
-			rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			LotterybuyerOrExpert user = null;
+			for (String userId : joinUsers) 
+			{
+				user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
+				RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+				rela.setIsDeleted(Constants.IS_NOT_DELETED);
+				rela.setIsReceive("1");
+				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setLotterybuyerOrExpert(user);
+				rela.setLotteryGroup(group);
+				rela.setCreator(groupId);
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setCreator(groupId);
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
-			//保存关联
-			relaBindbuyerAndGroupService.save(rela);
+				//保存关联
+				relaBindbuyerAndGroupService.save(rela);
+			}
+			
+			//建立融云中群和用户的关系
+			CodeSuccessResult result= rongyunImService.joinUserInGroup(joinUsers, groupId, group.getName());
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				logger.error("融云群加入用户报错", result.getErrorMessage());
+			}
+			
+			resultBean.setFlag(true);
+			resultBean.setMessage("加入成功");
 		}
-		
-		//建立融云中群和用户的关系
-		CodeSuccessResult result= rongyunImService.joinUserInGroup(joinUsers, groupId, group.getName());
-		if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+		else
 		{
-			logger.error("融云群加入用户报错", result.getErrorMessage());
+			int couldJoin = joinUsers.length-(nowMemberCount+joinUsers.length-memberCount);
+			resultBean.setFlag(false);
+			resultBean.setMessage("群等级不够加入当前要求加入的人数，当前只可以加入:"+couldJoin+"人");
 		}
 		
-		resultBean.setFlag(true);
-		resultBean.setMessage("加入成功");
+		
 		
 		return resultBean;
 	}
@@ -467,14 +492,48 @@ public class OuterLotteryGroupController
 				map.put("flag", true);
 				map.put("message", "更新群信息成功");
 				map.put("group", BeanUtil.copyBeanProperties(dto, group));
+				
+				//刷新群的信息
+				CodeSuccessResult result = rongyunImService.refreshGroup(dto.getId(), dto.getName());
+				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+				{
+					logger.error("融云刷新群信息时出错：", result.getErrorMessage());
+				}
 			}
 			
-			//刷新群的信息
-			CodeSuccessResult result = rongyunImService.refreshGroup(dto.getId(), dto.getName());
-			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			//TODO:群升级，群升级时才传递这个参数(升到几级，升2级传值2)
+			if(null != dto.getUpLevel() && !"".equals(dto.getUpLevel()))
 			{
-				logger.error("融云刷新群信息时出错：", result.getErrorMessage());
+				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
+				
+				//获取上次群升级的记录，获取上次的等级
+				LGroupLevel beforeLevel = lGroupLevelService.getLGroupLevelByID(group.getGroupLevel());//获取上一次等级的数据
+				
+				LGroupLevel afterLevel = lGroupLevelService.getLGroupLevelByID(dto.getUpLevel());//要升到级数的群等级数据
+				//放置群升级记录表数据
+				RelaGroupUpLevelRecord level = new RelaGroupUpLevelRecord();
+				level.setAfterLevel(afterLevel);
+				level.setBeforeLevel(beforeLevel);
+				level.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				level.setCreator(group.getId());
+				level.setIsDeleted(Constants.IS_NOT_DELETED);
+				level.setLotteryGroup(group);
+				level.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				level.setModify(group.getId());
+				level.setOperator(dto.getOwnerId());
+				relaGroupUpLevelService.save(level);//保存群等级记录表数据
+				
+				group.setGroupLevel(dto.getUpLevel());//放置当前群等级，也就是要升到的群等级数，eg：升到2级就传2
+				group.setMemberCount(afterLevel.getMemberCount());//更新membercount
+				
+				//更改群人数
+				lotteryGroupService.update(group);
+				map.put("flag", true);
+				map.put("message", "升级群成功");
+				map.put("group", BeanUtil.copyBeanProperties(dto, group));
 			}
+			
+		
 			
 		}
 		catch(Exception e)
@@ -539,7 +598,10 @@ public class OuterLotteryGroupController
 			entity.setGroupRobotID(robotUserId);
 			
 			//TODO:放置群等级
-			entity.setGroupLevel("");
+			String level1Id = "1";//等级1群的等级id
+			entity.setMemberCount(20);//以及群
+			entity.setGroupLevel(level1Id);
+			
 			entity.setIsDeleted(Constants.IS_NOT_DELETED);
 			entity.setCreator(dto.getOwnerId());
 			entity.setCreateTime(new Timestamp((System.currentTimeMillis())));
@@ -547,6 +609,20 @@ public class OuterLotteryGroupController
 			entity.setModifyTime(new Timestamp((System.currentTimeMillis())));
 			//保存群信息
 			lotteryGroupService.save(entity);
+			
+			//放置群升级记录表数据
+			RelaGroupUpLevelRecord level = new RelaGroupUpLevelRecord();
+			LGroupLevel L1 = lGroupLevelService.getLGroupLevelByID(level1Id);//获取L1等级的实体数据
+			level.setAfterLevel(L1);//一级群
+			level.setBeforeLevel(null);
+			level.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			level.setCreator(entity.getId());
+			level.setIsDeleted(Constants.IS_NOT_DELETED);
+			level.setLotteryGroup(entity);
+			level.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			level.setModify(entity.getId());
+			level.setOperator(dto.getOwnerId());
+			relaGroupUpLevelService.save(level);//保存群等级记录表数据
 			
 			//在融云创建群信息
 			String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中

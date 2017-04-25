@@ -27,9 +27,19 @@ public class LotteryGroupDTO {
 	
 	private String city;//市
 	
+	private String upLevel;//升级
 	
 	
 	
+	
+
+	public String getUpLevel() {
+		return upLevel;
+	}
+
+	public void setUpLevel(String upLevel) {
+		this.upLevel = upLevel;
+	}
 
 	public String getProvince() {
 		return province;
