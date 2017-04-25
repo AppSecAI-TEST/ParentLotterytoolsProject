@@ -12,9 +12,13 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String name;//姓名
 	
+	private String lastTouXiang;//旧头像
+	
 	private String touXiang;//头像
 	
-	private MultipartFile touXiangImg;//头像图片
+//	private File touXiangImg;//头像图片
+	
+//	private MultipartFile touXiangImg;//头像图片
 	
 	private String password;//密码
 	
@@ -73,6 +77,14 @@ public class LotterybuyerOrExpertDTO {
 	
 	
 
+	public String getLastTouXiang() {
+		return lastTouXiang;
+	}
+
+	public void setLastTouXiang(String lastTouXiang) {
+		this.lastTouXiang = lastTouXiang;
+	}
+
 	public String getFromApp() {
 		return fromApp;
 	}
@@ -96,14 +108,25 @@ public class LotterybuyerOrExpertDTO {
 	public void setIsRobot(String isRobot) {
 		this.isRobot = isRobot;
 	}
+	
+	
 
-	public MultipartFile getTouXiangImg() {
+
+/*	public File getTouXiangImg() {
+		return touXiangImg;
+	}
+
+	public void setTouXiangImg(File touXiangImg) {
+		this.touXiangImg = touXiangImg;
+	}*/
+
+	/*public MultipartFile getTouXiangImg() {
 		return touXiangImg;
 	}
 
 	public void setTouXiangImg(MultipartFile touXiangImg) {
 		this.touXiangImg = touXiangImg;
-	}
+	}*/
 
 	public String getPostCode() {
 		return postCode;

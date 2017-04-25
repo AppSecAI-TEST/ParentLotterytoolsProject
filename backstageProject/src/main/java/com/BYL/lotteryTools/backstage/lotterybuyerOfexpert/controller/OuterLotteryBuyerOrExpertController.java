@@ -16,10 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
@@ -135,16 +137,17 @@ public class OuterLotteryBuyerOrExpertController
 					//对密码进行加密
 					lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
 					
-					StringBuffer imguri = new StringBuffer();//头像uri
-					if(null != lotterybuyerOrExpertDTO.getTouXiangImg())
-					{//若头像不为空，则放置头像的uuid
-						Uploadfile uploadfile = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getTouXiangImg(), request);
-						lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());
-						imguri.append(request.getContextPath()).
-								append(uploadfile.getUploadfilepath()).
-								append(uploadfile.getUploadRealName());
-						logger.info("touxiang",imguri);//输出头像
-					}
+					StringBuffer imguri = new StringBuffer();//头像uri（注册时默认不进行头像的上传）
+					/*if(null != lotterybuyerOrExpertDTO.getTouXiang())//获取头像newsUuid是否为空
+					{
+						lotterybuyerOrExpert.setTouXiang(lotterybuyerOrExpertDTO.getTouXiang());//关联新头像
+						Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
+						//刷新融云用户信息,将图片信息同步
+						rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
+								lotterybuyerOrExpert.getName(), 
+								request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+						
+					}*/
 					
 					//创建融云用户id
 					String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
@@ -325,6 +328,25 @@ public class OuterLotteryBuyerOrExpertController
 		return resultBean;
 	}
 	
+	@RequestMapping(value="/uploadFile", method = RequestMethod.POST)
+	public @ResponseBody Map<String,Object> uploadFile(
+			@RequestParam(value = "file",required = false) MultipartFile[] files,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		Uploadfile uploadfile =null;
+		try {
+			for (MultipartFile multipartFile : files) {
+				 uploadfile = uploadfileService.uploadFiles(multipartFile,request);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		map.put("touxiang", uploadfile.getNewsUuid());
+		return map;
+	}
+	
 	/**
 	 * 更改个人信息（头像，彩聊号，城市，性别，个人简介，地址，坐标，邮政编码）（彩聊号只能更改一次，已经添加后不可以进行修改操作）
 	* @Title: updateCailiaohao 
@@ -337,7 +359,7 @@ public class OuterLotteryBuyerOrExpertController
 	* @return ResultBean    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value="/updateUser", method = RequestMethod.GET)
+	@RequestMapping(value="/updateUser",method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> updateUser(
 			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
 			HttpServletRequest request,HttpSession httpSession)
@@ -346,24 +368,24 @@ public class OuterLotteryBuyerOrExpertController
 		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
 				getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());
 		//上传头像（若头像上传了新的，则要进行用户信息刷新）
-		if(null != lotterybuyerOrExpertDTO.getTouXiangImg())
+		if(null != lotterybuyerOrExpertDTO.getTouXiang())//获取头像newsUuid是否为空
 		{
-			//查找出之前上传的头像附件
-			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpert.getTouXiang());
-			//删除之前上传的头像附件
-			uploadfileService.delete(uploadfile,httpSession);//删除附件的同时删除服务器附件文件
-			
-			try {
-				uploadfile = uploadfileService.uploadFiles(lotterybuyerOrExpertDTO.getTouXiangImg(),request);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());
-			
+			lotterybuyerOrExpert.setTouXiang(lotterybuyerOrExpertDTO.getTouXiang());//关联新头像
+			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
 			//刷新融云用户信息,将图片信息同步
 			rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
 					lotterybuyerOrExpert.getName(), 
 					request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+			
+			//删除旧头像(也可以定时批量删除)
+			if(null != lotterybuyerOrExpertDTO.getLastTouXiang()&&!"".equals(lotterybuyerOrExpertDTO.getLastTouXiang()))
+			{
+				Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getLastTouXiang());
+				if(null != lastTouxiang)
+				{//若存在旧头像，则要进行删除操作
+					uploadfileService.delete(lastTouxiang, httpSession);
+				}
+			}
 		}
 		
 		

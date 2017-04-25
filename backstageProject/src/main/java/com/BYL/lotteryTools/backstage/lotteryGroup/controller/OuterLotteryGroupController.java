@@ -655,5 +655,30 @@ public class OuterLotteryGroupController
 		return map;
 	}
 	
+	/**
+	 * 查找群
+	* @Title: findGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月25日 上午10:59:27 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/findGroup", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> findGroup(
+			LotteryGroupDTO dto,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		
+		
+		return map;
+	}
+	
 	
 }

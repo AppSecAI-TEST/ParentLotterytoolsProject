@@ -1,6 +1,10 @@
 package com.BYL.lotteryTools.common.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +12,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -66,6 +71,42 @@ public class UploadfileServiceImpl implements UploadfileService {
 		entity.setModify(entity.getCreator());
 		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		uploadfileRepository.delete(entity);
+	}
+	
+	public Uploadfile uploadFilesbyFile(File file,HttpServletRequest request) throws Exception
+	{
+		String path = request.getSession().getServletContext().getRealPath("upload");  
+        String fileName = file.getName();
+        
+        Uploadfile uploadfile = new Uploadfile();
+        String extName="";//扩展名
+        //扩展名格式： 
+        if (fileName.lastIndexOf(".") >= 0) {
+            extName = fileName.substring(fileName.lastIndexOf("."));
+        }
+        uploadfile.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        uploadfile.setCreator("app");
+        uploadfile.setIsDeleted(Constants.IS_NOT_DELETED);
+        uploadfile.setModify("app");
+        uploadfile.setModifyTime(new Timestamp(System.currentTimeMillis()));
+        uploadfile.setNewsUuid(UUID.randomUUID().toString());
+        uploadfile.setUploadContentType(extName);
+        uploadfile.setUploadFileName(fileName);
+        uploadfile.setUploadfilepath("/upload/");
+        uploadfile.setUploadRealName(UUID.randomUUID().toString()+extName);//真是存储姓名
+        this.save(uploadfile);
+        
+        File targetFile = new File(path, uploadfile.getUploadRealName());//设置上传目录以及存储的名称
+        if(!targetFile.exists()){  //若上传目录不存在，则创建目录
+            targetFile.mkdirs();  
+        }  
+        
+       FileUtils.copyFile(file,targetFile);
+        
+        //上传文件
+//        file.transferTo(targetFile); //传入文件对象调用上传方法，将文件上传到目录中
+		
+		return uploadfile;
 	}
 	
 	/**
