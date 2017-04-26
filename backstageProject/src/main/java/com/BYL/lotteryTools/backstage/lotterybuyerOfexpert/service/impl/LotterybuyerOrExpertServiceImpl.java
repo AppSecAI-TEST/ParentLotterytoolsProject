@@ -25,6 +25,8 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerO
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.DateUtil;
@@ -47,6 +49,9 @@ public class LotterybuyerOrExpertServiceImpl implements
 	
 	@Autowired
 	private RongyunImService rongyunImService;
+	
+	@Autowired
+	private UploadfileService uploadfileService;
 
 	public void save(LotterybuyerOrExpert entity) 
 	{
@@ -70,6 +75,15 @@ public class LotterybuyerOrExpertServiceImpl implements
 				if(null != entity.getCreateTime())
 				{
 					dto.setCreateTimeStr(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
+				}
+				
+				if(null != entity.getTouXiang()&& !"".equals(entity.getTouXiang()))
+				{
+					Uploadfile touxiangImg = uploadfileService.getUploadfileByNewsUuid(entity.getTouXiang());
+					if(null != touxiangImg)
+					{
+						dto.setTouXiangUrl(touxiangImg.getUploadfilepath()+touxiangImg.getUploadRealName());
+					}
 				}
 				
 			} catch (Exception e) {

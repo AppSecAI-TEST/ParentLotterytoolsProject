@@ -16,7 +16,7 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String touXiang;//头像
 	
-//	private File touXiangImg;//头像图片
+	private String touXiangUrl;//头像图片
 	
 //	private MultipartFile touXiangImg;//头像图片
 	
@@ -76,6 +76,14 @@ public class LotterybuyerOrExpertDTO {
 	
 	
 	
+
+	public String getTouXiangUrl() {
+		return touXiangUrl;
+	}
+
+	public void setTouXiangUrl(String touXiangUrl) {
+		this.touXiangUrl = touXiangUrl;
+	}
 
 	public String getLastTouXiang() {
 		return lastTouXiang;

@@ -45,6 +45,19 @@ public class RongyunImServiceImpl implements RongyunImService
 		return userBlockResult.toString();
 	}
 	
+	public CodeSuccessResult refreshUser(String userId,String username,String imguri)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
+		CodeSuccessResult result = null;
+		try {
+			result = rongCloud.user.refresh(userId, username, imguri);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	//新建用户，获取用户token
 	public String getUserToken(String userId,String username,String imguri)
 	{

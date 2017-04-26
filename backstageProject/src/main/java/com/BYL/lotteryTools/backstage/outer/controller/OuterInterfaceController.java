@@ -136,6 +136,8 @@ public class OuterInterfaceController
 	
 	
 	
+	
+	
 	/**
 	 * 根据省份表生成安卓需要的地区结构文件
 	* @Title: generate 

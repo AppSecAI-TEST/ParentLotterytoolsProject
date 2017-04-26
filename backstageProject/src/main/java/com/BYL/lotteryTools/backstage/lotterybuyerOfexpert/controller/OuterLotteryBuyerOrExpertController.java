@@ -16,16 +16,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
@@ -55,6 +58,8 @@ public class OuterLotteryBuyerOrExpertController
 	@Autowired
 	private UploadfileService uploadfileService;
 	
+	private Map<String,String> sessionMap = new HashMap<String, String>();
+	
 	
 	
 	
@@ -69,24 +74,25 @@ public class OuterLotteryBuyerOrExpertController
 	* @throws
 	 */
 	@RequestMapping(value="/getYanzhengmaForRegister" , method = RequestMethod.GET)
-	public ResultBean getYanzhengmaForRegister(@RequestParam(value="telephone",required=false) String telephone,
+	public @ResponseBody ResultBean getYanzhengmaForRegister(@RequestParam(value="telephone",required=false) String telephone,
 			HttpSession httpSession)
 	{
 		//TODO:调用第三方api给用户发送信息
 		//判断当前手机号是否已经注册过
 		ResultBean resultBean = new ResultBean();
-		/*String templateId = "";//设置模板id
+		String templateId = "3dPWOS6S4Kx84BbwDRNwQ4";//设置模板id
 		try {
 			SMSSendCodeResult result = rongyunImService.sendCode(telephone, templateId, "86", null, null);
-			httpSession.setAttribute(telephone, result.getSessionId());//放置sessionid
-			httpSession.setMaxInactiveInterval(15*60);//15min后过期
+			sessionMap.put(telephone, result.getSessionId());
+//			httpSession.setAttribute(telephone, result.getSessionId());//放置sessionid
+//			httpSession.setMaxInactiveInterval(15*60);//15min后过期
 			resultBean.setFlag(true);
 			resultBean.setMessage("发送成功");
 		} catch (Exception e) {
 			logger.error("error:", e);
 			resultBean.setFlag(false);
 			resultBean.setMessage("发送失败,请稍候再试");
-		}*/
+		}
 		
 		
 		return resultBean;
@@ -123,11 +129,16 @@ public class OuterLotteryBuyerOrExpertController
 			else
 			{//当前手机号未被注册
 				//根据手机号获取sessionid
-				/*String sessionId = (String) httpSession.getAttribute(lotterybuyerOrExpertDTO.getTelephone());
-				SMSVerifyCodeResult yanzhengma = rongyunImService.verifyCode(sessionId, lotterybuyerOrExpertDTO.getYanzhengma());
+//				String sessionId = (String) httpSession.getAttribute(lotterybuyerOrExpertDTO.getTelephone());
+				String sessionId = sessionMap.get(lotterybuyerOrExpertDTO.getTelephone());
+				SMSVerifyCodeResult yanzhengma = null;
+				if(null != sessionId)
+				{
+					 yanzhengma = rongyunImService.verifyCode(sessionId, lotterybuyerOrExpertDTO.getYanzhengma());
+				}
 				
 				if(yanzhengma.getSuccess())
-				{*/
+				{
 					//注册时彩币、彩金的金额都是null
 					lotterybuyerOrExpert = new LotterybuyerOrExpert();
 					lotterybuyerOrExpertDTO.setHandSel(new BigDecimal(0));
@@ -172,12 +183,12 @@ public class OuterLotteryBuyerOrExpertController
 					result.put("status", true);
 					result.put("message", "注册成功");
 					result.put("user", lotterybuyerOrExpertDTO);
-				/*}
+				}
 				else
 				{//手机验证码验证失败
 					result.put("status", false);
 					result.put("message", yanzhengma.getErrorMessage());//放置验证码错误信息
-				}*/
+				}
 				
 				
 			}
@@ -385,10 +396,13 @@ public class OuterLotteryBuyerOrExpertController
 		{
 			lotterybuyerOrExpert.setTouXiang(lotterybuyerOrExpertDTO.getTouXiang());//关联新头像
 			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
-			//刷新融云用户信息,将图片信息同步
-			rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
-					lotterybuyerOrExpert.getName(), 
-					request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+			//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
+			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
+					null, request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode()))
+			{
+				logger.error("融云同步头像失败", result.getErrorMessage());
+			}
 			
 			//删除旧头像(也可以定时批量删除)
 			if(null != lotterybuyerOrExpertDTO.getLastTouXiang()&&!"".equals(lotterybuyerOrExpertDTO.getLastTouXiang()))

@@ -43,6 +43,21 @@ public interface RongyunImService {
 	public String getUserToken(String userId,String username,String imguri);
 	
 	/**
+	 * 刷新用户信息
+	* @Title: refreshUser 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param username
+	* @param @param imguri
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月26日 下午2:30:58 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult refreshUser(String userId,String username,String imguri);
+	
+	/**
 	 * 将用户加入到群（加群之前判断当前群是否已经人数超过额度，超过则不可以加入了）
 	* @Title: joinUserInGroup 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
