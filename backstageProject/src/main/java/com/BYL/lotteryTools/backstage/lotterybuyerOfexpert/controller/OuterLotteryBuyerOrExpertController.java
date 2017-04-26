@@ -60,7 +60,7 @@ public class OuterLotteryBuyerOrExpertController
 	
 	private Map<String,String> sessionMap = new HashMap<String, String>();
 	
-	
+	private static final String DOMAIN="http://36.7.190.20:1881/";
 	
 	
 	/**
@@ -80,7 +80,7 @@ public class OuterLotteryBuyerOrExpertController
 		//TODO:调用第三方api给用户发送信息
 		//判断当前手机号是否已经注册过
 		ResultBean resultBean = new ResultBean();
-		String templateId = "3dPWOS6S4Kx84BbwDRNwQ4";//设置模板id
+		/*String templateId = "3dPWOS6S4Kx84BbwDRNwQ4";//设置模板id
 		try {
 			SMSSendCodeResult result = rongyunImService.sendCode(telephone, templateId, "86", null, null);
 			sessionMap.put(telephone, result.getSessionId());
@@ -92,7 +92,7 @@ public class OuterLotteryBuyerOrExpertController
 			logger.error("error:", e);
 			resultBean.setFlag(false);
 			resultBean.setMessage("发送失败,请稍候再试");
-		}
+		}*/
 		
 		
 		return resultBean;
@@ -130,7 +130,7 @@ public class OuterLotteryBuyerOrExpertController
 			{//当前手机号未被注册
 				//根据手机号获取sessionid
 //				String sessionId = (String) httpSession.getAttribute(lotterybuyerOrExpertDTO.getTelephone());
-				String sessionId = sessionMap.get(lotterybuyerOrExpertDTO.getTelephone());
+				/*String sessionId = sessionMap.get(lotterybuyerOrExpertDTO.getTelephone());
 				SMSVerifyCodeResult yanzhengma = null;
 				if(null != sessionId)
 				{
@@ -138,7 +138,7 @@ public class OuterLotteryBuyerOrExpertController
 				}
 				
 				if(yanzhengma.getSuccess())
-				{
+				{*/
 					//注册时彩币、彩金的金额都是null
 					lotterybuyerOrExpert = new LotterybuyerOrExpert();
 					lotterybuyerOrExpertDTO.setHandSel(new BigDecimal(0));
@@ -149,17 +149,13 @@ public class OuterLotteryBuyerOrExpertController
 					lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
 					
 					StringBuffer imguri = new StringBuffer();//头像uri（注册时默认不进行头像的上传）
-					/*if(null != lotterybuyerOrExpertDTO.getTouXiang())//获取头像newsUuid是否为空
-					{
-						lotterybuyerOrExpert.setTouXiang(lotterybuyerOrExpertDTO.getTouXiang());//关联新头像
-						Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
-						//刷新融云用户信息,将图片信息同步
-						rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
-								lotterybuyerOrExpert.getName(), 
-								request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
-						
-					}*/
-					
+					//添加默认头像(TODO:需要初始化一张默认头像图片到upload文件夹和uploadfile表中)
+					String morenTouxiang = "0";//默认头像newsUuid
+					lotterybuyerOrExpert.setTouXiang(morenTouxiang);//关联新头像
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(morenTouxiang);
+					//刷新融云用户信息,将图片信息同步
+					imguri.append(OuterLotteryBuyerOrExpertController.DOMAIN)
+							.append(request.getContextPath()).append(uploadfile.getUploadfilepath()).append(uploadfile.getUploadRealName());
 					//创建融云用户id
 					String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
 							lotterybuyerOrExpert.getName(), imguri.toString());
@@ -183,13 +179,13 @@ public class OuterLotteryBuyerOrExpertController
 					result.put("status", true);
 					result.put("message", "注册成功");
 					result.put("user", lotterybuyerOrExpertDTO);
-				}
+				/*}
 				else
 				{//手机验证码验证失败
 					result.put("status", false);
 					result.put("message", yanzhengma.getErrorMessage());//放置验证码错误信息
 				}
-				
+				*/
 				
 			}
 		
@@ -398,7 +394,7 @@ public class OuterLotteryBuyerOrExpertController
 			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
 			//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
 			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
-					null, request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+					null, OuterLotteryBuyerOrExpertController.DOMAIN+request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode()))
 			{
 				logger.error("融云同步头像失败", result.getErrorMessage());
