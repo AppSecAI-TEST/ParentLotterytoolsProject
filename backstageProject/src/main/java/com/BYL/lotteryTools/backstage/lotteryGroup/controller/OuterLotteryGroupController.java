@@ -215,6 +215,18 @@ public class OuterLotteryGroupController
 			buffer.append(" and lotteryType = ?").append(params.size());
 		}
 		
+		if(null != dto.getId() && !"".equals(dto.getId()))
+		{
+			params.add(dto.getId());
+			buffer.append(" and id = ?").append(params.size());
+		}
+		
+		if(null != dto.getName() && !"".equals(dto.getName()))
+		{
+			params.add(dto.getName());
+			buffer.append(" and name = ?").append(params.size());
+		}
+		
 		
 		//排序
 		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
