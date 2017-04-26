@@ -1,6 +1,5 @@
 package com.BYL.lotteryTools.backstage.lotteryStation.dto;
 
-import org.springframework.web.multipart.MultipartFile;
 
 
 
@@ -58,18 +57,44 @@ public class LotteryStationDTO
 	
 	private String idNumber;//站主身份证号
 	
-	private MultipartFile daixiaoImgFile;//代销证图片
+	private String daixiaoImg;//代销证图片
 	
-	private MultipartFile idNumberFrontImg;//身份证正面图片
+	private String idNumberFrontImg;//身份证正面图片
 	
-	private MultipartFile idNumberBackImg;//身份证背面图片
+	private String idNumberBackImg;//身份证背面图片
 	
 	private String inviteCode;//邀请码
 	
 	private String fromApp;//app数据录入1:app 0:非app
 	
+	
+	
 
 	
+	public String getDaixiaoImg() {
+		return daixiaoImg;
+	}
+
+	public void setDaixiaoImg(String daixiaoImg) {
+		this.daixiaoImg = daixiaoImg;
+	}
+
+	public String getIdNumberFrontImg() {
+		return idNumberFrontImg;
+	}
+
+	public void setIdNumberFrontImg(String idNumberFrontImg) {
+		this.idNumberFrontImg = idNumberFrontImg;
+	}
+
+	public String getIdNumberBackImg() {
+		return idNumberBackImg;
+	}
+
+	public void setIdNumberBackImg(String idNumberBackImg) {
+		this.idNumberBackImg = idNumberBackImg;
+	}
+
 	public String getFromApp() {
 		return fromApp;
 	}
@@ -126,21 +151,6 @@ public class LotteryStationDTO
 		this.userId = userId;
 	}
 
-	public MultipartFile getIdNumberFrontImg() {
-		return idNumberFrontImg;
-	}
-
-	public void setIdNumberFrontImg(MultipartFile idNumberFrontImg) {
-		this.idNumberFrontImg = idNumberFrontImg;
-	}
-
-	public MultipartFile getIdNumberBackImg() {
-		return idNumberBackImg;
-	}
-
-	public void setIdNumberBackImg(MultipartFile idNumberBackImg) {
-		this.idNumberBackImg = idNumberBackImg;
-	}
 
 	public String getNotAllowReason() {
 		return notAllowReason;
@@ -159,13 +169,6 @@ public class LotteryStationDTO
 	}
 
 	
-	public MultipartFile getDaixiaoImgFile() {
-		return daixiaoImgFile;
-	}
-
-	public void setDaixiaoImgFile(MultipartFile daixiaoImgFile) {
-		this.daixiaoImgFile = daixiaoImgFile;
-	}
 
 	public String getApprovalStatus() {
 		return approvalStatus;

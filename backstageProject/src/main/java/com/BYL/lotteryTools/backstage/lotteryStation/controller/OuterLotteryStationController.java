@@ -89,26 +89,22 @@ public class OuterLotteryStationController
 				lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 				lotteryStation.setIsDeleted(Constants.IS_NOT_DELETED);
 				
-				//上传彩票站的营业执照图片文件
-				
-				if(null != lotteryStationDTO.getDaixiaoImgFile())
+				//关联彩票站的营业执照图片文件
+				if(null != lotteryStationDTO.getDaixiaoImg()&&!"".equals(lotteryStationDTO.getDaixiaoImg()))
 				{
-					Uploadfile daixiaoImg = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request);
-					lotteryStation.setDaixiaoImg(daixiaoImg.getNewsUuid());
+					lotteryStation.setDaixiaoImg(lotteryStationDTO.getDaixiaoImg());
 				}
 				
-				//上传身份证图片调用方法
+				//关联身份证图片调用方法
 				
-				if(null != lotteryStationDTO.getIdNumberFrontImg())
+				if(null != lotteryStationDTO.getIdNumberFrontImg()&&!"".equals(lotteryStationDTO.getIdNumberFrontImg()))
 				{
-					Uploadfile frontImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberFrontImg(),request);
-					lotterybuyerOrExpert.setIdNumberFrontImg(frontImg.getNewsUuid());
+					lotterybuyerOrExpert.setIdNumberFrontImg(lotteryStationDTO.getIdNumberFrontImg());
 				}
 				
-				if(null != lotteryStationDTO.getIdNumberBackImg())
+				if(null != lotteryStationDTO.getIdNumberBackImg()&&!"".equals(lotteryStationDTO.getIdNumberBackImg()))
 				{
-					Uploadfile backImg = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberBackImg(),request);
-					lotterybuyerOrExpert.setIdNumberBackImg(backImg.getNewsUuid());
+					lotterybuyerOrExpert.setIdNumberBackImg(lotteryStationDTO.getIdNumberBackImg());
 				}
 				//保存站主信息
 				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);

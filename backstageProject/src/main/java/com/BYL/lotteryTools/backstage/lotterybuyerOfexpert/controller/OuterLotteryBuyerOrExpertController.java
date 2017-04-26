@@ -328,6 +328,19 @@ public class OuterLotteryBuyerOrExpertController
 		return resultBean;
 	}
 	
+	/**
+	 * 上传附件
+	* @Title: uploadFile 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param files
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月26日 上午8:53:05 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
 	@RequestMapping(value="/uploadFile", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> uploadFile(
 			@RequestParam(value = "file",required = false) MultipartFile[] files,
@@ -341,9 +354,9 @@ public class OuterLotteryBuyerOrExpertController
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error:", e);
 		}
-		map.put("touxiang", uploadfile.getNewsUuid());
+		map.put("id", uploadfile.getNewsUuid());
 		return map;
 	}
 	
