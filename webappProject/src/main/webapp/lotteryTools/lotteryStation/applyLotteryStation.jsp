@@ -276,6 +276,12 @@
 				            <input class="easyui-validatebox commonInput" type="text" id="stationOwnerV" name="stationOwner" style="width:200px"  
 				             readonly="readonly"   ></input>
 				        </div>
+				         <div class="ftitle">
+				          <label for="priceA">不通过原因:</label>
+				        <textarea id="notAllowReasonV" name="notAllowReason" class="easyui-validatebox"
+							readonly="readonly" 
+							style="resize: none; width: 300px; height: 200px;top:0px;"></textarea>
+						</div>
 				        <div class="ftitle">
 				            <label for="priceA">身份证正面图片:</label>
 				            <img id="idNumberFrontImgV" style="width:300px;height:300px;" alt="点击放大" src="" onclick="previewImage('idNumberFrontImgV')">

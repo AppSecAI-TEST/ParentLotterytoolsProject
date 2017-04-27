@@ -185,7 +185,8 @@ function viewDetailStation(id)
 					stationName:data.stationName,
 					provinceName:data.provinceName,
 					cityName:data.cityName,
-					stationOwner:data.stationOwner
+					stationOwner:data.stationOwner,
+					notAllowReason:data.notAllowReason
 					
 				});
 				
