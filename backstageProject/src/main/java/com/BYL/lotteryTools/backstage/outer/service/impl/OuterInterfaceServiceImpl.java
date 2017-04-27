@@ -17,7 +17,9 @@ import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayRepository;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
+import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcfivedataDTORepository;
+import com.BYL.lotteryTools.backstage.outer.repository.SrcthreedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
@@ -29,6 +31,9 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 {
 	@Autowired
 	private SrcfivedataDTORepository srcfivedataDTORepository;
+	
+	@Autowired
+	private SrcthreedataDTORepository srcthreedataDTORepository;
 	
 	@Autowired
 	private LotteryPlayRepository lotteryPlayRepository;
@@ -51,7 +56,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 from "+tbName+" ");
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 from analysis."+tbName+" ");
 		if(null != maxIssueId &&!"".equals(maxIssueId))
 		{
 			limit = 40;
@@ -157,6 +162,59 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		
 		return list;
 	}
+
+	public List<SrcthreedataDTO> getLotteryListOfThree(String tbName,String maxIssueId, String minIssueId) 
+	{
+		List<SrcthreedataDTO> list = new ArrayList<SrcthreedataDTO>();
+		int limit = 300;
+		
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3 from analysis."+tbName+" ");
+		if(null != maxIssueId &&!"".equals(maxIssueId))
+		{
+			limit = 40;
+			sql.append(" where ISSUE_NUMBER>"+maxIssueId+" order by ISSUE_NUMBER asc");
+		}
+		else
+			if(null != minIssueId &&!"".equals(minIssueId))
+			{
+				limit = 40;
+				sql.append(" where ISSUE_NUMBER<"+minIssueId+" order by ISSUE_NUMBER desc");
+			}
+			else
+			{
+				sql.append(" order by ISSUE_NUMBER desc ");
+			}
+		
+		
+		
+		
+		Pageable pageable = new PageRequest(0,limit);
+		QueryResult<SrcthreedataDTO> queryResult = srcthreedataDTORepository.
+				getScrollDataByGroupBySql(SrcthreedataDTO.class, sql.toString(), null,pageable );
+		list = queryResult.getResultList();
+		
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

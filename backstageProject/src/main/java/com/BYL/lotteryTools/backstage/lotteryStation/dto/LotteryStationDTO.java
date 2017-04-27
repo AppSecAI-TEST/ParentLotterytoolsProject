@@ -29,7 +29,11 @@ public class LotteryStationDTO
 	
 	private String province;//省
 	
+	private String provinceName;//省
+	
 	private String city;//市
+	
+	private String cityName;//市
 	
 	private String country;//区
 	
@@ -67,10 +71,55 @@ public class LotteryStationDTO
 	
 	private String fromApp;//app数据录入1:app 0:非app
 	
+	private String idNumberFrontImgUrl;
+	
+	private String idNumberBackImgUrl;
 	
 	
+	private String daixiaoImgUrl;
+	
+	
+	
+	public String getIdNumberFrontImgUrl() {
+		return idNumberFrontImgUrl;
+	}
 
-	
+	public void setIdNumberFrontImgUrl(String idNumberFrontImgUrl) {
+		this.idNumberFrontImgUrl = idNumberFrontImgUrl;
+	}
+
+	public String getIdNumberBackImgUrl() {
+		return idNumberBackImgUrl;
+	}
+
+	public void setIdNumberBackImgUrl(String idNumberBackImgUrl) {
+		this.idNumberBackImgUrl = idNumberBackImgUrl;
+	}
+
+	public String getDaixiaoImgUrl() {
+		return daixiaoImgUrl;
+	}
+
+	public void setDaixiaoImgUrl(String daixiaoImgUrl) {
+		this.daixiaoImgUrl = daixiaoImgUrl;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
 	public String getDaixiaoImg() {
 		return daixiaoImg;
 	}

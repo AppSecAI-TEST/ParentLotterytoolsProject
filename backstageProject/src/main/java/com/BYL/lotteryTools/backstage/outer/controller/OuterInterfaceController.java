@@ -69,12 +69,12 @@ public class OuterInterfaceController
 	* @throws
 	 */
 	@RequestMapping(value="/getLotteryList",method=RequestMethod.GET)
-	public @ResponseBody List<SrcfivedataDTO> getLotteryList(@RequestParam(value="id",required=true) String lotteryTypeId,
+	public @ResponseBody List<?> getLotteryList(@RequestParam(value="id",required=true) String lotteryTypeId,
 			@RequestParam(value="provinceCode",required=false) String provinceCode,
 			@RequestParam(value="maxIssueId",required=false) String maxIssueId,
 			@RequestParam(value="minIssueId",required=false) String minIssueId)
 	{
-		List<SrcfivedataDTO> list = new ArrayList<SrcfivedataDTO>();
+		List<?> list = new ArrayList<SrcfivedataDTO>();
 		
 		//若为获取上拉/下拉数据，则加载40条
 		
@@ -84,7 +84,17 @@ public class OuterInterfaceController
 		
 		String tbName = lotteryPlay.getCorrespondingTable();
 		
-		list = outerInterfaceService.getLotteryList(tbName, maxIssueId, minIssueId);
+		if("5".equals(lotteryPlay.getLotteryNumber()))
+		{//获取5个开奖号码的开奖数据
+			list = outerInterfaceService.getLotteryList(tbName, maxIssueId, minIssueId);
+		}
+		else
+			if("3".equals(lotteryPlay.getLotteryNumber()))
+			{//获取3个开奖号码的开奖数据
+				list = outerInterfaceService.getLotteryListOfThree(tbName, maxIssueId, minIssueId);
+			}
+		
+		
 		
 		return list;
 	}

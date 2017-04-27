@@ -17,6 +17,12 @@ import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.repository.LotteryStationRepository;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
+import com.BYL.lotteryTools.backstage.user.entity.City;
+import com.BYL.lotteryTools.backstage.user.entity.Province;
+import com.BYL.lotteryTools.backstage.user.service.CityService;
+import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
@@ -27,6 +33,15 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 
 	@Autowired
 	private LotteryStationRepository lotteryStationRepository;
+	
+	@Autowired
+	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private ProvinceService provinceService;
+	
+	@Autowired
+	private CityService cityService;
 
 	public void save(LotteryStation entity)
 	{
@@ -83,6 +98,7 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 				if(null != entity.getLotteryBuyerOrExpert())
 				{//放置站主用户id
 					dto.setUserId(entity.getLotteryBuyerOrExpert().getId());
+					dto.setStationOwner(entity.getLotteryBuyerOrExpert().getName());
 				}
 				
 				if(null != entity.getApprovalStatus())
@@ -92,7 +108,51 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 				
 				if(null != entity.getStatus())
 				{
-					dto.setStatusName(entity.getStatus().equals("1")?"已认证":"认证失败");
+					if(entity.getStatus().equals("1"))
+					{
+						dto.setStatusName("已认证");
+					}
+					else
+						if(entity.getStatus().equals("0"))
+						{
+							dto.setStatusName("认证失败");
+						}
+						
+				}
+				else
+				{
+					dto.setStatusName("未审核");
+				}
+				
+				if(null != entity.getDaixiaoImg())
+				{
+					Uploadfile daixiao = uploadfileService.getUploadfileByNewsUuid(entity.getDaixiaoImg());
+					dto.setDaixiaoImgUrl(daixiao.getUploadfilepath()+daixiao.getUploadRealName());
+				}
+				
+				//获取站主的身份证图片
+				if(null != entity.getIdNumberFrontImg())
+				{
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(entity.getIdNumberFrontImg());
+					dto.setIdNumberFrontImgUrl(uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+				}
+				
+				if(null != entity.getIdNumberBackImg())
+				{
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(entity.getIdNumberBackImg());
+					dto.setIdNumberBackImgUrl(uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+				}
+				
+				if(null != entity.getProvince())
+				{
+					Province province = provinceService.getProvinceByPcode(entity.getProvince());
+					dto.setProvinceName(province.getPname());
+				}
+					
+				if(null != entity.getCity())
+				{
+					City city = cityService.getCityByCcode(entity.getCity());
+					dto.setCityName(city.getCname());
 				}
 				
 			} 

@@ -99,15 +99,15 @@ public class OuterLotteryStationController
 				
 				if(null != lotteryStationDTO.getIdNumberFrontImg()&&!"".equals(lotteryStationDTO.getIdNumberFrontImg()))
 				{
-					lotterybuyerOrExpert.setIdNumberFrontImg(lotteryStationDTO.getIdNumberFrontImg());
+					lotteryStation.setIdNumberFrontImg(lotteryStationDTO.getIdNumberFrontImg());
 				}
 				
 				if(null != lotteryStationDTO.getIdNumberBackImg()&&!"".equals(lotteryStationDTO.getIdNumberBackImg()))
 				{
-					lotterybuyerOrExpert.setIdNumberBackImg(lotteryStationDTO.getIdNumberBackImg());
+					lotteryStation.setIdNumberBackImg(lotteryStationDTO.getIdNumberBackImg());
 				}
 				//保存站主信息
-				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+//				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 				
 				//将站主和彩票站关联
 				lotteryStation.setLotteryBuyerOrExpert(lotterybuyerOrExpert);

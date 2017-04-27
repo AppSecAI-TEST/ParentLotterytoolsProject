@@ -145,7 +145,7 @@ public class OuterLotteryGroupController
 			for (RelaBindOfLbuyerorexpertAndGroup rela : relalist)
 			{
 				LotterybuyerOrExpertDTO dto = new  LotterybuyerOrExpertDTO();
-				BeanUtil.copyBeanProperties(dto, rela.getLotterybuyerOrExpert());
+				dto = lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert());
 				userDtos.add(dto);
 			}
 			
@@ -276,7 +276,8 @@ public class OuterLotteryGroupController
 			 for (LotteryGroup lotteryGroup : groups) 
 			 {
 				 LotteryGroupDTO dto = new LotteryGroupDTO();
-				 BeanUtil.copyBeanProperties(dto, lotteryGroup);
+//				 BeanUtil.copyBeanProperties(dto, lotteryGroup);
+				 dto = lotteryGroupService.toDTO(lotteryGroup);
 				 groupDtos.add(dto);
 			 }
 			 
@@ -326,7 +327,8 @@ public class OuterLotteryGroupController
 					if(null != relaGroup.getLotteryGroup())
 					{
 						LotteryGroupDTO dto = new LotteryGroupDTO();
-						BeanUtil.copyBeanProperties(dto, relaGroup.getLotteryGroup());
+//						BeanUtil.copyBeanProperties(dto, relaGroup.getLotteryGroup());
+						dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
 						groupDtos.add(dto);
 					}
 				 }

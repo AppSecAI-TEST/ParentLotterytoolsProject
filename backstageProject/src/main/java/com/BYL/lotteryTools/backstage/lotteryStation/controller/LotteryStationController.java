@@ -105,6 +105,9 @@ public class LotteryStationController
 			@RequestParam(value="name",required=false) String name,
 			@RequestParam(value="provinceCode",required=false) String provinceCode,
 			@RequestParam(value="lotteryType",required=false) String lotteryType,//彩种，体彩/福彩
+			@RequestParam(value="fromApp",required=false) String fromApp,//来自app的彩票站信息
+			@RequestParam(value="approvalStatus",required=false) String approvalStatus,
+			@RequestParam(value="status",required=false) String status,
 			ModelMap model,HttpSession httpSession) throws Exception
 	{
 	 	Map<String,Object> returnData = new HashMap<String, Object>();
@@ -121,6 +124,24 @@ public class LotteryStationController
 		//只查询未删除数据
 		params.add("1");//只查询有效的数据
 		buffer.append(" isDeleted = ?").append(params.size());
+		
+		if(null != approvalStatus&&!"".equals(approvalStatus.trim()))
+		{
+			params.add(approvalStatus);
+			buffer.append(" and approvalStatus = ?").append(params.size());
+		}
+		
+		if(null != status&&!"".equals(status.trim()))
+		{
+			params.add(status);
+			buffer.append(" and status = ?").append(params.size());
+		}
+		
+		if(null != fromApp&&!"".equals(fromApp.trim()))
+		{
+			params.add(fromApp);
+			buffer.append(" and fromApp = ?").append(params.size());
+		}
 		
 		//连接查询条件
 		if(null != name&&!"".equals(name.trim()))
@@ -261,7 +282,11 @@ public class LotteryStationController
 			lotteryStation.setNotAllowReason(lotteryStationDTO.getNotAllowReason());
 			
 			//TODO:审核通过后生成彩票站邀请码
-			lotteryStation.setInviteCode(this.generateInviteCode());
+			if("1".equals(lotteryStationDTO.getStatus()))
+			{//审核通过生成邀请码
+				lotteryStation.setInviteCode(this.generateInviteCode());
+			}
+			
 			
 			//更新彩票站站主为站主身份
 			LotterybuyerOrExpert lotterybuyerOrExpert = lotteryStation.getLotteryBuyerOrExpert();
@@ -271,10 +296,13 @@ public class LotteryStationController
 			//更新彩票站的认证状态信息
 			lotteryStationService.update(lotteryStation);
 			resultBean.setStatus("success");
-			resultBean.setMessage("更改成功");
+			resultBean.setMessage("审核成功");
 		}
-		resultBean.setStatus("error");
-		resultBean.setMessage("更改失败");
+		else
+		{
+			resultBean.setStatus("error");
+			resultBean.setMessage("审核失败");
+		}
 		
 		
 		return resultBean;
@@ -284,8 +312,6 @@ public class LotteryStationController
 	//TODO:生成站点邀请码
 	private  String generateInviteCode()
 	{
-		StringBuffer buffer = new StringBuffer();
-		
 		List<LotteryStation> alllist = lotteryStationService.findAll();
 		
 		int code = alllist.size()+1;
@@ -295,7 +321,7 @@ public class LotteryStationController
 		{
 			str.insert(0, "0");
 		}
-		return buffer.toString();
+		return str.toString();
 	}
 	
 	

@@ -279,6 +279,82 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 审批彩票站信息
+	* @Title: applyStation 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月27日 下午1:22:42 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/applyStation.action", method = RequestMethod.GET)
+	public String applyStation()
+	{
+		String indexPage = "lotteryTools/lotteryStation/applyLotteryStation";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * 彩票站管理
+	* @Title: stationManage 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月27日 下午1:23:14 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/stationManage.action", method = RequestMethod.GET)
+	public String stationManage()
+	{
+		String indexPage = "lotteryTools/lotteryStation/lotteryStation";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * App用户（专家管理）
+	* @Title: lotteryExpertOrUser 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月27日 下午1:23:45 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/lotteryExpertOrUser.action", method = RequestMethod.GET)
+	public String lotteryExpertOrUser()
+	{
+		String indexPage = "lotteryTools/lotteryExpertOrUser/lotteryExpertOrUser";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * 彩聊群管理
+	* @Title: lotteryGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月27日 下午1:25:45 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/lotteryGroup.action", method = RequestMethod.GET)
+	public String lotteryGroup()
+	{
+		String indexPage = "lotteryTools/lotteryGroup/lotteryGroup";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页

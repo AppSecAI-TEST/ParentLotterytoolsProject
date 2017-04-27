@@ -80,6 +80,12 @@ public class LotteryStation extends BaseEntity
 	@Column(name="DAIXIAO_IMG",length=45)
 	private String daixiaoImg;//代销证图片
 	
+	@Column(name="ID_NUMBER_FRONT_IMG",length=45)
+	private String idNumberFrontImg;//身份证正面图片
+	
+	@Column(name="ID_NUMBER_BACK_IMG",length=45)
+	private String idNumberBackImg;//身份证反面图片
+	
 	
 	@Column(name="ADDDRESS",length=100)
 	private String address;//详细地址
@@ -133,6 +139,22 @@ public class LotteryStation extends BaseEntity
 	
 	
 	
+
+	public String getIdNumberFrontImg() {
+		return idNumberFrontImg;
+	}
+
+	public void setIdNumberFrontImg(String idNumberFrontImg) {
+		this.idNumberFrontImg = idNumberFrontImg;
+	}
+
+	public String getIdNumberBackImg() {
+		return idNumberBackImg;
+	}
+
+	public void setIdNumberBackImg(String idNumberBackImg) {
+		this.idNumberBackImg = idNumberBackImg;
+	}
 
 	public String getFromApp() {
 		return fromApp;
