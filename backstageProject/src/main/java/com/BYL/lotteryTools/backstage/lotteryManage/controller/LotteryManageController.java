@@ -208,6 +208,7 @@ public class LotteryManageController
 				@RequestParam(value="lotteryType",required=false) String lotteryType,//彩种，体彩/福彩
 				@RequestParam(value="lpbuId",required=false) String lpbuId,//补录方案id
 				@RequestParam(value="issueNumLen",required=false) String issueNumLen,//期号长度
+				@RequestParam(value="lineCount",required=false) String lineCount,//每天开出的最大期号
 				ModelMap model,HttpSession httpSession) throws Exception
 		{
 		   ResultBean resultBean = new ResultBean ();
@@ -225,6 +226,7 @@ public class LotteryManageController
 			   lotteryPlay.setLotteryNumber(lotteryNumber);
 			   lotteryPlay.setLotteryType(lotteryType);
 			   lotteryPlay.setIssueNumLen(issueNumLen);
+			   lotteryPlay.setLineCount(lineCount);
 			   
 			   LotteryPlayBulufangan lotteryPlayBulufangan = lotteryPlayBuLuPlanService.getLotteryPlayBulufanganById(lpbuId);
 			   
@@ -253,6 +255,7 @@ public class LotteryManageController
 			   lotteryPlay.setLotteryNumber(lotteryNumber);
 			   lotteryPlay.setLotteryType(lotteryType);
 			   lotteryPlay.setIssueNumLen(issueNumLen);
+			   lotteryPlay.setLineCount(lineCount);
 			   
 			   LotteryPlayBulufangan lotteryPlayBulufangan = lotteryPlayBuLuPlanService.getLotteryPlayBulufanganById(lpbuId);
 			   

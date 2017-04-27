@@ -172,6 +172,11 @@
 				            <input class="easyui-numberbox" precision="0" type="text" id="issueNumLenA" name="issueNumLen" style="width:200px"  
 				             data-options="required:true"   validType="number" missingMessage="请输入期号长度" invalidMessage="请输入数字"></input>
 				        </div>
+				         <div class="ftitle">
+				            <label for="priceA">开奖最大期号:</label>
+				            <input class="easyui-numberbox" precision="0" type="text" id="lineCountA" name="lineCount" style="width:200px"  
+				             data-options="required:true"   validType="number" missingMessage="请输入期号长度" invalidMessage="请输入数字"></input>
+				        </div>
 				        <div class="ftitle">
 				            <label for="priceA">彩种分类:</label>
 				            <select class="easyui-combobox" id="lotteryTypeA" name="lotteryType" style="width:200px;">
@@ -241,6 +246,11 @@
 				         <div class="ftitle">
 				            <label for="priceA">期号长度:</label>
 				            <input class="easyui-numberbox" precision="0" type="text" id="issueNumLenA" name="issueNumLen" style="width:200px"  
+				             data-options="required:true"   validType="number" missingMessage="请输入期号长度" invalidMessage="请输入数字"></input>
+				        </div>
+				          <div class="ftitle">
+				            <label for="priceA">开奖最大期号:</label>
+				            <input class="easyui-numberbox" precision="0" type="text" id="lineCountU" name="lineCount" style="width:200px"  
 				             data-options="required:true"   validType="number" missingMessage="请输入期号长度" invalidMessage="请输入数字"></input>
 				        </div>
 				        <div class="ftitle">

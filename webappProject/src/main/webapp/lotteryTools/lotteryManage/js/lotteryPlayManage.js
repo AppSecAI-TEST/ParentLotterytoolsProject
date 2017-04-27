@@ -189,7 +189,8 @@ function updateLotteryPlay(id)
 					correspondingTable:data.correspondingTable,
 					lotteryNumber:data.lotteryNumber,
 					lotteryType:data.lotteryType,
-					issueNumLen:data.issueNumLen
+					issueNumLen:data.issueNumLen,
+					lineCount:data.lineCount
 					
 				});
 				
