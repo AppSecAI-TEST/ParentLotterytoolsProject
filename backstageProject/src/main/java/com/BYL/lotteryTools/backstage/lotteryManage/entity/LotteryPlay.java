@@ -65,6 +65,9 @@ public class LotteryPlay extends BaseEntity implements Serializable
 	@Column(name="LOTTERY_TYPE", length=45)
 	private String lotteryType;//彩种，1：体彩，2：福彩  
 	
+	@Column(name="LINE_COUNT", length=45)
+	private String lineCount;//每天开出的最大期数
+	
 	//与“补录方案表”关联
 	@ManyToOne  
     @JoinColumn(name = "LP_BF_ID", referencedColumnName = "id")
@@ -80,6 +83,14 @@ public class LotteryPlay extends BaseEntity implements Serializable
 	
 	
 	
+
+	public String getLineCount() {
+		return lineCount;
+	}
+
+	public void setLineCount(String lineCount) {
+		this.lineCount = lineCount;
+	}
 
 	public List<LotteryTypeOfLotteryStationSale> getLotteryTypeOfLotteryStationSales() {
 		return lotteryTypeOfLotteryStationSales;

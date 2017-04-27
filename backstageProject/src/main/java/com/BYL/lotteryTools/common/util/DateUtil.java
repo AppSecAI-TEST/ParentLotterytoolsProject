@@ -183,6 +183,26 @@ public class DateUtil {
         calendar.set(Calendar.SECOND, 59);
         return calendar.getTime();
     }
+    
+    public static String getNextDayStr(String day)
+    {
+      SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
+      Calendar calendar = new GregorianCalendar();
+      String dateString = null;
+      try
+      {
+        Date date = formatter.parse(day);
+        calendar.setTime(date);
+        calendar.add(5, 1);
+        date = calendar.getTime();
+        dateString = formatter.format(date);
+      }
+      catch (ParseException e)
+      {
+        e.printStackTrace();
+      }
+      return dateString;
+    }
 
     /**
      * Created on 2010-10-26 

@@ -15,6 +15,8 @@ import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayPlanRepository;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayRepository;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
+import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
+import com.BYL.lotteryTools.backstage.outer.repository.SrcfivedataDTORepository;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
@@ -34,6 +36,9 @@ public class LotteryPlayServiceImpl implements LotteryPlayService
 	
 	@Autowired
 	private ProvinceService provinceService;
+	
+	@Autowired
+	private SrcfivedataDTORepository srcfivedataDTORepository;
 	
 
 
@@ -132,6 +137,50 @@ public class LotteryPlayServiceImpl implements LotteryPlayService
 	}
 
 
+	public List<LotteryPlay> getLotteryPlayByProvince(String province) {
+		return lotteryPlayRepository.getLotteryPlayByProvince(province);
+	}
+
+	public String getYuceMaxIssueId(String lotteryPlayId)
+	{
+		String issueId = "";
+		LotteryPlay lotteryPlay = this.getLotteryPlayById(lotteryPlayId);
+		String tbName = lotteryPlay.getCorrespondingTable();
+		String lineCount = lotteryPlay.getLineCount();//获取每天开出的最大期数
+
+		String execSql = "SELECT u.* FROM "+tbName +" u  order by ISSUE_NUMBER desc LIMIT 1 ";
+		Object[] queryParams = new Object[]{
+		};
+		SrcfivedataDTO fiveDto = srcfivedataDTORepository.getEntityBySql(SrcfivedataDTO.class,execSql, queryParams);
+		
+		if(null != fiveDto)
+		{
+			issueId = getNextIssueByCurrentIssue(fiveDto.getIssueNumber(), lineCount);
+		}
+		
+		return issueId;
+				
+	}
+
+	private static String getNextIssueByCurrentIssue(String issueNumber,String lineCount)
+	  {
+	    String issueCode = issueNumber.substring(issueNumber.length() - 2, issueNumber.length());
+	    int issue = Integer.parseInt(issueCode);
+	    int nextIssue = (issue + 1) % Integer.parseInt(lineCount);
+	    if (nextIssue > 9) 
+	    {
+	      return issueNumber.substring(0, issueNumber.length() - 2) + nextIssue;
+	    }
+	    if (nextIssue == 0)
+	    {
+	      return issueNumber.substring(0, issueNumber.length() - 2) + lineCount;
+	    }
+	    if (nextIssue == 1) 
+	    {
+	      return DateUtil.getNextDayStr(issueNumber.substring(0, issueNumber.length() - 2)) + "01";
+	    }
+	    return issueNumber.substring(0, issueNumber.length() - 2) + "0" + nextIssue;
+	  }
 	
 	
 	

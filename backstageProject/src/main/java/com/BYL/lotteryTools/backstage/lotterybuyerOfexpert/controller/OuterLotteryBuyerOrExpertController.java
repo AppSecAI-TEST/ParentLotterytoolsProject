@@ -62,6 +62,7 @@ public class OuterLotteryBuyerOrExpertController
 	
 	private static final String DOMAIN="http://36.7.190.20:1881/";
 	
+	private static String morenTouxiang = "0";//默认头像newsUuid
 	
 	/**
 	 * 获取注册用户手机验证码
@@ -150,7 +151,6 @@ public class OuterLotteryBuyerOrExpertController
 					
 					StringBuffer imguri = new StringBuffer();//头像uri（注册时默认不进行头像的上传）
 					//添加默认头像(TODO:需要初始化一张默认头像图片到upload文件夹和uploadfile表中)
-					String morenTouxiang = "0";//默认头像newsUuid
 					lotterybuyerOrExpert.setTouXiang(morenTouxiang);//关联新头像
 					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(morenTouxiang);
 					//刷新融云用户信息,将图片信息同步
@@ -395,20 +395,35 @@ public class OuterLotteryBuyerOrExpertController
 			//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
 			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
 					null, OuterLotteryBuyerOrExpertController.DOMAIN+request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
-			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode()))
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
 				logger.error("融云同步头像失败", result.getErrorMessage());
 			}
 			
 			//删除旧头像(也可以定时批量删除)
-			if(null != lotterybuyerOrExpertDTO.getLastTouXiang()&&!"".equals(lotterybuyerOrExpertDTO.getLastTouXiang()))
+			if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpertDTO.getLastTouXiang())
+					&&null != lotterybuyerOrExpertDTO.getLastTouXiang()&&!"".equals(lotterybuyerOrExpertDTO.getLastTouXiang()))
 			{
+				logger.info("删除附件",lotterybuyerOrExpertDTO.getLastTouXiang());
 				Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getLastTouXiang());
 				if(null != lastTouxiang)
 				{//若存在旧头像，则要进行删除操作
 					uploadfileService.delete(lastTouxiang, httpSession);
 				}
 			}
+		}
+		
+		//修改昵称
+		if(null != lotterybuyerOrExpertDTO.getName() && !"".equals(lotterybuyerOrExpertDTO.getName()))
+		{
+			lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
+			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
+					lotterybuyerOrExpertDTO.getName(), null);
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				logger.error("融云同步用户名失败", result.getErrorMessage());
+			}
+			
 		}
 		
 		
@@ -476,7 +491,7 @@ public class OuterLotteryBuyerOrExpertController
 			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			try 
 			{
-				BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
+				lotterybuyerOrExpertDTO = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
 				
 				map.put("flag", true);
 				map.put("message", "修改成功");

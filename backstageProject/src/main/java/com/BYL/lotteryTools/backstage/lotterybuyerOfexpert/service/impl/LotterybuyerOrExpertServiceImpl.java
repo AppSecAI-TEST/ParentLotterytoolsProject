@@ -82,6 +82,7 @@ public class LotterybuyerOrExpertServiceImpl implements
 					Uploadfile touxiangImg = uploadfileService.getUploadfileByNewsUuid(entity.getTouXiang());
 					if(null != touxiangImg)
 					{
+						dto.setTouXiang(touxiangImg.getNewsUuid());
 						dto.setTouXiangUrl(touxiangImg.getUploadfilepath()+touxiangImg.getUploadRealName());
 					}
 				}

@@ -35,8 +35,18 @@ public class LotteryPlayDTO
 	private String ltblPlaneId;//补录方案id
 	
 	
+	private String lineCount;//每天开出的最大期数
+	
 	
 
+
+	public String getLineCount() {
+		return lineCount;
+	}
+
+	public void setLineCount(String lineCount) {
+		this.lineCount = lineCount;
+	}
 
 	public String getIssueNumLen() {
 		return issueNumLen;

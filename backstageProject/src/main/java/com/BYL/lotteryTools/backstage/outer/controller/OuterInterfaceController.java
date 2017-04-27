@@ -1,7 +1,9 @@
 package com.BYL.lotteryTools.backstage.outer.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
+import com.BYL.lotteryTools.backstage.outer.dto.TransferDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
-import com.BYL.lotteryTools.backstage.user.entity.City;
+import com.BYL.lotteryTools.backstage.prediction.entity.PredictionType;
+import com.BYL.lotteryTools.backstage.prediction.service.PredictionTypeService;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
-import com.BYL.lotteryTools.backstage.user.entity.Region;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.backstage.user.service.RegionService;
@@ -45,6 +49,9 @@ public class OuterInterfaceController
 	
 	@Autowired
 	private RegionService regionService;
+	
+	@Autowired
+	private PredictionTypeService predictionTypeService;
 	
 	
 	
@@ -132,9 +139,114 @@ public class OuterInterfaceController
 	
 	
 	
+	//专家预测接口1：根据省份获取区域彩种列表
+	@RequestMapping(value="/getPredictiontypeOfProvince",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getPredictiontypeOfProvince(
+			@RequestParam(value="provinceCode",required=false) String provinceCode)
+	{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		List<LotteryPlay> list = lotteryPlayService.getLotteryPlayByProvince(provinceCode);
+		
+		List<LotteryPlayDTO> dtos = lotteryPlayService.toRDTOS(list);
+		
+		map.put("lotteryPlays", dtos);
+		map.put("flag", true);
+		map.put("message", "获取成功");
+		
+		return map;
+	}
 	
 	
+	//专家预测接口2：返回基本预测类型表（初始化1~6的基本预测类型）
+	@RequestMapping(value="/getBaseInitPredictionType",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getBaseInitPredictionType()
+	{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		/**
+		 * <option value="1">前三胆杀</option>
+			<option value="2">任胆杀</option>
+			<option value="3">前三六码复式</option>
+			<option value="4">乐选4期计划</option>
+			<option value="5">两码三期计划</option>
+			<option value="6">任三精选6组</option>
+		 */
+		List<TransferDTO> dtos = new ArrayList<TransferDTO>();
+		TransferDTO d1 = new TransferDTO();
+		d1.setName("前三胆杀");
+		d1.setValue("1");
+		dtos.add(d1);
+		
+		TransferDTO d2 = new TransferDTO();
+		d2.setName("任胆杀");
+		d2.setValue("2");
+		dtos.add(d2);
+		
+		TransferDTO d3 = new TransferDTO();
+		d3.setName("前三六码复式");
+		d3.setValue("3");
+		dtos.add(d3);
+		
+		TransferDTO d4 = new TransferDTO();
+		d4.setName("乐选4期计划");
+		d4.setValue("4");
+		dtos.add(d4);
+		
+		TransferDTO d5 = new TransferDTO();
+		d5.setName("两码三期计划");
+		d5.setValue("5");
+		dtos.add(d5);
+		
+		TransferDTO d6 = new TransferDTO();
+		d6.setName("任三精选6组");
+		d6.setValue("6");
+		dtos.add(d6);
+		
+		map.put("baseDtos", dtos);
+		map.put("flag", true);
+		map.put("message", "获取成功");
+		
+		return map;
+	}
 	
+	//专家预测接口3：根据区域彩种+基本预测类型（根据初始化基本预测类型找出预测方案表），在预测方案表中根据免费/收费筛选专家（按准确率排序）
+	@RequestMapping(value="/getOrderExpertList",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getOrderExpertList(
+			@RequestParam(value="provinceCode",required=false) String provinceCode,
+			@RequestParam(value="lotteryPlayId",required=false) String lotteryPlayId,
+			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
+			@RequestParam(value="isFree",required=false) String isFree,//0:免费 1：付费
+			@RequestParam(value="page",required=false) String page,//当前是第几次获取
+			@RequestParam(value="count",required=false) String count)//需要的专家数量
+	{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		//找出区域预测方案表的表名，然后在表内按顺序查询专家的列表
+		List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, provinceCode, baseTypeId);
+		String predictionTbname = "";//区域预测方案表
+		if(null != plist && plist.size()>0)
+		{
+			predictionTbname = plist.get(0).getPredictionTable();
+		}
+		//获取当前开出的最大期号,并计算预测的期号
+		String maxIssueId = lotteryPlayService.getYuceMaxIssueId(lotteryPlayId);
+		
+		//查询专家数据
+		List<?> preOfExperts = predictionTypeService.getPredictionPlanOfExperts(maxIssueId, isFree, count, baseTypeId,predictionTbname);
+		
+		map.put("preOfExperts", preOfExperts);
+		map.put("flag", true);
+		map.put("message", "获取成功");
+		
+		
+		return map;
+	}
+	
+	//专家预测接口4：查看某个专家的预测（根据区域彩种和区域预测类型筛选专家）
+	
+	
+	//专家预测接口5：查看某个专家的某个区域预测类型的预测结果
 	
 	
 	

@@ -23,4 +23,22 @@ public interface PredictionTypeService {
 	public PredictionTypeDTO toDTO(PredictionType entity);
 	
 	public List<PredictionTypeDTO> toDTOs(List<PredictionType> entities);
+	
+	public List<PredictionType> getPredictionTypeOfProAndLplay(String lotteryPlayId,String province,String baseInittypeId) ;
+	
+	/**
+	 * 获取当前预测期的预测数据
+	* @Title: getPredictionPlanOfExperts 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param maxIssueId
+	* @param @param isFree
+	* @param @param count
+	* @param @param baseTypeId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月26日 下午4:22:18 
+	* @return List<?>    返回类型 
+	* @throws
+	 */
+	public List<?> getPredictionPlanOfExperts(String maxIssueId,String isFree,String count,String baseTypeId,String predictionTbname);
 }

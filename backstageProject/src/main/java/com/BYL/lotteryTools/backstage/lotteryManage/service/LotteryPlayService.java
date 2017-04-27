@@ -61,7 +61,31 @@ public interface LotteryPlayService
 	 */
 	public List<LotteryPlay> getLotteryPlayByProvinceAndLotteryType(String city,String lotteryType);
 	
+	/**
+	 * 根据省份获取玩法
+	* @Title: getLotteryPlayByProvince 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param province
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月26日 下午3:41:36 
+	* @return List<LotteryPlay>    返回类型 
+	* @throws
+	 */
+	public List<LotteryPlay> getLotteryPlayByProvince(String province);
 	
+	/**
+	 * 获取当前应该预测的期号
+	* @Title: getYuceMaxIssueId 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryPlayId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年4月26日 下午4:25:52 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public String getYuceMaxIssueId(String lotteryPlayId);
 	
 	
 }
