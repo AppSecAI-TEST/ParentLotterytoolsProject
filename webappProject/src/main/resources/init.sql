@@ -53,6 +53,8 @@ INSERT  INTO `RELA_LT_AUTHORITY_ROLE`(`ROLE_ID`,`authority_ID`) VALUES ('0','402
 INSERT  INTO `RELA_LT_AUTHORITY_ROLE`(`ROLE_ID`,`authority_ID`) VALUES ('0','4028813a506515ad01506519e1720002');
 INSERT  INTO `RELA_LT_AUTHORITY_ROLE`(`ROLE_ID`,`authority_ID`) VALUES ('0','4028813a506515ad01506519290a0001');
 
+--初始化默认的头像附件图片和图片附件数据
+insert  into `UPLOADFILE`(`id`,`CREATE_TIME`,`CREATOR`,`IS_DELETED`,`MODIFY`,`MODIFY_TIME`,`deleteServiceFile`,`des`,`newsUuid`,`uploadContentType`,`uploadFileName`,`uploadRealName`,`uploadfilepath`) values (7,'2017-04-26 14:25:39','admin','1','admin','2017-04-26 14:25:39',0,NULL,'0','.jpg','touxiangmoren.jpg','touxiangmoren.jpg','/upload/');
 
 
 
