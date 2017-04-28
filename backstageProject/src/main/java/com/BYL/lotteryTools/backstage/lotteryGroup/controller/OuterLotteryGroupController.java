@@ -591,18 +591,18 @@ public class OuterLotteryGroupController
 			entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
 			
 			//处理群头像
-			if(null != dto.getTouXiangImg())
+			if(null != dto.getTouXiang())
 			{
-				Uploadfile uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(), request);
-				StringBuffer imguri = new StringBuffer();//头像uri
-				if(null != uploadfile)
-				{//若头像不为空，则放置头像的uuid
-					entity.setTouXiang(uploadfile.getNewsUuid());
-					imguri.append(request.getContextPath()).
-							append(uploadfile.getUploadfilepath()).
-							append(uploadfile.getUploadRealName());
-					logger.info("touxiang",imguri);//输出头像
-				}
+//				Uploadfile uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(), request);
+//				StringBuffer imguri = new StringBuffer();//头像uri
+//				if(null != uploadfile)
+//				{//若头像不为空，则放置头像的uuid
+					entity.setTouXiang(dto.getTouXiang());
+//					imguri.append(request.getContextPath()).
+//							append(uploadfile.getUploadfilepath()).
+//							append(uploadfile.getUploadRealName());
+//					logger.info("touxiang",imguri);//输出头像
+//				}
 			}
 			
 			//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人

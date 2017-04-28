@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,14 +20,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller.OuterLotteryBuyerOrExpertController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
+import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
-import com.BYL.lotteryTools.common.util.LoginUtils;
 
 /**
  * 
@@ -49,6 +52,33 @@ public class OuterLotteryStationController
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
 	
+	@Autowired
+	private RongyunImService rongyunImService;
+	
+	
+	
+	/*@RequestMapping(value = "/submitFromAppLS", method = RequestMethod.POST)
+	public @ResponseBody ResultBean submitFromAppLS(
+				LotteryStationDTO lotteryStationDTO,HttpServletRequest request,HttpSession httpSession)
+	{
+		ResultBean resultBean  = new ResultBean();
+		
+		if(null != lotteryStationDTO.getDaixiaoImgFile())
+		{
+			Uploadfile uploadfile =null;
+			String newsUuid = UUID.randomUUID().toString();
+			try {
+					 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request,newsUuid);
+				
+			} catch (Exception e) {
+				logger.error("error:", e);
+			}
+			
+			System.out.println("id="+lotteryStationDTO.getId());
+		}
+		
+		return resultBean;
+	}*/
 	/**
 	 * 保存用户在app端输入的彩票站信息
 	* @Title: saveFromAppLotteryStaion 
@@ -60,7 +90,7 @@ public class OuterLotteryStationController
 	* @return ResultBean    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value = "/submitFromAppLotteryStaion", method = RequestMethod.GET)
+	@RequestMapping(value = "/submitFromAppLotteryStaion", method = RequestMethod.POST)
 	public @ResponseBody ResultBean submitFromAppLotteryStaion(
 				LotteryStationDTO lotteryStationDTO,HttpServletRequest request,HttpSession httpSession)
 	{
@@ -77,44 +107,92 @@ public class OuterLotteryStationController
 			
 			if(null == lotteryStation)
 			{
-				//2.新建彩票站信息
-				lotteryStation = new LotteryStation();
-				BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
-				
-				lotteryStation.setFromApp("1");//app提交认证的彩票站信息
-				lotteryStation.setApprovalStatus("0");//审核中
-				lotteryStation.setCreateTime(new Timestamp(System.currentTimeMillis()));
-				lotteryStation.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
-				lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
-				lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
-				lotteryStation.setIsDeleted(Constants.IS_NOT_DELETED);
-				
-				//关联彩票站的营业执照图片文件
-				if(null != lotteryStationDTO.getDaixiaoImg()&&!"".equals(lotteryStationDTO.getDaixiaoImg()))
+				String sessionId = OuterLotteryBuyerOrExpertController.sessionMap.get(lotteryStationDTO.getTelephone());
+				SMSVerifyCodeResult yanzhengma = null;
+				if(null != sessionId)
 				{
-					lotteryStation.setDaixiaoImg(lotteryStationDTO.getDaixiaoImg());
+					 yanzhengma = rongyunImService.verifyCode(sessionId, lotteryStationDTO.getYanzhengma());
 				}
 				
-				//关联身份证图片调用方法
-				
-				if(null != lotteryStationDTO.getIdNumberFrontImg()&&!"".equals(lotteryStationDTO.getIdNumberFrontImg()))
+				if(yanzhengma.getSuccess())
 				{
-					lotteryStation.setIdNumberFrontImg(lotteryStationDTO.getIdNumberFrontImg());
+					//2.新建彩票站信息
+					lotteryStation = new LotteryStation();
+					BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
+					
+					lotteryStation.setFromApp("1");//app提交认证的彩票站信息
+					lotteryStation.setApprovalStatus("0");//审核中
+					lotteryStation.setCreateTime(new Timestamp(System.currentTimeMillis()));
+					lotteryStation.setCreator(lotteryStation.getId());
+					lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
+					lotteryStation.setModify(lotteryStation.getId());
+					lotteryStation.setIsDeleted(Constants.IS_NOT_DELETED);
+					
+					//关联彩票站的营业执照图片文件
+					/*if(null != lotteryStationDTO.getDaixiaoImg()&&!"".equals(lotteryStationDTO.getDaixiaoImg()))
+					{
+						lotteryStation.setDaixiaoImg(lotteryStationDTO.getDaixiaoImg());
+					}*/
+					if(null != lotteryStationDTO.getDaixiaoImgFile())
+					{
+						Uploadfile uploadfile =null;
+						String newsUuid = UUID.randomUUID().toString();
+						try {
+								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request,newsUuid);
+							
+						} catch (Exception e) {
+							logger.error("error:", e);
+						}
+						lotteryStation.setDaixiaoImg(uploadfile.getNewsUuid());
+					}
+					
+					//关联身份证图片调用方法
+					/*if(null != lotteryStationDTO.getIdNumberFrontImg()&&!"".equals(lotteryStationDTO.getIdNumberFrontImg()))
+					{
+						lotteryStation.setIdNumberFrontImg(lotteryStationDTO.getIdNumberFrontImg());
+					}*/
+					if(null != lotteryStationDTO.getIdNumberFrontImgFile())
+					{
+						Uploadfile uploadfile =null;
+						String newsUuid = UUID.randomUUID().toString();
+						try {
+								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberFrontImgFile(),request,newsUuid);
+							
+						} catch (Exception e) {
+							logger.error("error:", e);
+						}
+						lotteryStation.setIdNumberFrontImg(uploadfile.getNewsUuid());
+					}
+					/*if(null != lotteryStationDTO.getIdNumberBackImg()&&!"".equals(lotteryStationDTO.getIdNumberBackImg()))
+					{
+						lotteryStation.setIdNumberBackImg(lotteryStationDTO.getIdNumberBackImg());
+					}*/
+					if(null != lotteryStationDTO.getIdNumberBackImgFile())
+					{
+						Uploadfile uploadfile =null;
+						String newsUuid = UUID.randomUUID().toString();
+						try {
+								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberBackImgFile(),request,newsUuid);
+							
+						} catch (Exception e) {
+							logger.error("error:", e);
+						}
+						lotteryStation.setIdNumberBackImg(uploadfile.getNewsUuid());
+					}
+					
+					//将站主和彩票站关联
+					lotteryStation.setLotteryBuyerOrExpert(lotterybuyerOrExpert);
+					//保存彩票站信息
+					lotteryStationService.save(lotteryStation);
+					resultBean.setStatus("success");
+					resultBean.setMessage("提交成功");
+				}
+				else
+				{//手机验证码验证失败
+					resultBean.setStatus("fail");
+					resultBean.setMessage(yanzhengma.getErrorMessage());
 				}
 				
-				if(null != lotteryStationDTO.getIdNumberBackImg()&&!"".equals(lotteryStationDTO.getIdNumberBackImg()))
-				{
-					lotteryStation.setIdNumberBackImg(lotteryStationDTO.getIdNumberBackImg());
-				}
-				//保存站主信息
-//				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
-				
-				//将站主和彩票站关联
-				lotteryStation.setLotteryBuyerOrExpert(lotterybuyerOrExpert);
-				//保存彩票站信息
-				lotteryStationService.save(lotteryStation);
-				resultBean.setStatus("success");
-				resultBean.setMessage("提交成功");
 			}
 			else
 			{

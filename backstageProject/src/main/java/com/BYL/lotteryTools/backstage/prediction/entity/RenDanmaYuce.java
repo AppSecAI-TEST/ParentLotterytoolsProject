@@ -5,13 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * 前三胆码预测实体
+ * 任胆杀预测实体
 * @Description: TODO(这里用一句话描述这个方法的作用) 
 * @author banna
 * @date 2017年4月26日 下午4:42:52
  */
 @Entity
-public class QiansanDanmaYuce {
+public class RenDanmaYuce {
 	
 	@Id
 	@Column(name="ID")
@@ -27,13 +27,10 @@ public class QiansanDanmaYuce {
 	private String issueNumber;
 	
 	@Column(name="DANMA_ONE")
-	private String danmaone;
-	
-	@Column(name="DANMA_TWO")
-	private String danmatwo;
+	private String danmaOne;
 	
 	@Column(name="SHAMA_ONE")
-	private String shamaone;
+	private String shamaOne;
 	
 	@Column(name="IS_CHARGE")
 	private String isCharge;
@@ -45,35 +42,18 @@ public class QiansanDanmaYuce {
 	private String winRateDudan;
 	
 	
-	@Column(name="WIN_RATE_SHUANGDAN")
-	private String winRateShuangdan;
-	
-	@Column(name="WIN_RATE_DANMA")
-	private String winRateDanma;
-	
 	@Column(name="DROWN_NUMBER")
 	private String drownNumber;
 	
 	@Column(name="DUDAN_STATUS")
 	private String dudanStatus;
 	
-	@Column(name="SHUANGDAN_STATUS")
-	private String shuangdanStatus;
 	
-	@Column(name="DANMA_STATUS")
-	private String danmaStatus;
+	@Column(name="SHAMAYI_STATUS")
+	private String shamayiStatus;
 	
-	@Column(name="SHAMAER_STATUS")
-	private String shamaerStatus;
-	
-	@Column(name="SHAMASAN_STATUS")
-	private String shamasanStatus;
-	
-	@Column(name="WIN_RATE_SHAER")
-	private String winRateShaer;
-	
-	@Column(name="WIN_RATE_SHASAN")
-	private String winRateShasan;
+	@Column(name="WIN_RATE_SHAYI")
+	private String winRateShayi;
 	
 	@Column(name="EXPERT_LEVEL")
 	private String expertLevel;
@@ -110,28 +90,20 @@ public class QiansanDanmaYuce {
 		this.issueNumber = issueNumber;
 	}
 
-	public String getDanmaone() {
-		return danmaone;
+	public String getDanmaOne() {
+		return danmaOne;
 	}
 
-	public void setDanmaone(String danmaone) {
-		this.danmaone = danmaone;
+	public void setDanmaOne(String danmaOne) {
+		this.danmaOne = danmaOne;
 	}
 
-	public String getDanmatwo() {
-		return danmatwo;
+	public String getShamaOne() {
+		return shamaOne;
 	}
 
-	public void setDanmatwo(String danmatwo) {
-		this.danmatwo = danmatwo;
-	}
-
-	public String getShamaone() {
-		return shamaone;
-	}
-
-	public void setShamaone(String shamaone) {
-		this.shamaone = shamaone;
+	public void setShamaOne(String shamaOne) {
+		this.shamaOne = shamaOne;
 	}
 
 	public String getIsCharge() {
@@ -158,22 +130,6 @@ public class QiansanDanmaYuce {
 		this.winRateDudan = winRateDudan;
 	}
 
-	public String getWinRateShuangdan() {
-		return winRateShuangdan;
-	}
-
-	public void setWinRateShuangdan(String winRateShuangdan) {
-		this.winRateShuangdan = winRateShuangdan;
-	}
-
-	public String getWinRateDanma() {
-		return winRateDanma;
-	}
-
-	public void setWinRateDanma(String winRateDanma) {
-		this.winRateDanma = winRateDanma;
-	}
-
 	public String getDrownNumber() {
 		return drownNumber;
 	}
@@ -190,52 +146,20 @@ public class QiansanDanmaYuce {
 		this.dudanStatus = dudanStatus;
 	}
 
-	public String getShuangdanStatus() {
-		return shuangdanStatus;
+	public String getShamayiStatus() {
+		return shamayiStatus;
 	}
 
-	public void setShuangdanStatus(String shuangdanStatus) {
-		this.shuangdanStatus = shuangdanStatus;
+	public void setShamayiStatus(String shamayiStatus) {
+		this.shamayiStatus = shamayiStatus;
 	}
 
-	public String getDanmaStatus() {
-		return danmaStatus;
+	public String getWinRateShayi() {
+		return winRateShayi;
 	}
 
-	public void setDanmaStatus(String danmaStatus) {
-		this.danmaStatus = danmaStatus;
-	}
-
-	public String getShamaerStatus() {
-		return shamaerStatus;
-	}
-
-	public void setShamaerStatus(String shamaerStatus) {
-		this.shamaerStatus = shamaerStatus;
-	}
-
-	public String getShamasanStatus() {
-		return shamasanStatus;
-	}
-
-	public void setShamasanStatus(String shamasanStatus) {
-		this.shamasanStatus = shamasanStatus;
-	}
-
-	public String getWinRateShaer() {
-		return winRateShaer;
-	}
-
-	public void setWinRateShaer(String winRateShaer) {
-		this.winRateShaer = winRateShaer;
-	}
-
-	public String getWinRateShasan() {
-		return winRateShasan;
-	}
-
-	public void setWinRateShasan(String winRateShasan) {
-		this.winRateShasan = winRateShasan;
+	public void setWinRateShayi(String winRateShayi) {
+		this.winRateShayi = winRateShayi;
 	}
 
 	public String getExpertLevel() {
@@ -245,9 +169,9 @@ public class QiansanDanmaYuce {
 	public void setExpertLevel(String expertLevel) {
 		this.expertLevel = expertLevel;
 	}
-	
-	
 
+	
+	
 	
 	
 }

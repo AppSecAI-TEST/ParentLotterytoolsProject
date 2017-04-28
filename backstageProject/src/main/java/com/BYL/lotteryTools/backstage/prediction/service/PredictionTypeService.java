@@ -24,7 +24,9 @@ public interface PredictionTypeService {
 	
 	public List<PredictionTypeDTO> toDTOs(List<PredictionType> entities);
 	
-	public List<PredictionType> getPredictionTypeOfProAndLplay(String lotteryPlayId,String province,String baseInittypeId) ;
+	public List<PredictionType> getPredictionTypeOfProAndLplay(String lotteryPlayId,String baseInittypeId) ;
+	
+	public List<?> getHisPredictionOfExpert(String count,String baseTypeId,String predictionTbname,String expertId);
 	
 	/**
 	 * 获取当前预测期的预测数据

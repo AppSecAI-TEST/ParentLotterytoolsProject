@@ -58,7 +58,7 @@ public class OuterLotteryBuyerOrExpertController
 	@Autowired
 	private UploadfileService uploadfileService;
 	
-	private Map<String,String> sessionMap = new HashMap<String, String>();
+	public static Map<String,String> sessionMap = new HashMap<String, String>();
 	
 	private static final String DOMAIN="http://36.7.190.20:1881/";
 	
@@ -355,9 +355,10 @@ public class OuterLotteryBuyerOrExpertController
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		Uploadfile uploadfile =null;
+		String newsUuid = UUID.randomUUID().toString();
 		try {
 			for (MultipartFile multipartFile : files) {
-				 uploadfile = uploadfileService.uploadFiles(multipartFile,request);
+				 uploadfile = uploadfileService.uploadFiles(multipartFile,request,newsUuid);
 			}
 			
 		} catch (Exception e) {

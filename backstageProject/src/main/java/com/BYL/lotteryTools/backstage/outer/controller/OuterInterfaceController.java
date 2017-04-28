@@ -223,7 +223,7 @@ public class OuterInterfaceController
 	//专家预测接口3：根据区域彩种+基本预测类型（根据初始化基本预测类型找出预测方案表），在预测方案表中根据免费/收费筛选专家（按准确率排序）
 	@RequestMapping(value="/getOrderExpertList",method=RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getOrderExpertList(
-			@RequestParam(value="provinceCode",required=false) String provinceCode,
+//			@RequestParam(value="provinceCode",required=false) String provinceCode,
 			@RequestParam(value="lotteryPlayId",required=false) String lotteryPlayId,
 			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
 			@RequestParam(value="isFree",required=false) String isFree,//0:免费 1：付费
@@ -233,7 +233,7 @@ public class OuterInterfaceController
 		Map<String,Object> map = new HashMap<String,Object>();
 		
 		//找出区域预测方案表的表名，然后在表内按顺序查询专家的列表
-		List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, provinceCode, baseTypeId);
+		List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, baseTypeId);
 		String predictionTbname = "";//区域预测方案表
 		if(null != plist && plist.size()>0)
 		{
@@ -253,10 +253,55 @@ public class OuterInterfaceController
 		return map;
 	}
 	
-	//专家预测接口4：查看某个专家的预测（根据区域彩种和区域预测类型筛选专家）
+	//专家预测接口4：查看某个专家的预测（根据区域彩种和区域预测类型筛选专家）点击群内加号获取符合当前群属性的专家且点击专家查看详情时使用
+	@RequestMapping(value="/getHistoryGroupPreOfExpert",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getHistoryGroupPreOfExpert(
+			@RequestParam(value="expertId",required=false) String expertId,
+			@RequestParam(value="lotteryType",required=false) String lotteryType,//体彩、福彩
+			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
+			@RequestParam(value="provinceCode",required=false) String provinceCode,//6种预测类型的id
+			@RequestParam(value="page",required=false) String page,//当前是第几次获取
+			@RequestParam(value="count",required=false) String count)//需要的专家数量
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//根据省和体彩/福彩得到当前专家预测的区域彩种，然后根据区域彩种获取每个区域预测类型（将区域预测方案表去重）根据默认选择的基本预测类型分类id去查找预测数据
+		
+		
+		
+		return map;
+	}
 	
 	
-	//专家预测接口5：查看某个专家的某个区域预测类型的预测结果
+	//专家预测接口5：查看某个专家的某个区域预测类型的预测结果(在首页专家列表中点击专家查看详情时使用，且在页内切换不同基本预测类型分类时使用)
+	@RequestMapping(value="/getHistoryPreOfExpert",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getHistoryPreOfExpert(
+			@RequestParam(value="expertId",required=false) String expertId,
+			@RequestParam(value="lotteryPlayId",required=false) String lotteryPlayId,
+			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
+			@RequestParam(value="page",required=false) String page,//当前是第几次获取
+			@RequestParam(value="count",required=false) String count)//需要的专家数量
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//找出区域预测方案表的表名
+		List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, baseTypeId);
+		String predictionTbname = "";//区域预测方案表
+		if(null != plist && plist.size()>0)
+		{
+			predictionTbname = plist.get(0).getPredictionTable();
+		}
+		
+		//查询当前专家的预测数据
+		List<?> preOfExperts = predictionTypeService.getHisPredictionOfExpert(count, baseTypeId,predictionTbname,expertId);
+				
+		map.put("preOfExperts", preOfExperts);
+		map.put("flag", true);
+		map.put("message", "获取成功");
+		
+		
+		return map;
+	}
 	
 	
 	

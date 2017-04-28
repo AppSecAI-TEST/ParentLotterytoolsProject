@@ -116,14 +116,14 @@ public class UploadfileServiceImpl implements UploadfileService {
 	* @return String    返回类型 ,返回关联newsuuid
 	* @throws
 	 */
-	public Uploadfile uploadFiles(MultipartFile file,HttpServletRequest request) throws Exception
+	public Uploadfile uploadFiles(MultipartFile file,HttpServletRequest request,String newsUuid) throws Exception
 	{
 //		boolean flag = false;
 		String path = request.getSession().getServletContext().getRealPath("upload");  
         String fileName = file.getOriginalFilename();
         Uploadfile uploadfile = new Uploadfile();
         String extName="";//扩展名
-        //扩展名格式： 
+        //扩展名格式：
         if (fileName.lastIndexOf(".") >= 0) {
             extName = fileName.substring(fileName.lastIndexOf("."));
         }
@@ -132,7 +132,8 @@ public class UploadfileServiceImpl implements UploadfileService {
         uploadfile.setIsDeleted(Constants.IS_NOT_DELETED);
         uploadfile.setModify("app");
         uploadfile.setModifyTime(new Timestamp(System.currentTimeMillis()));
-        uploadfile.setNewsUuid(UUID.randomUUID().toString());
+//        uploadfile.setNewsUuid(UUID.randomUUID().toString());
+        uploadfile.setNewsUuid(newsUuid);
         uploadfile.setUploadContentType(extName);
         uploadfile.setUploadFileName(fileName);
         uploadfile.setUploadfilepath("/upload/");

@@ -1,5 +1,7 @@
 package com.BYL.lotteryTools.backstage.lotteryStation.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 
 
 
@@ -20,6 +22,8 @@ public class LotteryStationDTO
 	private String lotteryType;//彩种类型，1：体彩2：福彩
 	
 	private String telephone;//站主手机
+	
+	private String yanzhengma;//验证码
 	
 	private String stationNumber;//站点号
 	
@@ -67,6 +71,12 @@ public class LotteryStationDTO
 	
 	private String idNumberBackImg;//身份证背面图片
 	
+	private MultipartFile daixiaoImgFile;//代销证图片
+	
+	private MultipartFile idNumberFrontImgFile;//身份证正面图片
+	
+	private MultipartFile idNumberBackImgFile;//身份证背面图片
+	
 	private String inviteCode;//邀请码
 	
 	private String fromApp;//app数据录入1:app 0:非app
@@ -80,6 +90,39 @@ public class LotteryStationDTO
 	
 	
 	
+	
+	public String getYanzhengma() {
+		return yanzhengma;
+	}
+
+	public void setYanzhengma(String yanzhengma) {
+		this.yanzhengma = yanzhengma;
+	}
+
+	public MultipartFile getDaixiaoImgFile() {
+		return daixiaoImgFile;
+	}
+
+	public void setDaixiaoImgFile(MultipartFile daixiaoImgFile) {
+		this.daixiaoImgFile = daixiaoImgFile;
+	}
+
+	public MultipartFile getIdNumberFrontImgFile() {
+		return idNumberFrontImgFile;
+	}
+
+	public void setIdNumberFrontImgFile(MultipartFile idNumberFrontImgFile) {
+		this.idNumberFrontImgFile = idNumberFrontImgFile;
+	}
+
+	public MultipartFile getIdNumberBackImgFile() {
+		return idNumberBackImgFile;
+	}
+
+	public void setIdNumberBackImgFile(MultipartFile idNumberBackImgFile) {
+		this.idNumberBackImgFile = idNumberBackImgFile;
+	}
+
 	public String getIdNumberFrontImgUrl() {
 		return idNumberFrontImgUrl;
 	}

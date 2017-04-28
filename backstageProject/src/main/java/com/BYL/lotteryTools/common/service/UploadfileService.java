@@ -24,7 +24,7 @@ public interface UploadfileService {
 	
 	public List<Uploadfile> getUploadfilesByNewsUuid(String newsUuid);
 	
-	public Uploadfile uploadFiles(MultipartFile file,HttpServletRequest request) throws Exception;
+	public Uploadfile uploadFiles(MultipartFile file,HttpServletRequest request,String newsUuid) throws Exception;
 	
 	public Uploadfile uploadFilesbyFile(File file,HttpServletRequest request) throws Exception;
 }
