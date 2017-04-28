@@ -114,7 +114,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 		List<?> list = new ArrayList<Object>();
 		
 		Integer baseType = Integer.parseInt(baseTypeId);
-		
+		//TODO：处理返回值中要带专家的姓名，头像信息，需要再建预测实体的dto，用来存储这些根据expertId获取的值
 		switch(baseType)
 		{
 			case 1: list = this.getQiansanDanmaYuceList(maxIssueId, isFree, count, predictionTbname,null); break;//前三胆杀
@@ -193,7 +193,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	{
 		
 		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,DANMA_ONE,SHAMA_ONE,IS_CHARGE,MONEY"
-				+ ",WIN_RATE_DUDAN,DROWN_NUMBER,DUDAN_STATUS,SHAMAYI_STATUS,WIN_RATE_SHAYI,EXPERT_LEVEL FROM "+predictionTbname +" u  where u.ISSUE_NUMBER ="+maxIssueId );
+				+ ",WIN_RATE_DUDAN,DROWN_NUMBER,DUDAN_STATUS,SHAMAYI_STATUS,WIN_RATE_SHAYI,EXPERT_LEVEL FROM "+predictionTbname +" u  where " );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{
@@ -249,7 +249,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	{
 		
 		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,IS_CHARGE,MONEY,DROWN_NUMBER,EXPERT_LEVEL,WIN_RATE,"
-				+ "FUSHI,STATUS,YUCE_ISSUE_START,YUCE_ISSUE_STOP,CYCLE,ZJLEVEL FROM "+predictionTbname +" u  where u.ISSUE_NUMBER ="+maxIssueId );
+				+ "FUSHI,STATUS,YUCE_ISSUE_START,YUCE_ISSUE_STOP,CYCLE,ZJLEVEL FROM "+predictionTbname +" u  where " );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{
@@ -306,7 +306,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	{
 		
 		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,IS_CHARGE,MONEY,DROWN_NUMBER,EXPERT_LEVEL,WIN_RATE,ZJGROUPS,STATUS,GROUP1,"
-				+ "GROUP2,GROUP3,GROUP4,GROUP5,GROUP6 FROM "+predictionTbname +" u  where u.ISSUE_NUMBER ="+maxIssueId );
+				+ "GROUP2,GROUP3,GROUP4,GROUP5,GROUP6 FROM "+predictionTbname +" u  where " );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{

@@ -107,7 +107,7 @@ public class OuterLotteryStationController
 			
 			if(null == lotteryStation)
 			{
-				String sessionId = OuterLotteryBuyerOrExpertController.sessionMap.get(lotteryStationDTO.getTelephone());
+				/*String sessionId = OuterLotteryBuyerOrExpertController.sessionMap.get(lotteryStationDTO.getTelephone());
 				SMSVerifyCodeResult yanzhengma = null;
 				if(null != sessionId)
 				{
@@ -115,7 +115,7 @@ public class OuterLotteryStationController
 				}
 				
 				if(yanzhengma.getSuccess())
-				{
+				{*/
 					//2.新建彩票站信息
 					lotteryStation = new LotteryStation();
 					BeanUtil.copyBeanProperties(lotteryStation, lotteryStationDTO);
@@ -186,12 +186,12 @@ public class OuterLotteryStationController
 					lotteryStationService.save(lotteryStation);
 					resultBean.setStatus("success");
 					resultBean.setMessage("提交成功");
-				}
+				/*}
 				else
 				{//手机验证码验证失败
 					resultBean.setStatus("fail");
 					resultBean.setMessage(yanzhengma.getErrorMessage());
-				}
+				}*/
 				
 			}
 			else

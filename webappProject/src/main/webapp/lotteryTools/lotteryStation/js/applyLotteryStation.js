@@ -67,7 +67,7 @@ function initDatagrid()
 			            }  },
 				{field:'approvalStatusName',title:'审批状态',width:'8%',align:'center'},
 				{field:'statusName',title:'彩票站状态',width:'8%',align:'center'},
-				{field:'stationOwner',title:'站主',width:'8%',align:'center'},
+				{field:'code',title:'站主',width:'8%',align:'center'},
 				{field:'createTimeStr',title:'创建时间',width:'15%',align:'center'},
 				{field:'opt',title:'操作',width:'15%',align:'center',  
 			            formatter:function(value,row,index){  
