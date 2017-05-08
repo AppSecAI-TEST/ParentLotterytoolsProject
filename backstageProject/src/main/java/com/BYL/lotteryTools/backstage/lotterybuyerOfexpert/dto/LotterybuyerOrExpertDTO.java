@@ -36,6 +36,10 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String cityCode;
 	
+	private String provinceName;
+	
+	private String cityName;
+	
 	private String inviteCode;//邀请码
 	
 	private String regionCode;
@@ -76,6 +80,22 @@ public class LotterybuyerOrExpertDTO {
 	
 	
 	
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
 
 	public String getTouXiangUrl() {
 		return touXiangUrl;

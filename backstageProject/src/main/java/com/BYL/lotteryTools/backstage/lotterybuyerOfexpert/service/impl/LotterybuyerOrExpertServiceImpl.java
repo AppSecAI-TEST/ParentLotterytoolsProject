@@ -23,7 +23,9 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOr
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.LotterybuyerOrExpertRepository;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
+import com.BYL.lotteryTools.backstage.user.entity.City;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
+import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
@@ -52,6 +54,9 @@ public class LotterybuyerOrExpertServiceImpl implements
 	
 	@Autowired
 	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private CityService cityService;
 
 	public void save(LotterybuyerOrExpert entity) 
 	{
@@ -85,6 +90,20 @@ public class LotterybuyerOrExpertServiceImpl implements
 						dto.setTouXiang(touxiangImg.getNewsUuid());
 						dto.setTouXiangUrl(touxiangImg.getUploadfilepath()+touxiangImg.getUploadRealName());
 					}
+				}
+				
+				if(null != entity.getProvinceCode() && !"".equals(entity.getProvinceCode()))
+				{
+					Province province  = provinceService.getProvinceByPcode(entity.getProvinceCode());
+					
+					dto.setProvinceName(province.getPname());
+				}
+				
+				if(null != entity.getCityCode() && !"".equals(entity.getCityCode()))
+				{
+					City city =  cityService.getCityByCcode(entity.getCityCode());
+					
+					dto.setCityName(city.getCname());
 				}
 				
 			} catch (Exception e) {
