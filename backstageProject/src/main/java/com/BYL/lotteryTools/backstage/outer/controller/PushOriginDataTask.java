@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
+import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
 
 /**
@@ -48,7 +49,7 @@ public class PushOriginDataTask
 	
 
 	//判断当前维护的所有高频彩种是否开出新一期，开出后进行推送
-//	@Scheduled(cron = "0/30 * * * * ? ") //30s执行1次
+	@Scheduled(cron = "0/30 * * * * ? ") //30s执行1次
     //需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate  
     public void tuisongMethod() 
  	{ 
@@ -60,27 +61,57 @@ public class PushOriginDataTask
         		buffer.append(lotteryPlay.getLotteryType()).append(lotteryPlay.getCode());
 				try
 				{//判断当前彩种是否开奖
-					SrcfivedataDTO maxdto =  null;
+					SrcfivedataDTO maxdto =  null;//开奖号码为5个号码的彩种实体
+					SrcthreedataDTO maxThreedto = null;//开奖号码为3个号码的彩种实体
 					boolean tuisongFlag= true;
 					System.out.println(buffer+"="+issueMap.get(buffer.toString()));
 					if(null !=issueMap.get(buffer.toString()))
 					{//当前期号组合中有最大期号,获取比当前最大期号大的数据
-						 maxdto = outerInterfaceService.getMaxLottery
-								(lotteryPlay.getCorrespondingTable(), issueMap.get(buffer.toString()));
-						 if(null == maxdto )
-						 {//当前最大期号就是最大的数据
-							 tuisongFlag = false;
-						 }
-						 else
-						 {
-							 issueMap.put(buffer.toString(), maxdto.getIssueNumber());//存储最大期号
-						 }
+						if("5".equals(lotteryPlay.getLotteryNumber()))
+						{
+							 maxdto = outerInterfaceService.getMaxLottery
+										(lotteryPlay.getCorrespondingTable(), issueMap.get(buffer.toString()));
+								 if(null == maxdto )
+								 {//当前最大期号就是最大的数据
+									 tuisongFlag = false;
+								 }
+								 else
+								 {
+									 issueMap.put(buffer.toString(), maxdto.getIssueNumber());//存储最大期号
+								 }
+						}
+						else
+							if("3".equals(lotteryPlay.getLotteryNumber()))
+							{
+								 maxThreedto = outerInterfaceService.getMaxThreeLottery
+											(lotteryPlay.getCorrespondingTable(), issueMap.get(buffer.toString()));
+								 if(null == maxThreedto )
+								 {//当前最大期号就是最大的数据
+									 tuisongFlag = false;
+								 }
+								 else
+								 {
+									 issueMap.put(buffer.toString(), maxThreedto.getIssueNumber());//存储最大期号
+								 }
+							}
+						
 					}
 					else
 					{
-						 maxdto = outerInterfaceService.getMaxLottery
-								(lotteryPlay.getCorrespondingTable(), null);
-						issueMap.put(buffer.toString(), maxdto.getIssueNumber());//存储最大期号
+						if("5".equals(lotteryPlay.getLotteryNumber()))
+						{
+							 maxdto = outerInterfaceService.getMaxLottery
+										(lotteryPlay.getCorrespondingTable(), null);
+								issueMap.put(buffer.toString(), maxdto.getIssueNumber());//存储最大期号
+						}
+						else
+							if("3".equals(lotteryPlay.getLotteryNumber()))
+							{
+								maxThreedto = outerInterfaceService.getMaxThreeLottery
+										(lotteryPlay.getCorrespondingTable(), null);
+								issueMap.put(buffer.toString(), maxThreedto.getIssueNumber());//存储最大期号
+							}
+						
 						
 					}
 					//将推送内容进行推送
@@ -88,12 +119,24 @@ public class PushOriginDataTask
 					{
 						String[] tagsand = {lotteryPlay.getProvince(),lotteryPlay.getLotteryType()};
 						StringBuffer msgContent = new StringBuffer();
-						msgContent.append(maxdto.getIssueNumber()).append(",");
-						msgContent.append(maxdto.getNo1()).append(",");
-						msgContent.append(maxdto.getNo2()).append(",");
-						msgContent.append(maxdto.getNo3()).append(",");
-						msgContent.append(maxdto.getNo4()).append(",");
-						msgContent.append(maxdto.getNo5());
+						if("5".equals(lotteryPlay.getLotteryNumber()))
+						{
+							msgContent.append(maxdto.getIssueNumber()).append(",");
+							msgContent.append(maxdto.getNo1()).append(",");
+							msgContent.append(maxdto.getNo2()).append(",");
+							msgContent.append(maxdto.getNo3()).append(",");
+							msgContent.append(maxdto.getNo4()).append(",");
+							msgContent.append(maxdto.getNo5());
+						}
+						else
+							if("3".equals(lotteryPlay.getLotteryNumber()))
+							{
+								msgContent.append(maxThreedto.getIssueNumber()).append(",");
+								msgContent.append(maxThreedto.getNo1()).append(",");
+								msgContent.append(maxThreedto.getNo2()).append(",");
+								msgContent.append(maxThreedto.getNo3());
+							}
+						
 						PushController.sendPushWithCallback(tagsand, null, msgContent.toString(), lotteryPlay.getProvince());
 					}
 					

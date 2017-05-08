@@ -93,7 +93,8 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 from "+tbName+" ");
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 from analysis."+tbName+" ");
+		
 		if(null != maxIssueId &&!"".equals(maxIssueId))
 		{
 			sql.append(" where ISSUE_NUMBER>"+maxIssueId+"  order by ISSUE_NUMBER asc  ");
@@ -108,6 +109,40 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		Pageable pageable = new PageRequest(0,limit);
 		QueryResult<SrcfivedataDTO> queryResult = srcfivedataDTORepository.
 				getScrollDataByGroupBySql(SrcfivedataDTO.class, sql.toString(), null,pageable );
+		list = queryResult.getResultList();
+		if(null != list &&list.size()>0)
+		{
+			dto = list.get(0);
+		}
+		
+		return dto;
+	}
+	
+	public SrcthreedataDTO getMaxThreeLottery(String tbName,String maxIssueId) 
+	{
+		List<SrcthreedataDTO> list = new ArrayList<SrcthreedataDTO>();
+		SrcthreedataDTO dto = null;
+		int limit = 1;
+		
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3 from analysis."+tbName+" ");
+		
+		if(null != maxIssueId &&!"".equals(maxIssueId))
+		{
+			sql.append(" where ISSUE_NUMBER>"+maxIssueId+"  order by ISSUE_NUMBER asc  ");
+		}
+		else
+		{
+			sql.append(" order by ISSUE_NUMBER desc ");
+		}
+		
+		
+		
+		Pageable pageable = new PageRequest(0,limit);
+		QueryResult<SrcthreedataDTO> queryResult = srcthreedataDTORepository.
+				getScrollDataByGroupBySql(SrcthreedataDTO.class, sql.toString(), null,pageable );
 		list = queryResult.getResultList();
 		if(null != list &&list.size()>0)
 		{

@@ -2,6 +2,7 @@ package com.BYL.lotteryTools.backstage.outer.service;
 
 import java.util.List;
 
+import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
@@ -16,6 +17,8 @@ public interface OuterInterfaceService
 	public List<LotteryPlayOfProvince> getLotteryPlayOfProvince(String province);
 	
 	public SrcfivedataDTO getMaxLottery(String tbName,String maxIssueId) ;
+	
+	public SrcthreedataDTO getMaxThreeLottery(String tbName,String maxIssueId) ;
 	
 	public SrcfivedataDTO getSrcfivedataDTOByIssueNumber(String issueNumber);
 	
