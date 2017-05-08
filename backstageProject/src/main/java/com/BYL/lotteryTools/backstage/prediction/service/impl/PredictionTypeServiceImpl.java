@@ -132,14 +132,14 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	/**获取前三胆杀的专家预测结果**/	
 	private List<QiansanDanmaYuce> getQiansanDanmaYuceList(String maxIssueId,String isFree,String count,String predictionTbname,String expertId)
 	{
-		
-		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER"
+		StringBuffer execSql = new StringBuffer("SELECT u.ID as ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER"
 				+ ",DANMA_ONE,DANMA_TWO,SHAMA_ONE,IS_CHARGE,MONEY,WIN_RATE_DUDAN,WIN_RATE_SHUANGDAN,WIN_RATE_DANMA,WIN_RATE_SHUANGDAN,WIN_RATE_DANMA,"
-				+ " DROWN_NUMBER,DUDAN_STATUS,SHUANGDAN_STATUS,DANMA_STATUS,SHAMAER_STATUS,SHAMASAN_STATUS,WIN_RATE_SHAER,WIN_RATE_SHASAN,EXPERT_LEVEL  FROM "+predictionTbname +" u  where " );
+				+ " DROWN_NUMBER,DUDAN_STATUS,SHUANGDAN_STATUS,DANMA_STATUS,SHAMAER_STATUS,SHAMASAN_STATUS,WIN_RATE_SHAER,WIN_RATE_SHASAN,EXPERT_LEVEL,l.NAME as EXPERT_NAME  FROM "+predictionTbname +" u,T_LT_LOTTERYBUYER_OR_EXPERT l  where "
+						+ "u.EXPERT_ID = l.ID" );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{
-			execSql.append(" u.ISSUE_NUMBER ="+maxIssueId);
+			execSql.append(" and u.ISSUE_NUMBER ="+maxIssueId);
 			
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -156,7 +156,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				execSql.append(" and EXPERT_ID = '"+expertId+"' ");
 				}
 		}
-		else
+		/*else
 		{
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -173,11 +173,11 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 					execSql.append("  EXPERT_ID = '"+expertId+"' ");
 				}
 		}
+		*/
 		
 		
 		
-		
-		execSql.append(" order by EXPERT_LEVEL desc LIMIT "+count);
+		execSql.append(" order by u.EXPERT_LEVEL desc LIMIT "+count);
 		
 		Object[] queryParams = new Object[]{
 		};
@@ -191,13 +191,13 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	/**获取任胆杀的专家预测结果**/	
 	private List<RenDanmaYuce> getRenDanmaYuceList(String maxIssueId,String isFree,String count,String predictionTbname,String expertId)
 	{
-		
-		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,DANMA_ONE,SHAMA_ONE,IS_CHARGE,MONEY"
-				+ ",WIN_RATE_DUDAN,DROWN_NUMBER,DUDAN_STATUS,SHAMAYI_STATUS,WIN_RATE_SHAYI,EXPERT_LEVEL FROM "+predictionTbname +" u  where " );
+		StringBuffer execSql = new StringBuffer("SELECT u.ID as ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,DANMA_ONE,SHAMA_ONE,IS_CHARGE,MONEY"
+				+ ",WIN_RATE_DUDAN,DROWN_NUMBER,DUDAN_STATUS,SHAMAYI_STATUS,WIN_RATE_SHAYI,EXPERT_LEVEL,l.NAME as EXPERT_NAME FROM "+predictionTbname +" u,T_LT_LOTTERYBUYER_OR_EXPERT l  where "
+						+ "u.EXPERT_ID = l.ID" );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{
-			execSql.append(" u.ISSUE_NUMBER ="+maxIssueId);
+			execSql.append(" and u.ISSUE_NUMBER ="+maxIssueId);
 			
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -214,7 +214,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				execSql.append(" and EXPERT_ID = '"+expertId+"' ");
 				}
 		}
-		else
+		/*else
 		{
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -230,10 +230,10 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				{
 					execSql.append("  EXPERT_ID = '"+expertId+"' ");
 				}
-		}
+		}*/
 		
 		
-		execSql.append(" order by EXPERT_LEVEL asc LIMIT "+count);
+		execSql.append(" order by u.EXPERT_LEVEL asc LIMIT "+count);
 		
 		Object[] queryParams = new Object[]{
 		};
@@ -247,13 +247,13 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	/**获取复式预测的的专家预测结果（包括：两码三期计划，乐选四期，前三六码复式）**/	
 	private List<FushiYuce> getFushiYuceList(String maxIssueId,String isFree,String count,String predictionTbname,String expertId)
 	{
-		
-		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,IS_CHARGE,MONEY,DROWN_NUMBER,EXPERT_LEVEL,WIN_RATE,"
-				+ "FUSHI,STATUS,YUCE_ISSUE_START,YUCE_ISSUE_STOP,CYCLE,ZJLEVEL FROM "+predictionTbname +" u  where " );
+		StringBuffer execSql = new StringBuffer("SELECT u.ID as ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,IS_CHARGE,MONEY,DROWN_NUMBER,EXPERT_LEVEL,WIN_RATE,"
+				+ "FUSHI,STATUS,YUCE_ISSUE_START,YUCE_ISSUE_STOP,CYCLE,ZJLEVEL,l.NAME as EXPERT_NAME FROM "+predictionTbname +" u,T_LT_LOTTERYBUYER_OR_EXPERT l  where "
+						+ "u.EXPERT_ID = l.ID" );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{
-			execSql.append(" u.ISSUE_NUMBER ="+maxIssueId);
+			execSql.append(" and u.ISSUE_NUMBER ="+maxIssueId);
 			
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -270,7 +270,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				execSql.append(" and EXPERT_ID = '"+expertId+"' ");
 				}
 		}
-		else
+		/*else
 		{
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -286,11 +286,11 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				{
 					execSql.append("  EXPERT_ID = '"+expertId+"' ");
 				}
-		}
+		}*/
 		
 		
 		
-		execSql.append(" order by EXPERT_LEVEL asc LIMIT "+count);
+		execSql.append(" order by u.EXPERT_LEVEL asc LIMIT "+count);
 		
 		Object[] queryParams = new Object[]{
 		};
@@ -304,13 +304,14 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 	/**获取任三精选六组预测的的专家预测结果（包括：两码三期计划，乐选四期，前三六码复式）**/	
 	private List<SixGroupYuce> getSixGroupYuceList(String maxIssueId,String isFree,String count,String predictionTbname,String expertId)
 	{
-		
-		StringBuffer execSql = new StringBuffer("SELECT ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,IS_CHARGE,MONEY,DROWN_NUMBER,EXPERT_LEVEL,WIN_RATE,ZJGROUPS,STATUS,GROUP1,"
-				+ "GROUP2,GROUP3,GROUP4,GROUP5,GROUP6 FROM "+predictionTbname +" u  where " );
+		maxIssueId = "17042849";
+		StringBuffer execSql = new StringBuffer("SELECT u.ID as ID,PREDICTION_TYPE,EXPERT_ID,ISSUE_NUMBER,IS_CHARGE,MONEY,DROWN_NUMBER,EXPERT_LEVEL,WIN_RATE,ZJGROUPS,STATUS,GROUP1,"
+				+ "GROUP2,GROUP3,GROUP4,GROUP5,GROUP6,l.NAME as EXPERT_NAME FROM "+predictionTbname +" u,T_LT_LOTTERYBUYER_OR_EXPERT l  where "
+						+ "u.EXPERT_ID = l.ID" );
 		
 		if(null != maxIssueId && !"".equals(maxIssueId))
 		{
-			execSql.append(" u.ISSUE_NUMBER ="+maxIssueId);
+			execSql.append(" and u.ISSUE_NUMBER ="+maxIssueId);
 			
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -327,7 +328,7 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				execSql.append(" and EXPERT_ID = '"+expertId+"' ");
 				}
 		}
-		else
+		/*else
 		{
 			if(null != isFree && !"".equals(isFree))
 			{
@@ -343,11 +344,11 @@ public class PredictionTypeServiceImpl implements PredictionTypeService {
 				{
 					execSql.append("  EXPERT_ID = '"+expertId+"' ");
 				}
-		}
+		}*/
 		
 		
 		
-		execSql.append(" order by EXPERT_LEVEL asc LIMIT "+count);
+		execSql.append(" order by u.EXPERT_LEVEL asc LIMIT "+count);
 		
 		Object[] queryParams = new Object[]{
 		};

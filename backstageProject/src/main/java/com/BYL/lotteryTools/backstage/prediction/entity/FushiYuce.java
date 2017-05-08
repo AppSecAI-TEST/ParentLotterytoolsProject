@@ -61,6 +61,19 @@ public class FushiYuce {
 	
 	@Column(name="ZJLEVEL")
 	private String zjLevel;//只有乐选四期复式有用
+	
+	@Column(name="EXPERT_NAME")
+	private String expertName;
+	
+	
+
+	public String getExpertName() {
+		return expertName;
+	}
+
+	public void setExpertName(String expertName) {
+		this.expertName = expertName;
+	}
 
 	public int getId() {
 		return Id;

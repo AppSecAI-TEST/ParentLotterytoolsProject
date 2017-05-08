@@ -58,6 +58,19 @@ public class RenDanmaYuce {
 	@Column(name="EXPERT_LEVEL")
 	private String expertLevel;
 
+	@Column(name="EXPERT_NAME")
+	private String expertName;
+	
+	
+
+	public String getExpertName() {
+		return expertName;
+	}
+
+	public void setExpertName(String expertName) {
+		this.expertName = expertName;
+	}
+
 	public int getId() {
 		return Id;
 	}

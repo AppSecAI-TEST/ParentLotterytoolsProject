@@ -67,6 +67,19 @@ public class SixGroupYuce {
 	
 	@Column(name="GROUP6")
 	private String group6;
+	
+	@Column(name="EXPERT_NAME")
+	private String expertName;
+	
+	
+
+	public String getExpertName() {
+		return expertName;
+	}
+
+	public void setExpertName(String expertName) {
+		this.expertName = expertName;
+	}
 
 	public int getId() {
 		return Id;
