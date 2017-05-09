@@ -31,8 +31,11 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="NAME", length=45)
 	private String name;//群名称
 	
+	@Column(name="GROUP_NUMBER", length=45)
+	private String groupNumber;//群号
+	
 	@Column(name="LOTTERY_TYPE", length=45)
-	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩
+	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩,4:中心群,5：公司群
 	
 	@Column(name="GROUP_LEVEL", length=45)
 	private String groupLevel;//群等级，与群等级表关联
@@ -55,6 +58,23 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="MEMBER_COUNT")
 	private Integer memberCount;//当前群人数
 	
+	@Column(name="JOIN_TYPE")
+	private Integer joinType;//加入方式，1：验证加入 0：自由加入
+	
+	@Column(name="FABUKJ")
+	private Integer fabuKj;//是否发布开奖画面（1：发布0：不发布）
+	
+	@Column(name="FABUZS")
+	private Integer fabuZs;//是否发布走势画面（1：发布0：不发布）
+	
+	@Column(name="SSYLCX")
+	private Integer ssYlChaxun;//实时遗漏查询（1：是0：否）
+	
+	@Column(name="SSZJCX")
+	private Integer ssZjChaxun;//实时专家查询（1：是0：否）
+	
+	@Column(name="SSKJCX")
+	private Integer ssKjChaxun;//是否实时开奖查询（1：是0：否）
 	
 	@ManyToOne
 	@JoinColumn(name="GROUP_OWNER_ID",referencedColumnName="id")
@@ -64,12 +84,81 @@ public class LotteryGroup extends BaseEntity
 	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
 	private List<RelaBindOfLbuyerorexpertAndGroup> relaBindOfLbuyerorexpertAndGroups ;
 	
+	//2017.5.9ADD:一个群可以被多个用户申请加入
+	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
+	private List<RelaApplyOfLbuyerorexpertAndGroup> relaApplyOfLbuyerorexpertAndGroups ;
+	
 	//一个群可以对应多个群升级记录
 	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
 	private List<RelaGroupUpLevelRecord> relaGroupUpLevelRecords ;
 	
 	
 	
+
+	public String getGroupNumber() {
+		return groupNumber;
+	}
+
+	public void setGroupNumber(String groupNumber) {
+		this.groupNumber = groupNumber;
+	}
+
+	public Integer getFabuKj() {
+		return fabuKj;
+	}
+
+	public void setFabuKj(Integer fabuKj) {
+		this.fabuKj = fabuKj;
+	}
+
+	public Integer getFabuZs() {
+		return fabuZs;
+	}
+
+	public void setFabuZs(Integer fabuZs) {
+		this.fabuZs = fabuZs;
+	}
+
+	public Integer getSsYlChaxun() {
+		return ssYlChaxun;
+	}
+
+	public void setSsYlChaxun(Integer ssYlChaxun) {
+		this.ssYlChaxun = ssYlChaxun;
+	}
+
+	public Integer getSsZjChaxun() {
+		return ssZjChaxun;
+	}
+
+	public void setSsZjChaxun(Integer ssZjChaxun) {
+		this.ssZjChaxun = ssZjChaxun;
+	}
+
+	public Integer getSsKjChaxun() {
+		return ssKjChaxun;
+	}
+
+	public void setSsKjChaxun(Integer ssKjChaxun) {
+		this.ssKjChaxun = ssKjChaxun;
+	}
+
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroups() {
+		return relaApplyOfLbuyerorexpertAndGroups;
+	}
+
+	public void setRelaApplyOfLbuyerorexpertAndGroups(
+			List<RelaApplyOfLbuyerorexpertAndGroup> relaApplyOfLbuyerorexpertAndGroups) {
+		this.relaApplyOfLbuyerorexpertAndGroups = relaApplyOfLbuyerorexpertAndGroups;
+	}
+
+	public Integer getJoinType() {
+		return joinType;
+	}
+
+	public void setJoinType(Integer joinType) {
+		this.joinType = joinType;
+	}
 
 	public List<RelaGroupUpLevelRecord> getRelaGroupUpLevelRecords() {
 		return relaGroupUpLevelRecords;

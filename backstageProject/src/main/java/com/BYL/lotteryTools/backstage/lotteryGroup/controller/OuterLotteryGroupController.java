@@ -19,17 +19,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.dto.RelaApplyOfLbuyerorexpertAndGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LGroupLevel;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
+import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
@@ -68,6 +73,9 @@ public class OuterLotteryGroupController
 	
 	@Autowired
 	private RelaGroupUpLevelService relaGroupUpLevelService;
+	
+	@Autowired
+	private RelaApplybuyerAndGroupService relaApplybuyerAndGroupService;
 	
 	public static final String SUCCESS_CODE = "200";//成功返回码
 	
@@ -351,6 +359,212 @@ public class OuterLotteryGroupController
 	}
 	
 	/**
+	 * 申请加入群
+	* @Title: applyJoinGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param groupId
+	* @param @param applyMessage
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月9日 上午9:57:57 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/applyJoinGroup", method = RequestMethod.GET)
+	public @ResponseBody ResultBean applyJoinGroup(
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="groupId",required=false) String groupId,
+			@RequestParam(value="applyMessage",required=false) String applyMessage)
+	{
+		ResultBean resultBean = new ResultBean();
+		
+		//建立用户和群的申请关系
+		RelaApplyOfLbuyerorexpertAndGroup entity = new RelaApplyOfLbuyerorexpertAndGroup();
+		LotterybuyerOrExpert user = null;
+		if(null != userId)
+		 user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
+		
+		LotteryGroup lotteryGroup = null;
+		if(null != groupId)
+			lotteryGroup = lotteryGroupService.getLotteryGroupById(groupId);
+		
+		entity.setId(UUID.randomUUID().toString());//生成主键id
+		entity.setIsDeleted(Constants.IS_NOT_DELETED);
+		entity.setLotterybuyerOrExpert(user);
+		entity.setLotteryGroup(lotteryGroup);
+		
+		if(null != applyMessage &&!"".equals(applyMessage))//若申请信息不为空，则将申请信息放入
+			entity.setApplyMessage(applyMessage);
+		
+		entity.setCreator(userId);
+		entity.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		entity.setModify(userId);
+		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		entity.setApprovalUser(lotteryGroup.getLotteryBuyerOrExpert().getId());//添加群主id
+		
+		//保存用户的申请
+		if(null != userId && null != groupId)
+			relaApplybuyerAndGroupService.save(entity);
+		
+		//TODO:将申请信息推送给群主,推送给群主是approval
+		LotterybuyerOrExpert groupOwner = lotteryGroup.getLotteryBuyerOrExpert();
+		
+		
+		
+		return resultBean;
+	}
+	
+	/**
+	 * 群主审批加群申请
+	* @Title: gOwnerApprovalApplys 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param groupId
+	* @param @param isPass
+	* @param @param notPassMessage
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月9日 上午11:09:39 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/gOwnerApprovalApplys", method = RequestMethod.GET)
+	public @ResponseBody ResultBean gOwnerApprovalApplys(
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="groupId",required=false) String groupId,
+			@RequestParam(value="groupOwnerId",required=false) String groupOwnerId,//群主id
+			@RequestParam(value="isPass",required=false) String isPass,//1：通过0：不通过
+			@RequestParam(value="notPassMessage",required=false) String notPassMessage)
+	{
+		ResultBean resultBean = new ResultBean();
+		
+		//##如果审批通过，执行将用户加入群的操作##
+		
+		//根据用户id和群id获取用户申请加入群的信息
+		RelaApplyOfLbuyerorexpertAndGroup entity = relaApplybuyerAndGroupService.
+				getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
+		
+		if(null != entity)
+		{
+			entity.setStatus(isPass);//放置审核状态
+			
+			if("1".equals(isPass))
+			{//审核通过，执行加群操作
+				String[] joinUsers = {userId};//组合加群用户数组
+				this.joinUserInGroup(joinUsers, groupId);
+			}
+			else
+				if("0".equals(isPass))
+				{//审核不通过，执行不通过信息的添加
+					if(null != notPassMessage && !"".equals(notPassMessage))
+					  entity.setNotPassMessage(notPassMessage);
+					
+				}
+		}
+		
+		//TODO:将群主审核的结果推送给申请加群的用户,群主审核的tag是apply
+		
+		
+		
+		return resultBean;
+	}
+	
+	/**
+	 * 获取当前用户的申请加群的列表
+	* @Title: getApplyGroupList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月9日 上午11:42:52 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getApplyGroupList", method = RequestMethod.GET)
+	public @ResponseBody Map<String , Object> getApplyGroupList(
+			@RequestParam(value="userId",required=false) String userId)
+	{
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		try
+		{
+			List<RelaApplyOfLbuyerorexpertAndGroup> entities = relaApplybuyerAndGroupService.
+					getRelaApplyOfLbuyerorexpertAndGroupByCreator(userId);
+			
+			List<RelaApplyOfLbuyerorexpertAndGroupDTO> dtos = relaApplybuyerAndGroupService.toDTOS(entities);
+			
+			map.put("applyList", dtos);
+			map.put("flag", true);
+		}
+		catch(Exception e)
+		{
+			logger.error("error", e);
+			map.put("flag", false);
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * 获取当前用户（群主）需要审核的申请加群列表
+	* @Title: getApprovalList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月9日 上午11:47:45 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getApprovalList", method = RequestMethod.GET)
+	public @ResponseBody Map<String , Object> getApprovalList(
+			@RequestParam(value="ownerId",required=false) String ownerId)
+	{
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		try
+		{
+			List<RelaApplyOfLbuyerorexpertAndGroup> entities = relaApplybuyerAndGroupService.
+					getRelaApplyOfLbuyerorexpertAndGroupByApprovalUser(ownerId);
+			
+			List<RelaApplyOfLbuyerorexpertAndGroupDTO> dtos = relaApplybuyerAndGroupService.toDTOS(entities);
+			
+			map.put("approvalList", dtos);
+			map.put("flag", true);
+		}
+		catch(Exception e)
+		{
+			logger.error("error", e);
+			map.put("flag", false);
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * 根据群号获取群信息
+	* @Title: getGroupByGroupnumber 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupNumber
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月9日 下午2:51:00 
+	* @return LotteryGroupDTO    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getGroupByGroupnumber", method = RequestMethod.GET)
+	public @ResponseBody LotteryGroupDTO getGroupByGroupnumber(
+			@RequestParam(value="groupNumber",required=false)  String groupNumber)
+	{
+		LotteryGroup group = lotteryGroupService.getLotteryGroupByGroupNumber(groupNumber);
+		
+		LotteryGroupDTO dto = lotteryGroupService.toDTO(group);
+		
+		return dto;
+	}
+	
+	/**
 	 * 向群中加入用户
 	* @Title: joinUserInGroup 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
@@ -366,8 +580,8 @@ public class OuterLotteryGroupController
 	 */
 	@RequestMapping(value="/joinUserInGroup", method = RequestMethod.GET)
 	public @ResponseBody ResultBean joinUserInGroup(
-			String[] joinUsers,String groupId,
-			HttpServletRequest request,HttpSession httpSession)
+			@RequestParam(value="joinUsers",required=false)  String[] joinUsers,
+			@RequestParam(value="groupId",required=false) String groupId)
 	{
 		ResultBean resultBean = new ResultBean();
 		
@@ -437,7 +651,8 @@ public class OuterLotteryGroupController
 	 */
 	@RequestMapping(value="/quitUserFronGroup", method = RequestMethod.GET)
 	public @ResponseBody ResultBean quitUserFronGroup(
-			String[] quitUsers,String groupId,
+			@RequestParam(value="quitUsers",required=false)   String[] quitUsers,
+			@RequestParam(value="groupId",required=false)   String groupId,
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		ResultBean resultBean = new ResultBean();
@@ -586,23 +801,24 @@ public class OuterLotteryGroupController
 		{
 			BeanUtil.copyBeanProperties(entity, dto);
 			entity.setId(UUID.randomUUID().toString());//生成id
+			
+			entity.setGroupNumber(this.generateGroupNumber());//放置群号
 			LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
 					getLotterybuyerOrExpertById(dto.getOwnerId());
 			entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
 			
 			//处理群头像
-			if(null != dto.getTouXiang())
+			if(null != dto.getTouXiangImg())
 			{
-//				Uploadfile uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(), request);
-//				StringBuffer imguri = new StringBuffer();//头像uri
-//				if(null != uploadfile)
-//				{//若头像不为空，则放置头像的uuid
-					entity.setTouXiang(dto.getTouXiang());
-//					imguri.append(request.getContextPath()).
-//							append(uploadfile.getUploadfilepath()).
-//							append(uploadfile.getUploadRealName());
-//					logger.info("touxiang",imguri);//输出头像
-//				}
+				Uploadfile uploadfile =null;
+				String newsUuid = UUID.randomUUID().toString();
+				try {
+						 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
+					
+				} catch (Exception e) {
+					logger.error("error:", e);
+				}
+				entity.setTouXiang(uploadfile.getNewsUuid());
 			}
 			
 			//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人
@@ -650,6 +866,7 @@ public class OuterLotteryGroupController
 			}
 			else
 			{
+				map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
 				map.put("message", "创建成功");
 				map.put("flag", true);
 			}
@@ -692,6 +909,22 @@ public class OuterLotteryGroupController
 		
 		
 		return map;
+	}
+	
+	
+	//TODO:生成站点邀请码
+	private  String generateGroupNumber()
+	{
+		List<LotteryGroup> alllist = lotteryGroupService.findAll();
+		
+		int code = alllist.size()+1;
+		StringBuffer str = new StringBuffer(code+"");
+		//6位邀请码
+		while(str.length()<8)
+		{
+			str.insert(0, "0");
+		}
+		return str.toString();
 	}
 	
 	

@@ -28,4 +28,8 @@ public interface LotteryGroupService {
 	public List<LotteryGroup> getLotteryGroupByGroupRobotID(String groupRobotID);
 	
 	public LotteryGroup getLotteryGroupById(String id);
+	
+	public List<LotteryGroup> findAll();
+	
+	public LotteryGroup getLotteryGroupByGroupNumber(String groupNumber);
 }

@@ -24,6 +24,11 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	@Autowired
 	private LotteryGroupRespository lotteryGroupRespository;
 	
+	public List<LotteryGroup> findAll()
+	{
+		return lotteryGroupRespository.findAll();
+	}
+	
 	public void save(LotteryGroup entity)
 	{
 		lotteryGroupRespository.save(entity);
@@ -92,6 +97,10 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	public LotteryGroup getLotteryGroupById(String id)
 	{
 		return lotteryGroupRespository.getLotteryGroupById(id);
+	}
+
+	public LotteryGroup getLotteryGroupByGroupNumber(String groupNumber) {
+		return lotteryGroupRespository.getLotteryGroupByGroupNumber(groupNumber);
 	}
 	
 	

@@ -1,13 +1,5 @@
 package com.BYL.lotteryTools.common.bean;
 
-/**
- * 
-  * @ClassName: resultBean 
-  * @Description: TODO(杩斿洖鏁版嵁bean) 
-  * @author bann@sdfcp.com
-  * @date 2015骞�0鏈�鏃�涓嬪崍4:46:57 
-  *
- */
 public class ResultBean
 {
 	private String message;//杩斿洖鎻愮ず淇℃伅
