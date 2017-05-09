@@ -39,7 +39,7 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 		
 	}
 
-	public RelaApplyOfLbuyerorexpertAndGroup getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(
 			String userId, String groupId) {
 		return relaApplyOfBuyyerorexpertAndGroupRespository.getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
 	}

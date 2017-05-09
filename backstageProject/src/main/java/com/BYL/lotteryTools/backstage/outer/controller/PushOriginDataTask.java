@@ -49,7 +49,7 @@ public class PushOriginDataTask
 	
 
 	//判断当前维护的所有高频彩种是否开出新一期，开出后进行推送
-	@Scheduled(cron = "0/30 * * * * ? ") //30s执行1次
+//	@Scheduled(cron = "0/30 * * * * ? ") //30s执行1次
     //需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate  
     public void tuisongMethod() 
  	{ 
@@ -64,7 +64,6 @@ public class PushOriginDataTask
 					SrcfivedataDTO maxdto =  null;//开奖号码为5个号码的彩种实体
 					SrcthreedataDTO maxThreedto = null;//开奖号码为3个号码的彩种实体
 					boolean tuisongFlag= true;
-					System.out.println(buffer+"="+issueMap.get(buffer.toString()));
 					if(null !=issueMap.get(buffer.toString()))
 					{//当前期号组合中有最大期号,获取比当前最大期号大的数据
 						if("5".equals(lotteryPlay.getLotteryNumber()))

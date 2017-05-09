@@ -38,6 +38,7 @@ import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.controller.PushController;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
@@ -409,8 +410,8 @@ public class OuterLotteryGroupController
 		
 		//TODO:将申请信息推送给群主,推送给群主是approval
 		LotterybuyerOrExpert groupOwner = lotteryGroup.getLotteryBuyerOrExpert();
-		
-		
+		String[] tagsand = {"approval",groupOwner.getTelephone()};//推送给群主id，推送给群主审核
+		PushController.sendPushWithCallback(tagsand, null, "审核", userId);
 		
 		return resultBean;
 	}
@@ -442,11 +443,13 @@ public class OuterLotteryGroupController
 		//##如果审批通过，执行将用户加入群的操作##
 		
 		//根据用户id和群id获取用户申请加入群的信息
-		RelaApplyOfLbuyerorexpertAndGroup entity = relaApplybuyerAndGroupService.
+		List<RelaApplyOfLbuyerorexpertAndGroup> entities = relaApplybuyerAndGroupService.
 				getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
 		
-		if(null != entity)
+		RelaApplyOfLbuyerorexpertAndGroup entity = null;
+		if(null != entities )
 		{
+			entity = entities.get(0);
 			entity.setStatus(isPass);//放置审核状态
 			
 			if("1".equals(isPass))
@@ -461,11 +464,19 @@ public class OuterLotteryGroupController
 					  entity.setNotPassMessage(notPassMessage);
 					
 				}
+			
+			entity.setModify(groupOwnerId);
+			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			
+			relaApplybuyerAndGroupService.update(entity);
 		}
 		
 		//TODO:将群主审核的结果推送给申请加群的用户,群主审核的tag是apply
+		String[] tagsand = {"apply",entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
+		PushController.sendPushWithCallback(tagsand, null, "申请列表", groupOwnerId);
 		
-		
+		resultBean.setFlag(true);
+		resultBean.setMessage("审核成功");
 		
 		return resultBean;
 	}

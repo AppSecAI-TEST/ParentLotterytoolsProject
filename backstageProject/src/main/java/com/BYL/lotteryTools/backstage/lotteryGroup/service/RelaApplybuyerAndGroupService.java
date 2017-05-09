@@ -11,7 +11,7 @@ public interface RelaApplybuyerAndGroupService {
 	
 	public void update(RelaApplyOfLbuyerorexpertAndGroup entity);
 	
-	public RelaApplyOfLbuyerorexpertAndGroup getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(String userId,String groupId);
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(String userId,String groupId);
 	
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByApprovalUser(String approvalUser);
 	
