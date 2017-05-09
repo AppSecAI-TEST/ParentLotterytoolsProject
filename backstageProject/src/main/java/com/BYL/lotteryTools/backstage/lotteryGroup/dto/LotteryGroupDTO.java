@@ -19,6 +19,8 @@ public class LotteryGroupDTO {
 	
 	private String touXiang;//头像图片
 	
+	private String touXiangImgUrl;//头像图片路径
+	
 	private MultipartFile touXiangImg;//头像图片
 	
 	private String ownerId;//群主id
@@ -43,12 +45,30 @@ public class LotteryGroupDTO {
 	
 	private Integer ssKjChaxun;//是否实时开奖查询（1：是0：否）
 	
+	private String createTimeStr;//创建时间字符串
 	
 	
 	
 	
 	
 	
+	
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
+
+	public String getTouXiangImgUrl() {
+		return touXiangImgUrl;
+	}
+
+	public void setTouXiangImgUrl(String touXiangImgUrl) {
+		this.touXiangImgUrl = touXiangImgUrl;
+	}
 
 	public String getGroupNumber() {
 		return groupNumber;

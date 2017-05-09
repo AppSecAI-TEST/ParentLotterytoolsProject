@@ -14,7 +14,10 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
+import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("lotteryGroupService")
@@ -23,6 +26,9 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 {
 	@Autowired
 	private LotteryGroupRespository lotteryGroupRespository;
+	
+	@Autowired
+	private UploadfileService uploadfileService;
 	
 	public List<LotteryGroup> findAll()
 	{
@@ -61,7 +67,17 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 				
 				if(null != entity.getCreateTime())
 				{
-					
+					dto.setCreateTimeStr(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
+				}
+				
+				if(null != entity.getTouXiang()&&!"".equals(entity.getTouXiang()))
+				{
+					Uploadfile touxiangImg = uploadfileService.getUploadfileByNewsUuid(entity.getTouXiang());
+					if(null != touxiangImg)
+					{
+						dto.setTouXiang(touxiangImg.getNewsUuid());
+						dto.setTouXiangImgUrl(touxiangImg.getUploadfilepath()+touxiangImg.getUploadRealName());
+					}
 				}
 				
 			} catch (Exception e) {
