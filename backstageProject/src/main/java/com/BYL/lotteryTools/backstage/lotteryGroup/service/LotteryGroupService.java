@@ -32,4 +32,6 @@ public interface LotteryGroupService {
 	public List<LotteryGroup> findAll();
 	
 	public LotteryGroup getLotteryGroupByGroupNumber(String groupNumber);
+	
+	public  String generateGroupNumber();
 }

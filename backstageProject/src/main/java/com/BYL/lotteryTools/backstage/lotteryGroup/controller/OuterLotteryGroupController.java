@@ -1,5 +1,6 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.controller;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +35,6 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
-import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
@@ -46,6 +46,7 @@ import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
+import com.BYL.lotteryTools.common.util.QRCodeUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Controller
@@ -799,7 +800,7 @@ public class OuterLotteryGroupController
 	* @return Map<String,Object>    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value="/createGroup", method = RequestMethod.GET)
+	@RequestMapping(value="/createGroup")
 	public @ResponseBody Map<String,Object> createGroup(
 			LotteryGroupDTO dto,
 			HttpServletRequest request,HttpSession httpSession)
@@ -813,15 +814,15 @@ public class OuterLotteryGroupController
 			BeanUtil.copyBeanProperties(entity, dto);
 			entity.setId(UUID.randomUUID().toString());//生成id
 			
-			entity.setGroupNumber(this.generateGroupNumber());//放置群号
+			entity.setGroupNumber(lotteryGroupService.generateGroupNumber());//放置群号
 			LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
 					getLotterybuyerOrExpertById(dto.getOwnerId());
 			entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
 			
 			//处理群头像
+			Uploadfile uploadfile =null;
 			if(null != dto.getTouXiangImg())
 			{
-				Uploadfile uploadfile =null;
 				String newsUuid = UUID.randomUUID().toString();
 				try {
 						 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
@@ -848,6 +849,16 @@ public class OuterLotteryGroupController
 			entity.setCreateTime(new Timestamp((System.currentTimeMillis())));
 			entity.setModify(dto.getOwnerId());
 			entity.setModifyTime(new Timestamp((System.currentTimeMillis())));
+			
+			//生成群二维码
+			String logo = null;//内嵌logo图片，若群头像不为空，则嵌入群头像
+			String uploadPath = "upload";
+			String path = request.getSession().getServletContext().getRealPath(uploadPath); 
+			if(null != uploadfile)
+				logo = path+File.separator+uploadfile.getUploadRealName();
+			
+			String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
+			entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
 			//保存群信息
 			lotteryGroupService.save(entity);
 			
@@ -880,7 +891,12 @@ public class OuterLotteryGroupController
 				map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
 				map.put("message", "创建成功");
 				map.put("flag", true);
+				
+				//TODO:1.创建成功后，将当前群主的建群卡个数减1
+				
+				
 			}
+			
 			
 			
 			
@@ -923,20 +939,7 @@ public class OuterLotteryGroupController
 	}
 	
 	
-	//TODO:生成站点邀请码
-	private  String generateGroupNumber()
-	{
-		List<LotteryGroup> alllist = lotteryGroupService.findAll();
-		
-		int code = alllist.size()+1;
-		StringBuffer str = new StringBuffer(code+"");
-		//6位邀请码
-		while(str.length()<8)
-		{
-			str.insert(0, "0");
-		}
-		return str.toString();
-	}
+	
 	
 	
 }

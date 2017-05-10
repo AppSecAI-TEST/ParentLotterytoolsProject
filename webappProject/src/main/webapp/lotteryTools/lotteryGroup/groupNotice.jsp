@@ -6,7 +6,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link href="<%=request.getContextPath() %>/css/ztree/zTreeStyle.css" rel="stylesheet" type="text/css" />
     <jsp:include page="../../common/top.jsp" flush="true" /> 
-    <script src="<%=request.getContextPath() %>/lotteryTools/lotteryGroup/js/lotteryGroup.js" type="text/javascript"></script>
+    <script src="<%=request.getContextPath() %>/lotteryTools/lotteryGroup/js/groupNotice.js" type="text/javascript"></script>
     
     <script type="text/javascript">
   	var toolbar = [{
@@ -80,7 +80,7 @@
 	<div   data-options="region:'north'" style="height:90px;border:1px solid #95b8e7; background-color:white;">
 	    	<table style="border: none;height: 80px;">
 		    	<tr>
-		    		<td width="7%" class="td_font">群名称：</td>
+		    		<td width="7%" class="td_font">彩种名称：</td>
 		    		<td width="15%">
 		    			<input id="nameC" class="input_border"  type="text" name="nameC"  />  
 		    		</td>
@@ -90,9 +90,6 @@
 								<option value="">全部</option>
 								<option value="1">体彩</option>
 								<option value="2">福彩</option>
-								<option value="3">竞彩</option>
-								<option value="4">中心群</option>
-								<option value="5">公司群</option>
 						</select>
 		    		</td>
 		    		<td width="7%" class="td_font">省：</td>

@@ -76,6 +76,9 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="SSKJCX")
 	private Integer ssKjChaxun;//是否实时开奖查询（1：是0：否）
 	
+	@Column(name="GROUP_QR_IMG")
+	private String groupQRImg;//群二维码图片
+	
 	@ManyToOne
 	@JoinColumn(name="GROUP_OWNER_ID",referencedColumnName="id")
 	private LotterybuyerOrExpert lotteryBuyerOrExpert;//群主id
@@ -94,6 +97,14 @@ public class LotteryGroup extends BaseEntity
 	
 	
 	
+
+	public String getGroupQRImg() {
+		return groupQRImg;
+	}
+
+	public void setGroupQRImg(String groupQRImg) {
+		this.groupQRImg = groupQRImg;
+	}
 
 	public String getGroupNumber() {
 		return groupNumber;

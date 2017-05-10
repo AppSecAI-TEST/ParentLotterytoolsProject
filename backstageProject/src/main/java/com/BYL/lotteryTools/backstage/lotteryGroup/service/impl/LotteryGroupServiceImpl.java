@@ -14,9 +14,14 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.user.entity.City;
+import com.BYL.lotteryTools.backstage.user.entity.Province;
+import com.BYL.lotteryTools.backstage.user.service.CityService;
+import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
+import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
@@ -29,6 +34,12 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	
 	@Autowired
 	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private ProvinceService provinceService;
+	
+	@Autowired 
+	private CityService cityService;
 	
 	public List<LotteryGroup> findAll()
 	{
@@ -80,6 +91,34 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 					}
 				}
 				
+				if(null != entity.getProvince() && !Constants.PROVINCE_ALL.equals(entity.getProvince()))
+				{
+					Province province = provinceService.getProvinceByPcode(entity.getProvince());
+					
+					dto.setProvinceName(province.getPname());
+				}
+				
+				if(null != entity.getCity() && !Constants.CITY_ALL.equals(entity.getCity()))
+				{
+					City city = cityService.getCityByCcode(entity.getCity());
+					
+					dto.setCity(city.getCname());
+				}
+				
+				if(null != entity.getLotteryBuyerOrExpert())
+				{
+					dto.setOwnerName(entity.getLotteryBuyerOrExpert().getName());
+				}
+				//判断当前群主是否有认证的彩票站
+				if(null != entity.getLotteryBuyerOrExpert().getRelaBindOfLbuyerorexpertAndLStations())
+				{
+					dto.setHaveStation("1");
+				}
+				else
+				{
+					dto.setHaveStation("0");
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -117,6 +156,21 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 
 	public LotteryGroup getLotteryGroupByGroupNumber(String groupNumber) {
 		return lotteryGroupRespository.getLotteryGroupByGroupNumber(groupNumber);
+	}
+	
+	//TODO:生成站点邀请码
+	public  String generateGroupNumber()
+	{
+		List<LotteryGroup> alllist = lotteryGroupRespository.findAll();
+		
+		int code = alllist.size()+1;
+		StringBuffer str = new StringBuffer(code+"");
+		//6位邀请码
+		while(str.length()<8)
+		{
+			str.insert(0, "0");
+		}
+		return str.toString();
 	}
 	
 	

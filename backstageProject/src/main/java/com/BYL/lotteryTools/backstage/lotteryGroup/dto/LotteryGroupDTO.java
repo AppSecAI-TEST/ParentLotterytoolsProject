@@ -25,7 +25,7 @@ public class LotteryGroupDTO {
 	
 	private String ownerId;//群主id
 	
-	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩
+	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩 4.中心群 5：公司群
 	
 	private String province;//省
 	
@@ -47,12 +47,58 @@ public class LotteryGroupDTO {
 	
 	private String createTimeStr;//创建时间字符串
 	
+	private String provinceName;
+	
+	private String cityName;
+	
+	private String ownerName;//群主昵称
+	
+	private String haveStation;//当前群主是否有彩站，1：有认证彩站 0：没有
+	
+	private String groupQRImg;//群二维码图片
+	
+
 	
 	
-	
-	
-	
-	
+	public String getGroupQRImg() {
+		return groupQRImg;
+	}
+
+	public void setGroupQRImg(String groupQRImg) {
+		this.groupQRImg = groupQRImg;
+	}
+
+	public String getHaveStation() {
+		return haveStation;
+	}
+
+	public void setHaveStation(String haveStation) {
+		this.haveStation = haveStation;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
 
 	public String getCreateTimeStr() {
 		return createTimeStr;
