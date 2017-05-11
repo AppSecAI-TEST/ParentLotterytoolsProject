@@ -811,105 +811,110 @@ public class OuterLotteryGroupController
 		//在服务器创建群信息
 		try 
 		{
-			BeanUtil.copyBeanProperties(entity, dto);
-			entity.setId(UUID.randomUUID().toString());//生成id
-			
-			entity.setGroupNumber(lotteryGroupService.generateGroupNumber());//放置群号
-			LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
-					getLotterybuyerOrExpertById(dto.getOwnerId());
-			entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
-			
-			//处理群头像
-			Uploadfile uploadfile =null;
-			if(null != dto.getTouXiangImg())
+			if(null != dto.getOwnerId() && !"".equals(dto.getOwnerId()))
 			{
-				String newsUuid = UUID.randomUUID().toString();
-				try {
-						 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
-					
-				} catch (Exception e) {
-					logger.error("error:", e);
+				BeanUtil.copyBeanProperties(entity, dto);
+				entity.setId(UUID.randomUUID().toString());//生成id
+				
+				entity.setGroupNumber(lotteryGroupService.generateGroupNumber());//放置群号
+				LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
+						getLotterybuyerOrExpertById(dto.getOwnerId());
+				entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
+				
+				//处理群头像
+				Uploadfile uploadfile =null;
+				if(null != dto.getTouXiangImg())
+				{
+					String newsUuid = UUID.randomUUID().toString();
+					try {
+							 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
+						
+					} catch (Exception e) {
+						logger.error("error:", e);
+					}
+					entity.setTouXiang(uploadfile.getNewsUuid());
 				}
-				entity.setTouXiang(uploadfile.getNewsUuid());
+				
+				//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人
+				String robotUserId = lotterybuyerOrExpertService.
+						createRobotUser(dto.getProvince(), dto.getCity(), dto.getLotteryType());
+				
+				entity.setGroupRobotID(robotUserId);
+				
+				//TODO:放置群等级
+				String level1Id = "1";//等级1群的等级id
+				entity.setMemberCount(20);//以及群
+				entity.setGroupLevel(level1Id);
+				
+				entity.setIsDeleted(Constants.IS_NOT_DELETED);
+				entity.setCreator(dto.getOwnerId());
+				entity.setCreateTime(new Timestamp((System.currentTimeMillis())));
+				entity.setModify(dto.getOwnerId());
+				entity.setModifyTime(new Timestamp((System.currentTimeMillis())));
+				
+				//生成群二维码
+				String logo = null;//内嵌logo图片，若群头像不为空，则嵌入群头像
+				String uploadPath = "upload";
+				String path = request.getSession().getServletContext().getRealPath(uploadPath); 
+				if(null != uploadfile)
+					logo = path+File.separator+uploadfile.getUploadRealName();
+				
+				String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
+				entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
+				//保存群信息
+				lotteryGroupService.save(entity);
+				
+				//放置群升级记录表数据
+				RelaGroupUpLevelRecord level = new RelaGroupUpLevelRecord();
+				LGroupLevel L1 = lGroupLevelService.getLGroupLevelByID(level1Id);//获取L1等级的实体数据
+				level.setAfterLevel(L1);//一级群
+				level.setBeforeLevel(null);
+				level.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				level.setCreator(entity.getId());
+				level.setIsDeleted(Constants.IS_NOT_DELETED);
+				level.setLotteryGroup(entity);
+				level.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				level.setModify(entity.getId());
+				level.setOperator(dto.getOwnerId());
+				relaGroupUpLevelService.save(level);//保存群等级记录表数据
+				
+				//2017-5-11ADD：建立群主和群的加入关系
+				RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+				rela.setIsDeleted(Constants.IS_NOT_DELETED);
+				rela.setIsReceive("1");
+				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setLotterybuyerOrExpert(owner);
+				rela.setLotteryGroup(entity);
+				rela.setCreator(dto.getOwnerId());
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setCreator(dto.getOwnerId());
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				//保存关联
+				relaBindbuyerAndGroupService.save(rela);
+				
+				//在融云创建群信息
+				String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中
+				CodeSuccessResult result = rongyunImService.createGroup(joinUserId, entity.getId(), entity.getName());
+				
+				if(!SUCCESS_CODE.equals(result.getCode().toString()))
+				{//若创建失败
+					map.put("messsage", result.getErrorMessage());//创建失败返回融云端群创建失败信息
+					logger.error("createGroup error:", result.getErrorMessage());
+					map.put("flag", false);
+				}
+				else
+				{
+					map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
+					map.put("message", "创建成功");
+					map.put("flag", true);
+					
+					//TODO:1.创建成功后，将当前群主的建群卡个数减1
+					
+					
+				}
+				
 			}
 			
-			//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人
-			String robotUserId = lotterybuyerOrExpertService.
-					createRobotUser(dto.getProvince(), dto.getCity(), dto.getLotteryType());
-			
-			entity.setGroupRobotID(robotUserId);
-			
-			//TODO:放置群等级
-			String level1Id = "1";//等级1群的等级id
-			entity.setMemberCount(20);//以及群
-			entity.setGroupLevel(level1Id);
-			
-			entity.setIsDeleted(Constants.IS_NOT_DELETED);
-			entity.setCreator(dto.getOwnerId());
-			entity.setCreateTime(new Timestamp((System.currentTimeMillis())));
-			entity.setModify(dto.getOwnerId());
-			entity.setModifyTime(new Timestamp((System.currentTimeMillis())));
-			
-			//生成群二维码
-			String logo = null;//内嵌logo图片，若群头像不为空，则嵌入群头像
-			String uploadPath = "upload";
-			String path = request.getSession().getServletContext().getRealPath(uploadPath); 
-			if(null != uploadfile)
-				logo = path+File.separator+uploadfile.getUploadRealName();
-			
-			String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
-			entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
-			//保存群信息
-			lotteryGroupService.save(entity);
-			
-			//放置群升级记录表数据
-			RelaGroupUpLevelRecord level = new RelaGroupUpLevelRecord();
-			LGroupLevel L1 = lGroupLevelService.getLGroupLevelByID(level1Id);//获取L1等级的实体数据
-			level.setAfterLevel(L1);//一级群
-			level.setBeforeLevel(null);
-			level.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			level.setCreator(entity.getId());
-			level.setIsDeleted(Constants.IS_NOT_DELETED);
-			level.setLotteryGroup(entity);
-			level.setModifyTime(new Timestamp(System.currentTimeMillis()));
-			level.setModify(entity.getId());
-			level.setOperator(dto.getOwnerId());
-			relaGroupUpLevelService.save(level);//保存群等级记录表数据
-			
-			//2017-5-11ADD：建立群主和群的加入关系
-			RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
-			rela.setIsDeleted(Constants.IS_NOT_DELETED);
-			rela.setIsReceive("1");
-			rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
-			rela.setLotterybuyerOrExpert(owner);
-			rela.setLotteryGroup(entity);
-			rela.setCreator(dto.getOwnerId());
-			rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			rela.setCreator(dto.getOwnerId());
-			rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			//保存关联
-			relaBindbuyerAndGroupService.save(rela);
-			
-			//在融云创建群信息
-			String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中
-			CodeSuccessResult result = rongyunImService.createGroup(joinUserId, entity.getId(), entity.getName());
-			
-			if(!SUCCESS_CODE.equals(result.getCode().toString()))
-			{//若创建失败
-				map.put("messsage", result.getErrorMessage());//创建失败返回融云端群创建失败信息
-				logger.error("createGroup error:", result.getErrorMessage());
-				map.put("flag", false);
-			}
-			else
-			{
-				map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
-				map.put("message", "创建成功");
-				map.put("flag", true);
-				
-				//TODO:1.创建成功后，将当前群主的建群卡个数减1
-				
-				
-			}
 			
 			
 			

@@ -37,6 +37,7 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOr
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
+import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
@@ -196,18 +197,33 @@ public class LotteryGroupController
 	* @throws
 	 */
 	@RequestMapping(value="/saveOrUpdateGroup")
-	public @ResponseBody Map<String,Object> saveOrUpdateGroup(
+	public @ResponseBody ResultBean saveOrUpdateGroup(
 			LotteryGroupDTO dto,
 			HttpServletRequest request,HttpSession httpSession)
 	{
-		Map<String,Object> map = new HashMap<String, Object>();
+		ResultBean bean = new ResultBean();
 		
 		LotteryGroup entity = lotteryGroupService.getLotteryGroupById(dto.getId());
 		
 		if(null != entity)
 		{//修改群信息
 			entity.setName(dto.getName());
+			entity.setGroupLevel(dto.getGroupLevel());
+			entity.setFabuKj(dto.getFabuKj());
+			entity.setFabuZs(dto.getFabuZs());
+			entity.setIntroduction(dto.getIntroduction());
+			entity.setJoinType(dto.getJoinType());
+			entity.setLotteryType(dto.getLotteryType());
+			entity.setProvince(dto.getProvince());
+			entity.setCity(dto.getCity());
+			entity.setSsKjChaxun(dto.getSsKjChaxun());
+			entity.setSsYlChaxun(dto.getSsYlChaxun());
+			entity.setSsZjChaxun(dto.getSsZjChaxun());
 			
+			lotteryGroupService.update(entity);
+			
+			bean.setFlag(true);
+			bean.setMessage("修改成功");
 		}
 		else
 		{
@@ -287,15 +303,14 @@ public class LotteryGroupController
 				
 				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{//若创建失败
-					map.put("messsage", result.getErrorMessage());//创建失败返回融云端群创建失败信息
+					bean.setMessage( result.getErrorMessage());//创建失败返回融云端群创建失败信息
 					logger.error("createGroup error:", result.getErrorMessage());
-					map.put("flag", false);
+					bean.setFlag(false);
 				}
 				else
 				{
-					map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
-					map.put("message", "创建成功");
-					map.put("flag", true);
+					bean.setFlag(true);
+					bean.setMessage("创建成功");
 					
 					//创建成功后，将当前群主的建群卡个数减1
 				}
@@ -306,16 +321,15 @@ public class LotteryGroupController
 			} catch (Exception e) 
 			{
 				logger.error("error:", e);
-				map.put("message", "创建失败");
-				map.put("flag", false);
+				bean.setMessage("创建失败");
+				bean.setFlag(false);
 			}
 			
 		}
 	
 		
 		
-		
-		return map;
+		return bean;
 	}
 	
 	
