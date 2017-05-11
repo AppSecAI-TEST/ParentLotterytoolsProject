@@ -47,7 +47,7 @@ public class RelaBindbuyerAndGroupServiceImpl implements
 		List<Object> params = new ArrayList<Object>();
 		
 		StringBuffer sql = new StringBuffer("SELECT u.* FROM RELA_BIND_OF_BUYER_AND_LOTTERYGROUP u WHERE u.IS_DELETED='1' "
-				+ "AND u.LBOE_ID='"+userId+"' ORDER BY u.IS_TOP DESC ,u.CREATE_TIME DESC ");
+				+ "AND u.LBOE_ID='"+userId+"' ORDER BY u.IS_TOP DESC ,u.MODIFY_TIME DESC ");
 		
 		
 		QueryResult<RelaBindOfLbuyerorexpertAndGroup> queryResult = relaBindOfBuyyerorexpertAndGroupRespository.

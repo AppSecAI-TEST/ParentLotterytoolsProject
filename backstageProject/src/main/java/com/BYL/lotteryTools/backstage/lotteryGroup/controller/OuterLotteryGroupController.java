@@ -952,6 +952,54 @@ public class OuterLotteryGroupController
 		return map;
 	}
 	
+	/**
+	 * 用户操作置顶/取消置顶群操作
+	* @Title: updateGroupIsTop 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param isTop
+	* @param @param userId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月11日 上午9:53:02 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/updateGroupIsTop", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> updateGroupIsTop(
+			@RequestParam(value="isTop",required=false)  String isTop,
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="groupId",required=false) String groupId)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//更新置顶状态
+		RelaBindOfLbuyerorexpertAndGroup entity = relaBindbuyerAndGroupService.
+				getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
+		entity.setIsTop(isTop);
+		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		entity.setModify(userId);
+		relaBindbuyerAndGroupService.update(entity);
+		
+		//获取置顶后的群列表
+		List<LotteryGroupDTO> dtos = new ArrayList<LotteryGroupDTO>();
+		 List<RelaBindOfLbuyerorexpertAndGroup> relaGroups = relaBindbuyerAndGroupService.getRelaList(userId);
+		 for (RelaBindOfLbuyerorexpertAndGroup relaGroup : relaGroups)
+		 {//将排序关系转换为群信息
+			if(null != relaGroup.getLotteryGroup())
+			{
+				LotteryGroupDTO dto = new LotteryGroupDTO();
+				dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
+				dtos.add(dto);
+			}
+		 }
+		 
+		 map.put("flag", true);
+		 map.put("groupDtos", dtos);
+		
+		
+		return map;
+	}
+	
 	
 	
 	
