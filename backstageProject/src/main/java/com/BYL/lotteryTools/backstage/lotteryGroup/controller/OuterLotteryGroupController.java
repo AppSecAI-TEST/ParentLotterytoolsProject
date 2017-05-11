@@ -330,7 +330,7 @@ public class OuterLotteryGroupController
 		 {
 			 if(null != user)
 			 {
-				 List<RelaBindOfLbuyerorexpertAndGroup> relaGroups = user.getRelaBindOfLbuyerorexpertAndGroups();
+				 List<RelaBindOfLbuyerorexpertAndGroup> relaGroups = relaBindbuyerAndGroupService.getRelaList(userId);
 				 
 				 for (RelaBindOfLbuyerorexpertAndGroup relaGroup : relaGroups)
 				 {
@@ -875,6 +875,20 @@ public class OuterLotteryGroupController
 			level.setModify(entity.getId());
 			level.setOperator(dto.getOwnerId());
 			relaGroupUpLevelService.save(level);//保存群等级记录表数据
+			
+			//2017-5-11ADD：建立群主和群的加入关系
+			RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+			rela.setIsDeleted(Constants.IS_NOT_DELETED);
+			rela.setIsReceive("1");
+			rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+			rela.setLotterybuyerOrExpert(owner);
+			rela.setLotteryGroup(entity);
+			rela.setCreator(dto.getOwnerId());
+			rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			rela.setCreator(dto.getOwnerId());
+			rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			//保存关联
+			relaBindbuyerAndGroupService.save(rela);
 			
 			//在融云创建群信息
 			String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中
