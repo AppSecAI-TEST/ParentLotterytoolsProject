@@ -618,8 +618,8 @@ public class OuterLotteryGroupController
 				rela.setLotteryGroup(group);
 				rela.setCreator(groupId);
 				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
-				rela.setCreator(groupId);
-				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setModify(groupId);
+				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
 
 				//保存关联
 				relaBindbuyerAndGroupService.save(rela);
@@ -887,8 +887,8 @@ public class OuterLotteryGroupController
 				rela.setLotteryGroup(entity);
 				rela.setCreator(dto.getOwnerId());
 				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
-				rela.setCreator(dto.getOwnerId());
-				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setModify(dto.getOwnerId());
+				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
 				//保存关联
 				relaBindbuyerAndGroupService.save(rela);
 				
