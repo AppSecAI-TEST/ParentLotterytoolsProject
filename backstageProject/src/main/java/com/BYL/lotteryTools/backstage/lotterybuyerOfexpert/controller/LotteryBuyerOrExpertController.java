@@ -1,9 +1,6 @@
 package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +34,6 @@ import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.LoginUtils;
-import com.BYL.lotteryTools.common.util.MyMD5Util;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 /**
@@ -108,6 +104,8 @@ public class LotteryBuyerOrExpertController
 			@RequestParam(value="rows",required=false) int rows,
 			@RequestParam(value="name",required=false) String name,
 			@RequestParam(value="provinceCode",required=false) String provinceCode,
+			@RequestParam(value="isVirtual",required=false) String isVirtual,
+			@RequestParam(value="isRobot",required=false) String isRobot,
 			ModelMap model,HttpSession httpSession) throws Exception
 	{
 	 	Map<String,Object> returnData = new HashMap<String, Object>();
@@ -136,6 +134,20 @@ public class LotteryBuyerOrExpertController
 		{
 			params.add(provinceCode);
 			buffer.append(" and province = ?").append(params.size());
+		}
+		
+		//虚拟用户查询条件
+		if(null != isVirtual && !"".equals(isVirtual))
+		{
+			params.add(isVirtual);
+			buffer.append(" and  isVirtual = ?").append(params.size());
+		}
+		
+		//是否为机器人
+		if(null != isRobot && !"".equals(isRobot))
+		{
+			params.add(isRobot);
+			buffer.append(" and  isRobot = ?").append(params.size());
 		}
 		
 		

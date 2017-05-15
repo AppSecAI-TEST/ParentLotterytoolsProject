@@ -117,12 +117,14 @@ public class LotteryGroupController
 	@RequestMapping(value="/getGroupList", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupList(
 			LotteryGroupDTO dto,
+			@RequestParam(value="page",required=false) int page,
+			@RequestParam(value="rows",required=false) int rows,
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		//放置分页参数
-		Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+		Pageable pageable = new PageRequest(page-1,rows);
 		
 		//参数
 		StringBuffer buffer = new StringBuffer();
@@ -176,9 +178,8 @@ public class LotteryGroupController
 		
 		List<LotteryGroupDTO> dtos = lotteryGroupService.toDTOs(list);
 		
-		map.put("flag", true);
-		map.put("message", "获取成功");
-		map.put("groupDtos", dtos);
+		map.put("rows",dtos);
+		map.put("total", lQueryResult.getTotalRecord());
 		
 		return map;
 	}

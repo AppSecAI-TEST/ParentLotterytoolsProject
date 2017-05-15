@@ -49,7 +49,7 @@ public class PushOriginDataTask
 	
 
 	//判断当前维护的所有高频彩种是否开出新一期，开出后进行推送
-//	@Scheduled(cron = "0/30 * * * * ? ") //30s执行1次
+	@Scheduled(cron = "0/30 * * * * ? ") //30s执行1次
     //需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate  
     public void tuisongMethod() 
  	{ 

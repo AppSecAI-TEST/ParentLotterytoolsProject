@@ -106,6 +106,16 @@ public class LotterybuyerOrExpertServiceImpl implements
 					dto.setCityName(city.getCname());
 				}
 				
+				//是否为群主
+				if(null != entity.getLotteryGroups() && entity.getLotteryGroups().size()>0)
+				{
+					dto.setIsGroupOwner("1");
+				}
+				else
+				{
+					dto.setIsGroupOwner("0");
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

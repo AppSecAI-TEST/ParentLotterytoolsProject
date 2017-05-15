@@ -102,17 +102,19 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 				{
 					City city = cityService.getCityByCcode(entity.getCity());
 					
-					dto.setCity(city.getCname());
+					dto.setCityName(city.getCname());
 				}
 				
 				if(null != entity.getLotteryBuyerOrExpert())
 				{
 					dto.setOwnerName(entity.getLotteryBuyerOrExpert().getName());
+					dto.setOwnerId(entity.getLotteryBuyerOrExpert().getId());
 				}
 				//判断当前群主是否有认证的彩票站
-				if(null != entity.getLotteryBuyerOrExpert().getRelaBindOfLbuyerorexpertAndLStations())
+				if(null != entity.getLotteryBuyerOrExpert())
 				{
-					dto.setHaveStation("1");
+					if(null != entity.getLotteryBuyerOrExpert().getLotteryStations())
+						dto.setHaveStation("1");
 				}
 				else
 				{

@@ -80,6 +80,8 @@ function initOwnerListDatagrid(ownerDatagridId,ownerId)
 	var params = new Object();
 	
 	params.isVirtual = "0";//获取非虚拟用户
+	params.isRobot = "0";//获取非机器人用户
+	
 	$('#'+ownerDatagridId).datagrid({
 		singleSelect:true,
 		rownumbers:false,
@@ -101,7 +103,7 @@ function initOwnerListDatagrid(ownerDatagridId,ownerId)
                 //调用formater函数对列进行格式化，使其显示单选按钮（所有单选按钮name属性设为统一，这样就只能有一个处于选中状态）  
                 formatter: function (value, row, index) {  
                      var s = '<input name="selectRadio"  type="radio" id="selectRadio"'+index+'  /> ';  
-  
+                     	
                     return s;  
                 }  
   
@@ -143,7 +145,7 @@ function initOwnerListDatagrid(ownerDatagridId,ownerId)
 		        	 var selectedRows = $('#'+ownerDatagridId).datagrid('getRows');
 		 			$.each(selectedRows,function(j,selectedRow){
 		 				
-		 				if(selectedRow.id == lpbuId){
+		 				if(selectedRow.id == ownerId){
 		 					$("input[type='radio']")[j].checked = true;
 		 				}
 		 			});
@@ -243,34 +245,22 @@ function updateLGroup(id)
         	
 				$('#ffDetail').form('load',{
 					id:data.id,
-					stationName:data.stationName,
-					provinceName:data.provinceName,
-					cityName:data.cityName,
-					stationOwner:data.stationOwner
+					name:data.name,
+					introduction:data.introduction,
+					fabuKj:data.fabuKj,
+					fabuZs:data.fabuZs,
+					ssYlChaxun:data.ssYlChaxun,
+					ssKjChaxun:data.ssKjChaxun,
+					ssZjChaxun:data.ssZjChaxun
 					
 				});
 				
-				if('1' == data.lotteryType)
-					{
-						$("#lotteryTypeA").val("体彩");
-					}
-				else if('2' == data.lotteryType)
-						{
-							$("#lotteryTypeA").val("福彩");
-						}
+				//初始化省份combobox
+				initProvince("update", "privinceU", data.province);
+				//初始化市级区域combobox
+				initCities('update','cityU',data.city,data.province);
 				
-				if('1' == data.isBylStation)
-				{
-					$("#isBylStationA").val("是,佰艺霖账号："+data.bylStationCode);
-				}
-				else 
-					{
-						$("#isBylStationA").val("否");
-					}
-				
-				$("#idNumberFrontImgA").attr("src",contextPath+data.idNumberFrontImgUrl);
-				$("#idNumberBackImgA").attr("src",contextPath+data.idNumberBackImgUrl);
-				$("#daixiaoImgA").attr("src",contextPath+data.daixiaoImgUrl);
+				initOwnerListDatagrid('ownerListU', data.ownerId);
 				
         	
         },

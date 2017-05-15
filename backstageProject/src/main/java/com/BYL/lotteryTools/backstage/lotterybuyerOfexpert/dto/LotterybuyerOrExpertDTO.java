@@ -78,8 +78,17 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String signature;//个性签名
 	
+	private String isGroupOwner;
 	
 	
+
+	public String getIsGroupOwner() {
+		return isGroupOwner;
+	}
+
+	public void setIsGroupOwner(String isGroupOwner) {
+		this.isGroupOwner = isGroupOwner;
+	}
 
 	public String getProvinceName() {
 		return provinceName;

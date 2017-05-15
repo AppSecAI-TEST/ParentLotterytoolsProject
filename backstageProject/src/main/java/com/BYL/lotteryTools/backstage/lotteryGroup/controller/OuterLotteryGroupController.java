@@ -49,6 +49,12 @@ import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.QRCodeUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
+/**
+ *彩聊群外部接口类
+* @Description: TODO(这里用一句话描述这个方法的作用) 
+* @author banna
+* @date 2017年5月11日 下午3:24:54
+ */
 @Controller
 @RequestMapping("/outerLGroup")
 public class OuterLotteryGroupController
@@ -103,23 +109,31 @@ public class OuterLotteryGroupController
 		
 		//删除群的同时删除群绑定的机器人
 		LotteryGroup entity = lotteryGroupService.getLotteryGroupById(dto.getId());
-		entity.setGroupRobotID(null);
 		
-		//删除融云的群信息
-		CodeSuccessResult result = rongyunImService.groupDismiss(dto.getOwnerId(), dto.getId());
-		if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+		if(null != entity)
 		{
-			logger.error("融云删除群报错", result.getErrorMessage());
+			entity.setGroupRobotID(null);
+			//删除融云的群信息
+			CodeSuccessResult result = rongyunImService.groupDismiss(entity.getLotteryBuyerOrExpert().getId(), dto.getId());
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				logger.error("融云删除群报错", result.getErrorMessage());
+			}
+			
+			//删除数据库中的群信息
+			entity.setIsDeleted(Constants.IS_DELETED);
+			entity.setModify(dto.getOwnerId());
+			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			entity.setLotteryBuyerOrExpert(null);
+			lotteryGroupService.update(entity);
+			map.put("message", "删除成功");
+			map.put("flag", true);
 		}
-		
-		//删除数据库中的群信息
-		entity.setIsDeleted(Constants.IS_DELETED);
-		entity.setModify(dto.getOwnerId());
-		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
-		entity.setLotteryBuyerOrExpert(null);
-		lotteryGroupService.update(entity);
-		map.put("message", "删除成功");
-		map.put("flag", true);
+		else
+		{
+			map.put("message", "删除失败");
+			map.put("flag", false);
+		}
 		
 		return map;
 	}
@@ -191,6 +205,8 @@ public class OuterLotteryGroupController
 	@RequestMapping(value="/getGroupList", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupList(
 			LotteryGroupDTO dto,
+			@RequestParam(value="page",required=false)   Integer page,//当前页数
+			@RequestParam(value="row",required=false)    Integer row,//当前获取数据量
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -803,7 +819,7 @@ public class OuterLotteryGroupController
 	@RequestMapping(value="/createGroup")
 	public @ResponseBody Map<String,Object> createGroup(
 			LotteryGroupDTO dto,
-			HttpServletRequest request,HttpSession httpSession)
+			HttpServletRequest request)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		

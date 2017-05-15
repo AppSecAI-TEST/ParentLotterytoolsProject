@@ -51,7 +51,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	public List<SrcfivedataDTO> getLotteryList(String tbName,String maxIssueId, String minIssueId) 
 	{
 		List<SrcfivedataDTO> list = new ArrayList<SrcfivedataDTO>();
-		int limit = 300;
+		int limit = 160;
 		
 		
 		StringBuffer sql = new StringBuffer();
@@ -191,6 +191,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 			lotteryPlayOfProvince.setNumberLength(lotteryPlay.getLotteryPlayBulufangan().getEndNumber());
 			lotteryPlayOfProvince.setProvinceCode(lotteryPlay.getProvince());
 			lotteryPlayOfProvince.setLotteryTypeName(lotteryPlay.getLotteryType().equals("1")?"体彩":"福彩");
+			lotteryPlayOfProvince.setLineCount(lotteryPlay.getLineCount());
 			
 			list.add(lotteryPlayOfProvince);
 		}
