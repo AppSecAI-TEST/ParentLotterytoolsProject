@@ -227,6 +227,7 @@ public class OuterLotteryGroupController
 		//参数
 		StringBuffer buffer = new StringBuffer();
 		List<Object> params = new ArrayList<Object>();
+		boolean flag = false;
 		
 		//只查询未删除数据
 		params.add("1");//只查询有效的数据
@@ -234,51 +235,79 @@ public class OuterLotteryGroupController
 		
 		//传汉字
 		List<Province> prolist = provinceService.getProvinceByPname("%"+dto.getProvince()+"%");
-		if(null != prolist)
+		if(null != prolist && prolist.size()>0)
 		{
+			flag = true;
 			params.add(prolist.get(0).getPcode());
 			buffer.append(" and province = ?").append(params.size());
 		}
-		
-		//传汉字
-		List<City> cityList = cityService.getCityByCname("%"+dto.getCity()+"%");
-		if(null != cityList)
+		else
 		{
-			params.add(cityList.get(0).getCcode());
-			buffer.append(" and city = ?").append(params.size());
-		}
-		//传汉字
-		String lotteryType = "体彩".equals(dto.getLotteryType())?"1":"2";
-		if(null != lotteryType)
-		{
-			params.add(lotteryType);
-			buffer.append(" and lotteryType = ?").append(params.size());
-		}
-		//按群号精确查找
-		if(null != dto.getGroupNumber() && !"".equals(dto.getGroupNumber()))
-		{
-			params.add(dto.getGroupNumber());
-			buffer.append(" and groupNumber = ?").append(params.size());
-		}
-		//按群名称精确查找
-		if(null != dto.getName() && !"".equals(dto.getName()))
-		{
-			params.add(dto.getName());
-			buffer.append(" and name = ?").append(params.size());
-		}
+			//传汉字
+			List<City> cityList = cityService.getCityByCname("%"+dto.getCity()+"%");
+			if(null != cityList && cityList.size()>0)
+			{
+				flag = true;
+				params.add(cityList.get(0).getCcode());
+				buffer.append(" and city = ?").append(params.size());
+			}
+			else
+			{
+				//传汉字
+				String lotteryType = "";
+				if(null != dto.getLotteryType() &&!"".equals(dto.getLotteryType()))
+				{
+					lotteryType = "体彩".equals(dto.getLotteryType())?"1":"2";
+				}
+				if(!"".equals(lotteryType))
+				{
+					flag = true;
+					params.add(lotteryType);
+					buffer.append(" and lotteryType = ?").append(params.size());
+				}
+				else
+				{
+					//按群号精确查找
+					if(null != dto.getGroupNumber() && !"".equals(dto.getGroupNumber()))
+					{
+						flag = true;
+						params.add(dto.getGroupNumber());
+						buffer.append(" and groupNumber = ?").append(params.size());
+					}
+					else
+					{
+						//按群名称精确查找
+						if(null != dto.getName() && !"".equals(dto.getName()))
+						{
+							flag = true;
+							params.add(dto.getName());
+							buffer.append(" and name = ?").append(params.size());
+						}
+					}
+				}
+				
+			}
+			
+			
+		}		
 		
 		
 		//排序
-		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
-		orderBy.put("createTime", "desc");
+		List<LotteryGroupDTO> dtos =  null;
+		if(flag)
+		{
+			LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
+			orderBy.put("createTime", "desc");
+			
+			QueryResult<LotteryGroup> lQueryResult = lotteryGroupService
+					.getLotteryGroupList(LotteryGroup.class,
+					buffer.toString(), params.toArray(),orderBy, pageable);
+					
+			List<LotteryGroup> list = lQueryResult.getResultList();
+			
+			dtos = lotteryGroupService.toDTOs(list);
+		}
 		
-		QueryResult<LotteryGroup> lQueryResult = lotteryGroupService
-				.getLotteryGroupList(LotteryGroup.class,
-				buffer.toString(), params.toArray(),orderBy, pageable);
-				
-		List<LotteryGroup> list = lQueryResult.getResultList();
-		
-		List<LotteryGroupDTO> dtos = lotteryGroupService.toDTOs(list);
 		
 		map.put("flag", true);
 		map.put("message", "获取成功");

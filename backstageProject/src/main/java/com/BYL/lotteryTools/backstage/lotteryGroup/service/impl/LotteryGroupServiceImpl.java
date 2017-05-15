@@ -102,7 +102,8 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 				{
 					City city = cityService.getCityByCcode(entity.getCity());
 					
-					dto.setCityName(city.getCname());
+					if(null != city)
+						dto.setCityName(city.getCname());
 				}
 				
 				if(null != entity.getLotteryBuyerOrExpert())

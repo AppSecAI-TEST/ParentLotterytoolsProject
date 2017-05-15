@@ -19,6 +19,6 @@ public interface CityRepository extends GenericRepository<City, String> {
 	@Query("select u from City u where  u.ccode =?1")
 	public City getCityByCcode(String ccode);
 	
-	@Query("select u from City u where  u.cname =?1")
+	@Query("select u from City u where  u.cname like ?1")
 	public List<City> getCityByCname(String cname);
 }
