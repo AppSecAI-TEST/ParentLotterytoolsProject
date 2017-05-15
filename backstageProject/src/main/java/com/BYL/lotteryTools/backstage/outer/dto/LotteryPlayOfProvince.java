@@ -13,7 +13,19 @@ public class LotteryPlayOfProvince
 	private String numberLength;//号码池号码个数，3,11,12
 	
 	private String provinceCode;//区域彩种省份code
+	
+	private String lineCount;//每天开出的最大期数
+	
+	
 
+
+	public String getLineCount() {
+		return lineCount;
+	}
+
+	public void setLineCount(String lineCount) {
+		this.lineCount = lineCount;
+	}
 
 	public String getLotteryPlayId() {
 		return lotteryPlayId;
