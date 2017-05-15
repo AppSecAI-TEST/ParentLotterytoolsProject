@@ -51,7 +51,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	public List<SrcfivedataDTO> getLotteryList(String tbName,String maxIssueId, String minIssueId) 
 	{
 		List<SrcfivedataDTO> list = new ArrayList<SrcfivedataDTO>();
-		int limit = 160;
+		int limit = 300;
 		
 		
 		StringBuffer sql = new StringBuffer();

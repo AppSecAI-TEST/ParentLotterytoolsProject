@@ -1,6 +1,8 @@
 package com.BYL.lotteryTools.backstage.user.repository;
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 
 import com.BYL.lotteryTools.backstage.user.entity.City;
@@ -16,4 +18,7 @@ public interface CityRepository extends GenericRepository<City, String> {
 	 */
 	@Query("select u from City u where  u.ccode =?1")
 	public City getCityByCcode(String ccode);
+	
+	@Query("select u from City u where  u.cname =?1")
+	public List<City> getCityByCname(String cname);
 }

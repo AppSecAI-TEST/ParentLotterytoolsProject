@@ -21,4 +21,6 @@ public interface CityService {
 	* @date 2015年11月5日 上午9:31:11
 	 */
 	public City getCityByCcode(String code);
+	
+	public List<City> getCityByCname(String cname);
 }

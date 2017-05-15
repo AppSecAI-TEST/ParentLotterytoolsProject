@@ -21,4 +21,6 @@ public interface ProvinceService {
 	* @date 2015年11月5日 上午9:26:39
 	 */
 	public Province getProvinceByPcode(String pcode);
+	
+	public List<Province> getProvinceByPname(String pname);
 }

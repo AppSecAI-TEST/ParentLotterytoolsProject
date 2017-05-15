@@ -41,6 +41,10 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerO
 import com.BYL.lotteryTools.backstage.outer.controller.PushController;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
+import com.BYL.lotteryTools.backstage.user.entity.City;
+import com.BYL.lotteryTools.backstage.user.entity.Province;
+import com.BYL.lotteryTools.backstage.user.service.CityService;
+import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
@@ -84,6 +88,12 @@ public class OuterLotteryGroupController
 	
 	@Autowired
 	private RelaApplybuyerAndGroupService relaApplybuyerAndGroupService;
+	
+	@Autowired
+	private ProvinceService provinceService;
+	
+	@Autowired
+	private CityService cityService;
 	
 	public static final String SUCCESS_CODE = "200";//成功返回码
 	
@@ -222,31 +232,35 @@ public class OuterLotteryGroupController
 		params.add("1");//只查询有效的数据
 		buffer.append(" isDeleted = ?").append(params.size());
 		
-		
-		if(null != dto.getProvince() && !"".equals(dto.getProvince())&& !Constants.PROVINCE_ALL.equals(dto.getProvince()))
+		//传汉字
+		List<Province> prolist = provinceService.getProvinceByPname("%"+dto.getProvince()+"%");
+		if(null != prolist)
 		{
-			params.add(dto.getProvince());
+			params.add(prolist.get(0).getPcode());
 			buffer.append(" and province = ?").append(params.size());
 		}
 		
-		if(null != dto.getCity() && !"".equals(dto.getCity())&& !Constants.CITY_ALL.equals(dto.getCity()))
+		//传汉字
+		List<City> cityList = cityService.getCityByCname("%"+dto.getCity()+"%");
+		if(null != cityList)
 		{
-			params.add(dto.getCity());
+			params.add(cityList.get(0).getCcode());
 			buffer.append(" and city = ?").append(params.size());
 		}
-		
-		if(null != dto.getLotteryType() && !"".equals(dto.getLotteryType()))
+		//传汉字
+		String lotteryType = "体彩".equals(dto.getLotteryType())?"1":"2";
+		if(null != lotteryType)
 		{
-			params.add(dto.getLotteryType());
+			params.add(lotteryType);
 			buffer.append(" and lotteryType = ?").append(params.size());
 		}
-		
-		if(null != dto.getId() && !"".equals(dto.getId()))
+		//按群号精确查找
+		if(null != dto.getGroupNumber() && !"".equals(dto.getGroupNumber()))
 		{
-			params.add(dto.getId());
-			buffer.append(" and id = ?").append(params.size());
+			params.add(dto.getGroupNumber());
+			buffer.append(" and groupNumber = ?").append(params.size());
 		}
-		
+		//按群名称精确查找
 		if(null != dto.getName() && !"".equals(dto.getName()))
 		{
 			params.add(dto.getName());

@@ -253,7 +253,7 @@ public class OuterInterfaceController
 		return map;
 	}
 	
-	//专家预测接口4：查看某个专家的预测（根据区域彩种和区域预测类型筛选专家）点击群内加号获取符合当前群属性的专家且点击专家查看详情时使用
+	//TODO:专家预测接口4：查看某个专家的预测（根据区域彩种和区域预测类型筛选专家）点击群内加号获取符合当前群属性的专家且点击专家查看详情时使用
 	@RequestMapping(value="/getHistoryGroupPreOfExpert",method=RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getHistoryGroupPreOfExpert(
 			@RequestParam(value="expertId",required=false) String expertId,

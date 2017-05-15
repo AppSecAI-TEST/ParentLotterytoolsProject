@@ -67,6 +67,10 @@ public class CityServiceImpl implements CityService {
 		return cityRepository.getCityByCcode(code);
 	}
 
+	public List<City> getCityByCname(String cname) {
+		return cityRepository.getCityByCname(cname);
+	}
+
 	
 	
 }

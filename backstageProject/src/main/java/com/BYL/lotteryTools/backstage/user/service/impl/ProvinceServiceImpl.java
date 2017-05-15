@@ -35,5 +35,9 @@ public class ProvinceServiceImpl implements ProvinceService {
 		
 		return provinceRepository.getProvinceByPcode(pcode);
 	}
+
+	public List<Province> getProvinceByPname(String pname) {
+		return provinceRepository.getProvinceByPname(pname);
+	}
 	
 }
