@@ -330,6 +330,8 @@
 				        
 				         <div class="ftitle">
 				            <label for="priceA">头像:</label>
+				            <input type="hidden" id="touXiangU" name="touXiang">
+				             <a href="#" id="uploadU" class="l-btn l-btn-small" plain="true" onclick="openDialog('ddA','update')" style="width:100px;">点击上传头像</a>
 				            <img id="touxiangImgU" style="width:300px;height:300px;" alt="点击放大" src="" onclick="previewImage('touxiangImgU')">
 				        </div>
 				        
