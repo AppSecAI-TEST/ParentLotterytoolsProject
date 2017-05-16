@@ -18,12 +18,12 @@
         <!-- 开启注解事务只对当前配置文件有效 -->
         <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 
-        <jpa:repositories base-package="com.BYL.lotteryTools.backstage" repository-impl-postfix="Impl"
+        <jpa:repositories base-package="com.BYL.lotteryTools" repository-impl-postfix="Impl"
         entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"  factory-class="com.BYL.lotteryTools.common.repository.DefaultRepositoryFactoryBean"></jpa:repositories>
 
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
             <property name="dataSource" ref="dataSource" />
-            <property name="packagesToScan" value="com.BYL.lotteryTools.backstage" />
+            <property name="packagesToScan" value="com.BYL.lotteryTools" />
             <property name="persistenceProvider">
                 <bean class="org.hibernate.ejb.HibernatePersistence" />
             </property>
@@ -66,16 +66,16 @@
             </property>
             <property name="url">
                 <!-- <value>jdbc:mysql://182.92.153.8:3306/echart4?useUnicode=true&amp;amp;characterEncoding=utf-8</value> -->
-                <value>jdbc:mysql://127.0.0.1:3306/lotteryTools?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
+                <value>jdbc:mysql://123.56.231.50:3306/lotteryTools?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
                 <!-- <value>jdbc:mysql://123.56.231.50:3306/echart4?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
             -->
 		 </property>
             <!-- <property name="username" value="root" />
             <property name="password" value="root" /> -->
-            <!-- <property name="username" value="analysis" />
-            <property name="password" value="34songJIA$#" /> -->
-			 <property name="username" value="root" />
-            <property name="password" value="root" />
+            <property name="username" value="analysis" />
+            <property name="password" value="34songJIA$#" />
+			<!--  <property name="username" value="root" />
+            <property name="password" value="root" /> -->
             <!--maxIdle: 最大空闲连接,连接池中容许保持空闲状态的最大连接数量,超过的空闲连接将被释放,如果设置为负数表示不限制-->
             <property name="maxIdle" value="10"/>
 
@@ -105,8 +105,56 @@
             </property>
         </bean>
         
-       
+        <!-- analysis数据源(数据分析) -->
+        <bean name="analysisDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+            <property name="driverClassName">
+                <value>org.gjt.mm.mysql.Driver</value>
+            </property>
+            <property name="url">
+                 <value>jdbc:mysql://123.56.231.50:3306/analysis?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
+            </property>
+            <property name="username" value="analysis" />
+            <property name="password" value="34songJIA$#" />
 
+            <!--maxIdle: 最大空闲连接,连接池中容许保持空闲状态的最大连接数量,超过的空闲连接将被释放,如果设置为负数表示不限制-->
+            <property name="maxIdle" value="10"/>
+
+            <!--minIdle: 最小空闲连接,连接池中容许保持空闲状态的最小连接数量,低于这个数量将创建新的连接,如果设置为0则不创建-->
+            <property name="minIdle" value="5"/>
+
+            <!--maxActive: 最大连接数量-->
+            <property name="maxActive" value="2000"/>
+
+            <!--removeAbandoned: 是否自动回收超时连接-->
+            <property name="removeAbandoned" value="true"/>
+
+            <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+            <property name="removeAbandonedTimeout" value="10000"/>
+
+            <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+            <property name="maxWait" value="3000"/>
+
+            <!-- SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录 -->
+            <property name="validationQuery">
+                <value>SELECT 1</value>
+            </property>
+
+            <!-- 指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个. -->
+            <property name="testOnBorrow">
+                <value>true</value>
+            </property>
+        </bean>
+        
+       <!-- 支持上传文件 -->  
+		<bean id="multipartResolver"
+		    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		 	<!-- 文件大小最大值 -->  
+	        <!--  <property name="maxUploadSize" value="10485760000" />   -->  
+	        <!-- 内存中的最大值 -->  
+	        <!-- <property name="maxInMemorySize" value="40960" /> -->
+	        <!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常-->  
+      		<!--  <property name="resolveLazily" value="true"/> --> 
+		</bean>
       
 
     </beans>

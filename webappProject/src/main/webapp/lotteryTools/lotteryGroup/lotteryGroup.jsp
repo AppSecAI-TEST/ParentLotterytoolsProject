@@ -148,9 +148,9 @@
 				         <div class="ftitle">
 				            <label for="lotteryTypeA" >类型:</label>
 					    			<select class="easyui-combobox" id="lotteryTypeA" name="lotteryType" style="width:200px;">
-										<option value="1" >体彩</option>
-										<option value="2">福彩</option>
-										<option value="3">竞彩</option>
+										<option value="1" >体彩群</option>
+										<option value="2">福彩群</option>
+										<option value="3">竞彩群</option>
 										<option value="4">中心群</option>
 										<option value="5">公司群</option>
 									</select>
@@ -257,9 +257,9 @@
 				         <div class="ftitle">
 				            <label for="lotteryTypeA" >类型:</label>
 					    			<select class="easyui-combobox" id="lotteryTypeU" name="lotteryType" style="width:200px;">
-										<option value="1" >体彩</option>
-										<option value="2">福彩</option>
-										<option value="3">竞彩</option>
+										<option value="1" >体彩群</option>
+										<option value="2">福彩群</option>
+										<option value="3">竞彩群</option>
 										<option value="4">中心群</option>
 										<option value="5">公司群</option>
 									</select>
@@ -331,8 +331,8 @@
     		</div>
 	     
     </div>
-    
-   
+    <!-- 上传图片弹框 -->
+     <div id="ddA">Dialog Content.</div>
 </body>
 	
 	

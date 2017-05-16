@@ -1,7 +1,5 @@
-webappProject/.settings/
-webappProject/target/
-webappProject/.classpath
-webappProject/.project
-backstageProject/target/
-webappProject/target/m2e-wtp/
-/.settings/
+.settings/
+target/
+*.class
+.idea/
+/classes/

@@ -278,6 +278,7 @@ function closeDialog()
 {
 	$("#addLotteryGroup").dialog('close');//初始化添加角色弹框关闭
 	$("#updateLotteryGroup").dialog('close');//初始化添加角色弹框关闭
+	$("#ddA").dialog('close');
 }
 
 /**
