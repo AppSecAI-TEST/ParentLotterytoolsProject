@@ -1,4 +1,4 @@
-var ownerId ;
+var ownerId ='';
 $(function()
 		{
 			initQueryProvince();
@@ -75,7 +75,7 @@ function initDatagrid()
 }
 
 //获取群主列表
-function initOwnerListDatagrid(ownerDatagridId,ownerId)
+function initOwnerListDatagrid(ownerDatagridId)
 {
 	var params = new Object();
 	
@@ -184,8 +184,7 @@ function addLotteryGroup()
 	$("#ssZjChaxunA").combobox('setValue',"0");
 	
 	initProvince('add','privinceA','');//默认选中全部，则全部下是没有市数据的
-	
-	initOwnerListDatagrid('ownerListA', ownerId);
+	initOwnerListDatagrid('ownerListA');
 	
 	$("#addLotteryGroup").dialog('open');
 }
@@ -243,7 +242,7 @@ function updateLGroup(id)
         dataType: "json",
         success: function (data) {
         	
-				$('#ffDetail').form('load',{
+				$('#ffUpdate').form('load',{
 					id:data.id,
 					name:data.name,
 					introduction:data.introduction,
@@ -260,7 +259,8 @@ function updateLGroup(id)
 				//初始化市级区域combobox
 				initCities('update','cityU',data.city,data.province);
 				
-				initOwnerListDatagrid('ownerListU', data.ownerId);
+				ownerId = data.ownerId;
+				initOwnerListDatagrid('ownerListU');
 				
         	
         },
@@ -418,7 +418,7 @@ function submitAddLotteryGroup()
 						}
 					else
 						{
-							$.messager.alert('提示', "请选择补录方案!");
+							$.messager.alert('提示', "请选择群主!");
 						}
 				}
 			return flag;
@@ -452,7 +452,7 @@ function submitUpdateLotteryGroup()
 					}
 					else
 					{
-						$.messager.alert('提示', "请选择补录方案!");
+						$.messager.alert('提示', "请选择群主!");
 					}
 				}
 			return flag;

@@ -220,6 +220,9 @@ public class LotteryGroupController
 			entity.setSsKjChaxun(dto.getSsKjChaxun());
 			entity.setSsYlChaxun(dto.getSsYlChaxun());
 			entity.setSsZjChaxun(dto.getSsZjChaxun());
+			LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
+					getLotterybuyerOrExpertById(dto.getOwnerId());
+			entity.setLotteryBuyerOrExpert(owner);//更改群与群主的关系
 			
 			lotteryGroupService.update(entity);
 			
