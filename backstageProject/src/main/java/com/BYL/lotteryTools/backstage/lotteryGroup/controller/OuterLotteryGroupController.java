@@ -136,6 +136,28 @@ public class OuterLotteryGroupController
 			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			entity.setLotteryBuyerOrExpert(null);
 			lotteryGroupService.update(entity);
+			
+			//删除群的同时删除群的关联关系
+			Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+			QueryResult<RelaBindOfLbuyerorexpertAndGroup> relas = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, entity.getId());
+			List<RelaBindOfLbuyerorexpertAndGroup> list = relas.getResultList();
+			for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : list) 
+			{
+				try
+				{
+					relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
+				}
+				catch(Exception e)
+				{
+					logger.error("delete,error:", e);
+				}
+			}
+			//TODO:删除加群申请的关联关系
+			
+			//TODO:删除群等级关联关系
+			
+			
+			
 			map.put("message", "删除成功");
 			map.put("flag", true);
 		}
