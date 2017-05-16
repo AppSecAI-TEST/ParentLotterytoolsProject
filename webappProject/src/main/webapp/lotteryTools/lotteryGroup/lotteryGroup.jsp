@@ -352,6 +352,25 @@
     </div>
     <!-- 上传图片弹框 -->
      <div id="ddA">Dialog Content.</div>
+     <!-- 管理群成员dialog -->
+     <div id="manageMemberDiv" class="easyui-dialog" fit="true" title="管理群成员" style="width:800px;height:600px;padding:0px;border:0;top:1px;"
+            data-options="
+            modal:true,
+                iconCls: 'icon-save',
+                buttons: [{
+                    text:'关闭',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#manageMemberDiv').dialog('close');
+                        $('#memberDatagrid').datagrid('loadData', { total: 0, rows: [] });  
+                        ownerId = '';
+                    }
+                }]
+            ">
+     	 <table id="memberDatagrid" class="easyui-datagrid"  title="群成员列表" >
+			</table>
+     </div>
+    
      
      <div id="uploadShowAimgPreview" title="图片预览" class="easyui-dialog" data-options="modal:true"  style="width:700px; height:500px;"> </div>
 </body>

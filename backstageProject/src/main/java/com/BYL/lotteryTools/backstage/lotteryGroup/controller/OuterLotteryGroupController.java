@@ -163,6 +163,8 @@ public class OuterLotteryGroupController
 	 */
 	@RequestMapping(value="/getMembersOfGroup", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getMembersOfGroup(
+			@RequestParam(value="page",required=false)   Integer page,//当前页数
+			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
 			String groupId,
 			HttpServletRequest request,HttpSession httpSession)
 	{
@@ -170,23 +172,39 @@ public class OuterLotteryGroupController
 		
 		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
 		//获取当前群和用户的关联关系(TODO:当前方法获取的群成员不包括群主和群内机器人)
-		List<RelaBindOfLbuyerorexpertAndGroup> relalist = group.getRelaBindOfLbuyerorexpertAndGroups();
+		Pageable pageable = null;
+		if(null != rows && 0 != rows)
+		{
+			pageable = new PageRequest(page-1,rows);
+		}
+		else
+		{
+			pageable = new PageRequest(0,Integer.MAX_VALUE);
+		}
+		
+		//不带分页的群成员查询
+		QueryResult<RelaBindOfLbuyerorexpertAndGroup> lQueryResult = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, groupId);
+		List<RelaBindOfLbuyerorexpertAndGroup> relalist = lQueryResult.getResultList();
 		
 		List<LotterybuyerOrExpertDTO> userDtos = new ArrayList<LotterybuyerOrExpertDTO>();
-		
+		LotterybuyerOrExpert owner = group.getLotteryBuyerOrExpert();
 		try
 		{
 			for (RelaBindOfLbuyerorexpertAndGroup rela : relalist)
 			{
 				LotterybuyerOrExpertDTO dto = new  LotterybuyerOrExpertDTO();
 				dto = lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert());
+				if(owner.equals(rela.getLotterybuyerOrExpert()))
+					dto.setIsGroupOwner("1");//若为当前群群主，则设置为1
 				userDtos.add(dto);
+					
 			}
 			
 			 map.put("flag", true);
 			 map.put("message", "获取成功");
 			 map.put("memberDtos", userDtos);
-			
+			 map.put("rows",userDtos);
+			 map.put("total", lQueryResult.getTotalCount());
 		}
 		catch(Exception e)
 		{
@@ -215,6 +233,7 @@ public class OuterLotteryGroupController
 	@RequestMapping(value="/getGroupList", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupList(
 			LotteryGroupDTO dto,
+			@RequestParam(value="userId",required=false)   String userId,//当前发出获取群列表的的用户id
 			@RequestParam(value="page",required=false)   Integer page,//当前页数
 			@RequestParam(value="row",required=false)    Integer row,//当前获取数据量
 			HttpServletRequest request,HttpSession httpSession)
@@ -306,6 +325,27 @@ public class OuterLotteryGroupController
 			List<LotteryGroup> list = lQueryResult.getResultList();
 			
 			dtos = lotteryGroupService.toDTOs(list);
+			
+			if(null != userId && !"".equals(userId))
+			{
+				for (LotteryGroupDTO group : dtos) 
+				{
+					RelaBindOfLbuyerorexpertAndGroup rela = relaBindbuyerAndGroupService.
+							getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, group.getId());
+					
+					if(null != rela)
+					{
+						group.setIsJoinOfUser("1");//当前用户已加入当前群
+						group.setIsOwner(rela.getIsGroupOwner());
+					}
+					else
+					{
+						group.setIsJoinOfUser("0");
+					}
+				}
+			}
+
+			
 		}
 		
 		
@@ -673,6 +713,7 @@ public class OuterLotteryGroupController
 				rela.setIsDeleted(Constants.IS_NOT_DELETED);
 				rela.setIsReceive("1");
 				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setIsGroupOwner("0");//群成员
 				rela.setLotterybuyerOrExpert(user);
 				rela.setLotteryGroup(group);
 				rela.setCreator(groupId);
@@ -942,6 +983,7 @@ public class OuterLotteryGroupController
 				rela.setIsDeleted(Constants.IS_NOT_DELETED);
 				rela.setIsReceive("1");
 				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setIsGroupOwner("1");//群主
 				rela.setLotterybuyerOrExpert(owner);
 				rela.setLotteryGroup(entity);
 				rela.setCreator(dto.getOwnerId());

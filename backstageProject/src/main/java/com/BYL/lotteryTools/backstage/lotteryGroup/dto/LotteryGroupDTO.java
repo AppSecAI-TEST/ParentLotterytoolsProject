@@ -57,9 +57,31 @@ public class LotteryGroupDTO {
 	
 	private String groupQRImg;//群二维码图片
 	
+	private String isJoinOfUser;//指定用户是否已加入此群 1：已加入 0:未加入
+	
+	private String isOwner;//指定用户是否为此群群主
+	
+	
+	
 
 	
 	
+	public String getIsOwner() {
+		return isOwner;
+	}
+
+	public void setIsOwner(String isOwner) {
+		this.isOwner = isOwner;
+	}
+
+	public String getIsJoinOfUser() {
+		return isJoinOfUser;
+	}
+
+	public void setIsJoinOfUser(String isJoinOfUser) {
+		this.isJoinOfUser = isJoinOfUser;
+	}
+
 	public String getGroupQRImg() {
 		return groupQRImg;
 	}

@@ -55,6 +55,7 @@ function initDatagrid()
 				{field:'opt',title:'操作',width:'15%',align:'center',  
 			            formatter:function(value,row,index){  
 			            	 var btn = '<a class="editcls" onclick="updateLGroup(&quot;'+row.id+'&quot;)" href="javascript:void(0)">修改</a>'
+			            				+'<a class="memberManage" onclick="manageGroupMember(&quot;'+row.id+'&quot;)" href="javascript:void(0)">群成员管理</a>'
 					                	+'<a class="delete" onclick="deleteLotteryGroup(&quot;'+row.id+'&quot;)" href="javascript:void(0)">删除</a>';
 			            	return btn;  
 			            }  
@@ -63,7 +64,7 @@ function initDatagrid()
 	    onLoadSuccess:function(data){  
 	        $('.editcls').linkbutton({text:'修改',plain:true,iconCls:'icon-edit'}); 
 	        $('.delete').linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
-	        
+	        $('.memberManage').linkbutton({text:'群成员管理',plain:true,iconCls:'icon-reload'});  
 	        if(data.rows.length==0){
 				var body = $(this).data().datagrid.dc.body2;
 				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="10">没有数据</td></tr>');
@@ -72,6 +73,120 @@ function initDatagrid()
 	        
 	    }
 	});
+}
+
+//群成员管理
+function manageGroupMember(groupId)
+{
+	$('#manageMemberDiv').dialog('open');
+	var params = new Object();
+	
+	params.groupId = groupId;
+	
+	$('#memberDatagrid').datagrid({
+		singleSelect:true,
+		rownumbers:false,
+		queryParams: params,
+		url:contextPath + '/outerLGroup/getMembersOfGroup.action',//'datagrid_data1.json',
+		method:'get',
+		border:false,
+		singleSelect:false,
+		fit:true,//datagrid自适应
+		fitColumns:true,
+		pagination:true,
+		collapsible:false,
+		pageSize:20,//初始化页面显示条数的值是根据pageList的数组中的值来设置的，否则无法正确设置
+		pageList:[10,20,30,50],
+		columns:[[
+				{field:'ck',checkbox:true},
+				{field:'id',hidden:true},
+				{field:'name',title:'昵称',width:'10%',align:'center'},
+				{field:'isPhone',width:'10%',title:'手机用户',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var numOrCharName ='';
+		            	switch(value)
+		            	{
+		            		case '0':numOrCharName='否';break;
+		            		case '1':numOrCharName='是';break;
+		            	}
+		            	return numOrCharName;  
+		            }  },
+		        {field:'provinceName',title:'省',width:'10%',align:'center'},
+		        {field:'cityName',title:'市',width:'10%',align:'center'},
+		        {field:'cailiaoName',title:'彩聊名',width:'15%',align:'center'},
+		        {field:'isGroupOwner',width:'15%',title:'群主',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var numOrCharName ='';
+		            	switch(value)
+		            	{
+		            		case '0':numOrCharName='否';break;
+		            		case '1':numOrCharName='是';break;
+		            	}
+		            	return numOrCharName;  
+		            }  },{field:'opt',title:'操作',width:'15%',align:'center',  
+			            formatter:function(value,row,index){  
+			            	 var btn = '<a class="removemember" onclick="removeMemberFromGroup(&quot;'+row.id+'&quot;,&quot;'+groupId+'&quot;,&quot;'+row.isGroupOwner+'&quot;)" href="javascript:void(0)">删除</a>';
+			            	return btn;  
+			            }  
+			        }  
+		    ]],  
+		    onLoadSuccess:function(data){  
+	        $('.removemember').linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
+	        if(data.rows.length==0){
+				var body = $(this).data().datagrid.dc.body2;
+				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="10">没有数据</td></tr>');
+			}
+	        
+	        
+	    },
+        onClickRow: function(rowIndex, rowData){
+           
+        }
+	});
+}
+
+//删除群成员
+function removeMemberFromGroup(memberId,groupId,isGroupOwner)
+{
+	var url = contextPath + '/outerLGroup/quitUserFronGroup.action';
+	var data1 = new Object();
+	var flag = true;
+	
+	if(1 == isGroupOwner)
+		{
+			flag = false;
+			$.messager.alert('提示', "群主不可以删除!");
+		}
+	
+	if(flag)
+		{
+			var codearr = [];
+			codearr.push(memberId);
+			
+			data1.quitUsers=codearr.toString();
+			data1.groupId = groupId;
+			
+			$.messager.confirm("提示", "您确认移除当前群成员？", function (r) {  
+		        if (r) {  
+			        	$.ajax({
+			        		async: false,   //设置为同步获取数据形式
+			                type: "get",
+			                url: url,
+			                data:data1,
+			                dataType: "json",
+			                success: function (data) {
+			                	manageGroupMember(groupId);//重新加载群成员列表
+			                	$.messager.alert('提示', data.message);
+			                },
+			                error: function (XMLHttpRequest, textStatus, errorThrown) {
+			                    window.parent.location.href = contextPath + "/menu/error.action";
+			                }
+			           });
+			        	
+		        }  
+		    });  
+		}
+	
 }
 
 //获取群主列表
@@ -281,6 +396,7 @@ function closeDialog()
 	$("#updateLotteryGroup").dialog('close');//初始化添加角色弹框关闭
 //	$("#ddA").dialog('close');
 	$("#uploadShowAimgPreview").dialog('close');
+	$("#manageMemberDiv").dialog('close');
 }
 
 /**

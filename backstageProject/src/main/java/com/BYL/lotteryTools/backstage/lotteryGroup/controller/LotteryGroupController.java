@@ -27,12 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LGroupLevel;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
-import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
-import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -76,6 +76,8 @@ public class LotteryGroupController extends GlobalExceptionHandler
 	@Autowired
 	private LGroupLevelService lGroupLevelService;
 	
+	@Autowired
+	private RelaBindbuyerAndGroupService relaBindbuyerAndGroupService;
 	
 	/**
 	 * 获取彩票群详情
@@ -212,6 +214,8 @@ public class LotteryGroupController extends GlobalExceptionHandler
 			try
 			{
 				String lastName = entity.getName();
+				String lastOwnerId = entity.getLotteryBuyerOrExpert().getId();
+				
 				entity.setName(dto.getName());
 				entity.setGroupLevel(dto.getGroupLevel());
 				entity.setFabuKj(dto.getFabuKj());
@@ -224,9 +228,33 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				entity.setSsKjChaxun(dto.getSsKjChaxun());
 				entity.setSsYlChaxun(dto.getSsYlChaxun());
 				entity.setSsZjChaxun(dto.getSsZjChaxun());
-				LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
-						getLotterybuyerOrExpertById(dto.getOwnerId());
-				entity.setLotteryBuyerOrExpert(owner);//更改群与群主的关系
+				if(!lastOwnerId.equals(dto.getOwnerId()))
+				{
+					LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
+							getLotterybuyerOrExpertById(dto.getOwnerId());
+					entity.setLotteryBuyerOrExpert(owner);//更改群与群主的关系
+					
+					//2017-5-16ADD：建立群主和群的加入关系
+					RelaBindOfLbuyerorexpertAndGroup rela 
+						= relaBindbuyerAndGroupService.getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(lastOwnerId, dto.getId());
+					if(null != rela)
+						relaBindbuyerAndGroupService.delete(rela);
+					
+					rela = new RelaBindOfLbuyerorexpertAndGroup();
+					rela.setIsDeleted(Constants.IS_NOT_DELETED);
+					rela.setIsReceive("1");
+					rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+					rela.setIsGroupOwner("1");//群主
+					rela.setLotterybuyerOrExpert(owner);
+					rela.setLotteryGroup(entity);
+					rela.setCreator(dto.getOwnerId());
+					rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+					rela.setModify(dto.getOwnerId());
+					rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
+					//保存关联
+					relaBindbuyerAndGroupService.save(rela);
+				}
+				
 				
 				
 				
@@ -243,6 +271,8 @@ public class LotteryGroupController extends GlobalExceptionHandler
 					entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
 				}
 				lotteryGroupService.update(entity);
+				
+				
 				
 				bean.setFlag(true);
 				bean.setMessage("修改成功");
@@ -333,6 +363,21 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				level.setModify(entity.getId());
 				level.setOperator(dto.getOwnerId());
 				relaGroupUpLevelService.save(level);//保存群等级记录表数据
+				
+				//2017-5-11ADD：建立群主和群的加入关系
+				RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+				rela.setIsDeleted(Constants.IS_NOT_DELETED);
+				rela.setIsReceive("1");
+				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setIsGroupOwner("1");//群主
+				rela.setLotterybuyerOrExpert(owner);
+				rela.setLotteryGroup(entity);
+				rela.setCreator(dto.getOwnerId());
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setModify(dto.getOwnerId());
+				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				//保存关联
+				relaBindbuyerAndGroupService.save(rela);
 				
 				//在融云创建群信息
 				String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中

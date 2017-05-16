@@ -57,4 +57,28 @@ public class RelaBindbuyerAndGroupServiceImpl implements
 		
 		return list;
 	}
+	
+	
+	public QueryResult<RelaBindOfLbuyerorexpertAndGroup> getMemberOfJoinGroup(Pageable pageable,String groupId) 
+	{
+//		Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+		List<Object> params = new ArrayList<Object>();
+		
+		StringBuffer sql = new StringBuffer("SELECT u.* "
+				+ " FROM RELA_BIND_OF_BUYER_AND_LOTTERYGROUP u WHERE u.IS_DELETED='1' "
+				+ " AND u.GROUP_ID='"+groupId+"' ORDER BY u.CREATE_TIME DESC ");
+		
+		
+		QueryResult<RelaBindOfLbuyerorexpertAndGroup> queryResult = relaBindOfBuyyerorexpertAndGroupRespository.
+				getScrollDataBySql(RelaBindOfLbuyerorexpertAndGroup.class, sql.toString(), params.toArray(), pageable);
+		
+//		list = queryResult.getResultList();
+		
+		return queryResult;
+	}
+
+	public void delete(RelaBindOfLbuyerorexpertAndGroup entity)
+	{
+		relaBindOfBuyyerorexpertAndGroupRespository.delete(entity);
+	}
 }

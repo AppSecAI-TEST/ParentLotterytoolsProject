@@ -46,6 +46,20 @@ public class RelaBindOfLbuyerorexpertAndGroup extends BaseEntity
 	
 	@Column(name="IS_RECEIVER",length=10)
 	private String isReceive;//是否接收消息（0：不接收消息 1：接收消息）
+	
+	@Column(name="IS_GROUP_OWNER",length=10)
+	private String isGroupOwner;//是否为群主
+	
+	
+
+
+	public String getIsGroupOwner() {
+		return isGroupOwner;
+	}
+
+	public void setIsGroupOwner(String isGroupOwner) {
+		this.isGroupOwner = isGroupOwner;
+	}
 
 	public String getId() {
 		return id;
