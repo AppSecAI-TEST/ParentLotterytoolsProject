@@ -39,6 +39,7 @@ import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.mode
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.exception.GlobalExceptionHandler;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
@@ -53,7 +54,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
  */
 @Controller
 @RequestMapping("/lgroup")
-public class LotteryGroupController
+public class LotteryGroupController extends GlobalExceptionHandler
 {
 	private Logger logger = LoggerFactory.getLogger(LotteryGroupController.class);
 	
@@ -208,26 +209,50 @@ public class LotteryGroupController
 		
 		if(null != entity)
 		{//修改群信息
-			entity.setName(dto.getName());
-			entity.setGroupLevel(dto.getGroupLevel());
-			entity.setFabuKj(dto.getFabuKj());
-			entity.setFabuZs(dto.getFabuZs());
-			entity.setIntroduction(dto.getIntroduction());
-			entity.setJoinType(dto.getJoinType());
-			entity.setLotteryType(dto.getLotteryType());
-			entity.setProvince(dto.getProvince());
-			entity.setCity(dto.getCity());
-			entity.setSsKjChaxun(dto.getSsKjChaxun());
-			entity.setSsYlChaxun(dto.getSsYlChaxun());
-			entity.setSsZjChaxun(dto.getSsZjChaxun());
-			LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
-					getLotterybuyerOrExpertById(dto.getOwnerId());
-			entity.setLotteryBuyerOrExpert(owner);//更改群与群主的关系
+			try
+			{
+				String lastName = entity.getName();
+				entity.setName(dto.getName());
+				entity.setGroupLevel(dto.getGroupLevel());
+				entity.setFabuKj(dto.getFabuKj());
+				entity.setFabuZs(dto.getFabuZs());
+				entity.setIntroduction(dto.getIntroduction());
+				entity.setJoinType(dto.getJoinType());
+				entity.setLotteryType(dto.getLotteryType());
+				entity.setProvince(dto.getProvince());
+				entity.setCity(dto.getCity());
+				entity.setSsKjChaxun(dto.getSsKjChaxun());
+				entity.setSsYlChaxun(dto.getSsYlChaxun());
+				entity.setSsZjChaxun(dto.getSsZjChaxun());
+				LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
+						getLotterybuyerOrExpertById(dto.getOwnerId());
+				entity.setLotteryBuyerOrExpert(owner);//更改群与群主的关系
+				
+				
+				
+				if(!lastName.equals(entity.getName()))
+				{
+					String logo = null;//内嵌logo图片，若群头像不为空，则嵌入群头像
+					String uploadPath = "upload";
+					String path = request.getSession().getServletContext().getRealPath(uploadPath); 
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(entity.getTouXiang());
+					if(null != uploadfile)
+						logo = path+File.separator+uploadfile.getUploadRealName();
+					
+					String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
+					entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
+				}
+				lotteryGroupService.update(entity);
+				
+				bean.setFlag(true);
+				bean.setMessage("修改成功");
+			}
+			catch(Exception e)
+			{
+				
+			}
 			
-			lotteryGroupService.update(entity);
-			
-			bean.setFlag(true);
-			bean.setMessage("修改成功");
+		
 		}
 		else
 		{
