@@ -281,6 +281,14 @@ public class LotteryGroupController extends GlobalExceptionHandler
 					}
 					entity.setTouXiang(uploadfile.getNewsUuid());
 				}
+				else
+				{
+					if(null != dto.getTouXiang() && !"".equals(dto.getTouXiang()))
+					{
+						uploadfile = uploadfileService.getUploadfileByNewsUuid(dto.getTouXiang());
+						
+					}
+				}
 				
 				//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人
 				String robotUserId = lotterybuyerOrExpertService.

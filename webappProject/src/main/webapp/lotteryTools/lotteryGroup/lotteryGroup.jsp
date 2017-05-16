@@ -136,7 +136,7 @@
                 }]
             ">
 		
-			<div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
+			<div class="easyui-layout" style="height:95%;padding:0;width:100%;" >
 	    	 	<div region="north" style="height:65%;" title="彩聊群内容" hide="false">
 	    	 		<form id="ff" method="get" novalidate style="margin-top:5px;">
 		    	 		<div class="ftitle">
@@ -168,11 +168,7 @@
 								</select>
 				            </div>
 				        </div>
-				        <div class="ftitle" >
-				            <label for="introductionA">群描述:</label>
-				            <textarea id="introductionA" name="introduction" class="easyui-validatebox" placeholder="请输入群简介"
-					         	 validType="length[0,100]" style="resize:none;width:350px;height:100px;border-radius:5px;margin-left: 30px;"></textarea>
-					    </div>
+				        
 					    
 					   <div class="ftitle">
 				            <label for="priceA">发布开奖画面:</label>
@@ -214,10 +210,24 @@
 							</select>
 				        </div>
 				        
+				        <div class="ftitle">
+				            <label for="subject">头像:</label>
+				            <input type="hidden" id="touXiangA" name="touXiang">
+				             <a href="#" id="uploadA" class="l-btn l-btn-small" plain="true" onclick="openDialog('ddA','add')" style="width:100px;">点击上传头像</a>
+				       		 <img id="touxiangImgA" style="width:300px;height:300px;" alt="点击放大" src="" onclick="previewImage('touxiangImgA')">
+				        </div>
+				      
+				        
+				        <div class="ftitle" >
+				            <label for="introductionA">群描述:</label>
+				            <textarea id="introductionA" name="introduction" class="easyui-validatebox" placeholder="请输入群简介"
+					         	 validType="length[0,100]" style="resize:none;width:350px;height:100px;border-radius:5px;margin-left: 30px;"></textarea>
+					    </div>
+				        
 				     </form>
 	    	 	</div>
-	    	 	<div region="center" style="height:35%;padding:0;width:99%;" title="选择群主(必选)">
-	    	 		<table id="ownerListA" class="easyui-datagrid" style="width:100%;height:95%;"   ></table>
+	    	 	<div region="center" style="height:33%;width:99%;" title="选择群主(必选)">
+	    	 		<table id="ownerListA" class="easyui-datagrid" style="width:100%;height:auto;"   ></table>
 	    	 	</div>
     		</div>
 	     
@@ -245,8 +255,8 @@
                 }]
             ">
 		
-			<div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
-	    	 	<div region="north" style="height:45%;" title="彩聊群内容" hide="false">
+			<div class="easyui-layout" style="height:95%;padding:0;width:100%;" >
+	    	 	<div region="north" style="height:63%;" title="彩聊群内容" hide="false">
 	    	 		<form id="ffUpdate" method="get" novalidate style="margin-top:5px;">
 		    	 		<div class="ftitle">
 				            <label for="codeA">群名:</label>
@@ -269,20 +279,15 @@
 				            <div style="">
 				           		<!-- <label for="privinceA">省:</label> -->
 					            <select class="easyui-combobox " id="privinceU" name="province"  
-					          	  data-options="editable:false" style="width:100px;" >
+					          	  data-options="editable:false" style="width:150px;" >
 								</select>
 								<!-- <label for="cityA">市:</label> -->
 								<select class="easyui-combobox " id="cityU" name="city"  
-					          	  data-options="editable:false" style="width:100px;" >
+					          	  data-options="editable:false" style="width:150px;" >
 								</select>
 				            </div>
 				        </div>
-				        <div class="ftitle" >
-				            <label for="introductionA">群描述:</label>
-				            <textarea id="introductionU" name="introduction" class="easyui-validatebox" placeholder="请输入群简介"
-					         	 validType="length[0,100]" style="resize:none;width:350px;height:100px;border-radius:5px;margin-left: 30px;"></textarea>
-					    </div>
-					    
+				     
 					   <div class="ftitle">
 				            <label for="priceA">发布开奖画面:</label>
 				            <select class="easyui-combobox" id="fabuKjU" name="fabuKj" style="width:200px;">
@@ -323,9 +328,21 @@
 							</select>
 				        </div>
 				        
+				         <div class="ftitle">
+				            <label for="priceA">头像:</label>
+				            <img id="touxiangImgU" style="width:300px;height:300px;" alt="点击放大" src="" onclick="previewImage('touxiangImgU')">
+				        </div>
+				        
+				        <div class="ftitle" >
+				            <label for="introductionA">群描述:</label>
+				            <textarea id="introductionU" name="introduction" class="easyui-validatebox" placeholder="请输入群简介"
+					         	 validType="length[0,100]" style="resize:none;width:350px;height:100px;border-radius:5px;margin-left: 30px;"></textarea>
+					    </div>
+					    
+				        
 				     </form>
 	    	 	</div>
-	    	 	<div region="center" style="height:55%;padding:0;width:99%;" title="选择群主(必选)">
+	    	 	<div region="center" style="height:35%;padding:0;width:99%;" title="选择群主(必选)">
 	    	 		<table id="ownerListU" class="easyui-datagrid" style="width:100%;height:95%;"></table>
 	    	 	</div>
     		</div>
@@ -333,6 +350,8 @@
     </div>
     <!-- 上传图片弹框 -->
      <div id="ddA">Dialog Content.</div>
+     
+     <div id="uploadShowAimgPreview" title="图片预览" class="easyui-dialog" data-options="modal:true"  style="width:700px; height:500px;"> </div>
 </body>
 	
 	

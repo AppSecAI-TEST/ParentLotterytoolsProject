@@ -40,6 +40,8 @@ import com.BYL.lotteryTools.backstage.user.service.RegionService;
 import com.BYL.lotteryTools.backstage.user.service.UserService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.bean.TreeBean;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.LoginUtils;
 import com.BYL.lotteryTools.common.util.MyMD5Util;
@@ -73,6 +75,9 @@ public class MenuController {
     
     @Autowired
     private RegionService regionService;
+    
+    @Autowired
+    private UploadfileService uploadfileService;
     
     /**
 	 * 
@@ -369,7 +374,28 @@ public class MenuController {
 		return indexPage;
 	}
 	
-	
+	/**
+	 * 调整到上传附件页
+	* @Title: uploadFile 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param uploadId
+	* @param @param session
+	* @param @param model
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月16日 下午1:39:01 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/uploadFile.action", method = RequestMethod.GET)
+	public String uploadFile(@RequestParam(value="uploadId",required=false) String uploadId,HttpSession session,ModelMap model)
+	{
+		String indexPage = "lotteryTools/uploadFile";
+		
+		
+		model.addAttribute("uploadId", uploadId);
+		return indexPage;
+	}
 	
 	
     
@@ -1033,6 +1059,29 @@ public class MenuController {
 		}
 	
 	
+	 /**
+	  * 根据newsUuid获取附件信息
+	 * @Title: getUploadFileData 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param @param newsUuid
+	 * @param @param model
+	 * @param @param httpSession
+	 * @param @return
+	 * @param @throws Exception    设定文件 
+	 * @author banna
+	 * @date 2017年5月16日 下午1:44:25 
+	 * @return Uploadfile    返回类型 
+	 * @throws
+	  */
+	 @RequestMapping(value = "/getUploadFileData")
+		public @ResponseBody Uploadfile getUploadFileData(
+				@RequestParam(value="newsUuid",required=false) String newsUuid,
+				ModelMap model,HttpSession httpSession) throws Exception
+		{
+		 	Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(newsUuid);
+		 	
+		 	return uploadfile;
+		}
 	
 	
 	

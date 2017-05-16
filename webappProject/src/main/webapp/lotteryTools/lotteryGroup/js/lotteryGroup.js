@@ -250,7 +250,8 @@ function updateLGroup(id)
 					fabuZs:data.fabuZs,
 					ssYlChaxun:data.ssYlChaxun,
 					ssKjChaxun:data.ssKjChaxun,
-					ssZjChaxun:data.ssZjChaxun
+					ssZjChaxun:data.ssZjChaxun,
+					touXiang:data.touXiang
 					
 				});
 				
@@ -262,7 +263,7 @@ function updateLGroup(id)
 				ownerId = data.ownerId;
 				initOwnerListDatagrid('ownerListU');
 				
-        	
+				$("#touxiangImgU").attr("src",contextPath+data.touXiangImgUrl);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             window.parent.location.href = contextPath + "/menu/error.action";
@@ -278,7 +279,106 @@ function closeDialog()
 {
 	$("#addLotteryGroup").dialog('close');//初始化添加角色弹框关闭
 	$("#updateLotteryGroup").dialog('close');//初始化添加角色弹框关闭
-	$("#ddA").dialog('close');
+//	$("#ddA").dialog('close');
+	$("#uploadShowAimgPreview").dialog('close');
+}
+
+/**
+ * 图片预览
+ * @param imgId：图片div的id
+ * @param realName：图片真实路径
+ */
+function previewImage(id)
+{
+	$("#uploadShowAimgPreview").dialog('open');//打开鼠标预览弹框
+	var path = $("#"+id).prop("src");
+	$("#uploadShowAimgPreview").html("<img style='width:600px;height:500px;' src='"+path+"'/>");
+}
+
+function openDialog(dialogId,addorupdate){
+	var createUUID = (function (uuidRegEx, uuidReplacer) { 
+		 return function () { 
+		 return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(uuidRegEx, uuidReplacer).toUpperCase(); 
+		};
+		 })(/[xy]/g, function (c) { 
+		 var r = Math.random() * 16 | 0, 
+		 v = c =="x"? r : (r & 3 | 8); 
+		 return v.toString(16); 
+		});
+	
+	var uploadId ;
+	if('update'==addorupdate)
+		{
+			
+			uploadId = $("#touXiangU").val();
+			
+			if(null == uploadId || '' == uploadId)//若附件id为空，则生成附件id并放入值中
+				{
+					uploadId = createUUID();
+					$("#touXiangU").val(uploadId);
+				}
+			
+		}
+	else
+		if('add'==addorupdate)
+		{
+			if(''==$("#touXiangA").val())
+				{
+					uploadId = createUUID();
+					$("#touXiangA").val(uploadId);
+				}
+			else
+				{
+					uploadId = $("#touXiangA").val();
+				}
+			
+		}
+	
+//	var url = 'uploadFile.jsp?uploadId='+uploadId;
+	var url = contextPath+'/menu/uploadFile.action?uploadId='+uploadId;
+	$('#'+dialogId).dialog({
+	    title: '上传头像',
+	    width: 500,
+	    height: 300,
+	    closed: false,
+	    cache: false,
+	    content: '<iframe id="'+uploadId+'"src="'+url+'" width="100%" height="100%" frameborder="0" scrolling="auto" ></iframe>',  
+//	    href: 'uploadFile.jsp?uploadId='+uploadId,
+	    modal: true,
+	    onClose:function(){
+	    		initImgShow(uploadId,addorupdate);
+	    	}
+	});
+	
+	
+}
+
+//初始化图片展示
+function initImgShow(uploadId,addorupdate)
+{
+	var data1 = new Object();
+	data1.newsUuid = uploadId;
+	
+	var url = contextPath+'/menu/getUploadFileData.action';
+	$.ajax({
+		async: false, //设置为同步获取数据形式
+        type: "get",
+        url: url,
+        data:data1,
+        dataType: "json",
+        success: function (data) {
+        	var touXiangImgUrl = contextPath+data.uploadfilepath+data.uploadRealName;
+        	if('add' == addorupdate)
+        		$("#touxiangImgA").attr("src",touXiangImgUrl);
+        	else
+        		$("#touxiangImgU").attr("src",touXiangImgUrl);
+        	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+	});
+	
 }
 
 /**

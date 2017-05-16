@@ -9,11 +9,11 @@
     <title>upload</title>
  
     <head>
-       <link rel="stylesheet" href="js/jquery.uploadify-v2.1.0/uploadify.css" type="text/css"></link>
+       <link rel="stylesheet" href="<%=request.getContextPath() %>/lotteryTools/js/jquery.uploadify-v2.1.0/uploadify.css" type="text/css"></link>
        <jsp:include page="../common/top.jsp" flush="true" /> 
-       <script type="text/javascript" src="js/jquery.uploadify-v2.1.0/jquery-1.3.2.min.js"></script>
-       <script type="text/javascript" src="js/jquery.uploadify-v2.1.0/jquery.uploadify.v2.1.0.min.js"></script>
-       <script type="text/javascript" src="js/jquery.uploadify-v2.1.0/swfobject.js"></script>
+       <script type="text/javascript" src="<%=request.getContextPath() %>/lotteryTools/js/jquery.uploadify-v2.1.0/jquery-1.3.2.min.js"></script>
+       <script type="text/javascript" src="<%=request.getContextPath() %>/lotteryTools/js/jquery.uploadify-v2.1.0/jquery.uploadify.v2.1.0.min.js"></script>
+       <script type="text/javascript" src="<%=request.getContextPath() %>/lotteryTools/js/jquery.uploadify-v2.1.0/swfobject.js"></script>
        
         <script type="text/javascript">
            var  proId="";
@@ -22,6 +22,7 @@
         		function()
         		{
         			uploadId=getQueryString("uploadId");//附件id
+        			alert(uploadId);
         		}
         );
          var realname="";//存储的名称
@@ -41,9 +42,9 @@
           
            var num = 0;//选择的文件个数
             $('#file').uploadify({
-             'uploader'       : 'js/jquery.uploadify-v2.1.0/uploadify.swf',//uploadify.swf 文件的相对路径，该swf文件是一个带有文字BROWSE的按钮，点击后淡出打开文件对话框，默认值：uploadify.swf
+             'uploader'       : contextPath+'/lotteryTools/js/jquery.uploadify-v2.1.0/uploadify.swf',//uploadify.swf 文件的相对路径，该swf文件是一个带有文字BROWSE的按钮，点击后淡出打开文件对话框，默认值：uploadify.swf
              'script'          : '../servlet/Upload',//后台处理程序的相对路径 。默认值：uploadify.php 
-             'cancelImg'      : 'js/jquery.uploadify-v2.1.0/cancel.png',//
+             'cancelImg'      : contextPath+'/lotteryTools/js/jquery.uploadify-v2.1.0/cancel.png',//
              //'checkScript' ：false,//用来判断上传选择的文件在服务器是否存在的后台处理程序的相对路径 
              'fileDataName' : 'file',//设置一个名字，在服务器处理程序中根据该名字来取上传文件的数据。默认为Filedata 
              'folder'          : 'WEB-INF',//上传文件存放的目录
