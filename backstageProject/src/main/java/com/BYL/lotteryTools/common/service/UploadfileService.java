@@ -27,4 +27,17 @@ public interface UploadfileService {
 	public Uploadfile uploadFiles(MultipartFile file,HttpServletRequest request,String newsUuid) throws Exception;
 	
 	public Uploadfile uploadFilesbyFile(File file,HttpServletRequest request) throws Exception;
+	
+	/**
+	 * 删除附件数据
+	* @Title: deleteUploadFile 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param uploadfiles
+	* @param @param httpSession    设定文件 
+	* @author banna
+	* @date 2017年5月17日 上午11:32:51 
+	* @return void    返回类型 
+	* @throws
+	 */
+	public void deleteUploadFile(List<Uploadfile> uploadfiles,HttpSession httpSession);
 }

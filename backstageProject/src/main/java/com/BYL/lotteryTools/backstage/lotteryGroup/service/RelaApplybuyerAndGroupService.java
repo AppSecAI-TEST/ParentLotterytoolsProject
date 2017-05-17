@@ -11,6 +11,8 @@ public interface RelaApplybuyerAndGroupService {
 	
 	public void update(RelaApplyOfLbuyerorexpertAndGroup entity);
 	
+	public void delete(RelaApplyOfLbuyerorexpertAndGroup entity);
+	
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(String userId,String groupId);
 	
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByApprovalUser(String approvalUser);
@@ -21,4 +23,8 @@ public interface RelaApplybuyerAndGroupService {
 	public List<RelaApplyOfLbuyerorexpertAndGroupDTO> toDTOS(List<RelaApplyOfLbuyerorexpertAndGroup> entities);
 	
 	public RelaApplyOfLbuyerorexpertAndGroupDTO toDTO(RelaApplyOfLbuyerorexpertAndGroup entity);
+	
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByGroupId(String groupId);
+	
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndStatus(String creator,String groupId);
 }

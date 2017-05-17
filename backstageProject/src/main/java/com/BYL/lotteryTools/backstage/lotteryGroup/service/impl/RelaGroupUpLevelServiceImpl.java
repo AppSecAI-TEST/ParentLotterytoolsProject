@@ -1,5 +1,7 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,6 +26,15 @@ public class RelaGroupUpLevelServiceImpl implements RelaGroupUpLevelService {
 	public void update(RelaGroupUpLevelRecord entity)
 	{
 		relaGroupUpLevelRepository.save(entity);
+	}
+
+	public List<RelaGroupUpLevelRecord> getRelaGroupUpLevelRecordByGroupId(
+			String groupId) {
+		return relaGroupUpLevelRepository.getRelaGroupUpLevelRecordByGroupId(groupId);
+	}
+
+	public void delete(RelaGroupUpLevelRecord entity) {
+		relaGroupUpLevelRepository.delete(entity);		
 	}
 
 	

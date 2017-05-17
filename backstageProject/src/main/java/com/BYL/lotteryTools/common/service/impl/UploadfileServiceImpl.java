@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,10 +21,13 @@ import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.repository.UploadfileRepository;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.Constants;
+import com.BYL.lotteryTools.common.util.LoginUtils;
 
 @Service("/uploadfileService")
 @Transactional(propagation = Propagation.REQUIRED)
 public class UploadfileServiceImpl implements UploadfileService {
+	
+	private Logger logger = LoggerFactory.getLogger(UploadfileServiceImpl.class);
 	
 	@Autowired
 	private UploadfileRepository uploadfileRepository;
@@ -148,6 +153,56 @@ public class UploadfileServiceImpl implements UploadfileService {
         file.transferTo(targetFile); //传入文件对象调用上传方法，将文件上传到目录中
 		
 		return uploadfile;
+	}
+
+	/**
+	 * 
+	* @Title: deleteUploadFileByNewsUuid 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param uploadfiles
+	* @param @param httpSession    设定文件 
+	* @author banna
+	* @date 2017年5月17日 上午11:32:21 
+	* @throws
+	 */
+	public void deleteUploadFile(List<Uploadfile> uploadfiles,HttpSession httpSession) {
+
+		//删除
+		 if(null != uploadfiles)
+		 {
+			//①：删除附件的数据时要把当前附件数据对于的附件文件也删除
+			 String savePath = httpSession.getServletContext().getRealPath("");//获取项目根路径
+		    
+		     //删除附件文件相关s
+			 File dirFile = null;
+			 boolean deleteFlag = false;//删除附件flag
+			 
+			 for (Uploadfile uploadfile : uploadfiles) 
+			 {
+				 	savePath = savePath +uploadfile.getUploadfilepath();
+				 	//2.删除附件
+			 		dirFile = new File(savePath+uploadfile.getUploadRealName());//uploadfile.getUploadRealName()
+			 		logger.info("待删除文件路径："+dirFile);
+			        // 如果dir对应的文件不存在，或者不是一个目录，则退出
+		        	deleteFlag = dirFile.delete();
+		        	if(deleteFlag)
+		        	{//删除附件(清空附件关联newsUuid)
+		        		logger.info("deleteImg==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+		        	}
+		        	else
+		        	{
+		        		logger.error("deleteImg ERROR==没有找到要删除的附件文件或删除失败，附件路径为="+savePath+";File.exists="+dirFile.exists());
+		        	}
+				    //删除附件e
+			   		 uploadfile.setModify(uploadfile.getNewsUuid());//放置附件关联uuid
+			   		 uploadfile.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			   		 uploadfile.setIsDeleted(Constants.IS_DELETED);//删除标记
+			   		 uploadfile.setDeleteServiceFile(deleteFlag);//存储是否成功删除文件标记
+			   		 this.update(uploadfile);
+			 }
+			 
+			
+		 }
 	}
 	
 

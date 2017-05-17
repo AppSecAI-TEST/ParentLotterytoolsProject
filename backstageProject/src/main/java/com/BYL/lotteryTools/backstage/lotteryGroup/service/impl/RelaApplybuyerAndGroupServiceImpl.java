@@ -117,4 +117,19 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 		return dto;
 	}
 
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByGroupId(
+			String groupId) {
+		return relaApplyOfBuyyerorexpertAndGroupRespository.getRelaApplyOfLbuyerorexpertAndGroupByGroupId(groupId);
+	}
+
+	public void delete(RelaApplyOfLbuyerorexpertAndGroup entity) 
+	{
+		relaApplyOfBuyyerorexpertAndGroupRespository.delete(entity);
+	}
+
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndStatus(
+			String creator,String groupId) {
+		return relaApplyOfBuyyerorexpertAndGroupRespository.getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndGroupId(creator,groupId);
+	}
+
 }

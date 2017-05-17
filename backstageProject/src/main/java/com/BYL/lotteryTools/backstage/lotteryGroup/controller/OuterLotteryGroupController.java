@@ -122,9 +122,10 @@ public class OuterLotteryGroupController
 		
 		if(null != entity)
 		{
+			String groupId = entity.getId();
 			entity.setGroupRobotID(null);
 			//删除融云的群信息
-			CodeSuccessResult result = rongyunImService.groupDismiss(entity.getLotteryBuyerOrExpert().getId(), dto.getId());
+			CodeSuccessResult result = rongyunImService.groupDismiss(entity.getLotteryBuyerOrExpert().getId(), groupId);
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
 				logger.error("融云删除群报错", result.getErrorMessage());
@@ -135,11 +136,11 @@ public class OuterLotteryGroupController
 			entity.setModify(dto.getOwnerId());
 			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			entity.setLotteryBuyerOrExpert(null);
-			lotteryGroupService.update(entity);
 			
-			//删除群的同时删除群的关联关系
+			
+			//删除群的同时删除群的关联关系(用户和群的关联关系)
 			Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
-			QueryResult<RelaBindOfLbuyerorexpertAndGroup> relas = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, entity.getId());
+			QueryResult<RelaBindOfLbuyerorexpertAndGroup> relas = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, groupId);
 			List<RelaBindOfLbuyerorexpertAndGroup> list = relas.getResultList();
 			for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : list) 
 			{
@@ -152,12 +153,34 @@ public class OuterLotteryGroupController
 					logger.error("delete,error:", e);
 				}
 			}
-			//TODO:删除加群申请的关联关系
+			//删除加群申请的关联关系
+			List<RelaApplyOfLbuyerorexpertAndGroup> applys = relaApplybuyerAndGroupService.
+					getRelaApplyOfLbuyerorexpertAndGroupByGroupId(groupId);
+			for (RelaApplyOfLbuyerorexpertAndGroup delApply : applys) 
+			{
+				relaApplybuyerAndGroupService.delete(delApply);
+			}
 			
-			//TODO:删除群等级关联关系
+			//删除群等级关联关系
+			List<RelaGroupUpLevelRecord> records = relaGroupUpLevelService.getRelaGroupUpLevelRecordByGroupId(groupId);
+			for (RelaGroupUpLevelRecord relaGroupUpLevelRecord : records) {
+				relaGroupUpLevelService.delete(relaGroupUpLevelRecord);
+			}
+			
+			//删除群头像和群二维码
+			List<Uploadfile> touxiang = uploadfileService.getUploadfilesByNewsUuid(entity.getTouXiang());
+			uploadfileService.deleteUploadFile(touxiang, httpSession);//调用删除附件数据和附件文件方法
+			//删除二维码图片
+			String savePath = httpSession.getServletContext().getRealPath(entity.getGroupQRImg());//获取二维码绝对路径
+			File dirFile = new File(savePath);
+			boolean deleteFlag = dirFile.delete();
+			if(deleteFlag)
+				logger.info("删除成功",deleteFlag);
+			else
+				logger.error("error:","删除失败，文件："+entity.getGroupQRImg());//若删除失败记录未删除成功的文件,之后做手动删除
 			
 			
-			
+			lotteryGroupService.update(entity);
 			map.put("message", "删除成功");
 			map.put("flag", true);
 		}
@@ -352,6 +375,7 @@ public class OuterLotteryGroupController
 			{
 				for (LotteryGroupDTO group : dtos) 
 				{
+					//判断当前用户是否已加入此群
 					RelaBindOfLbuyerorexpertAndGroup rela = relaBindbuyerAndGroupService.
 							getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, group.getId());
 					
@@ -363,7 +387,21 @@ public class OuterLotteryGroupController
 					else
 					{
 						group.setIsJoinOfUser("0");
+						//判断当前用户是否已申请加群(status is null 是还没进行审核的加群申请)
+						List<RelaApplyOfLbuyerorexpertAndGroup> applys = relaApplybuyerAndGroupService.
+								getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndStatus(userId,group.getId());
+						if(null != applys && applys.size()>0)
+						{
+							group.setAlreadyApplyOfUser("1");
+						}
+						else
+						{
+							group.setAlreadyApplyOfUser("0");
+						}
+						
 					}
+					
+					
 				}
 			}
 

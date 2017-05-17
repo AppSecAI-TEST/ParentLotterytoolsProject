@@ -20,5 +20,9 @@ public interface RelaApplyOfBuyyerorexpertAndGroupRespository extends GenericRep
 	@Query("select u from RelaApplyOfLbuyerorexpertAndGroup u where u.isDeleted = '1' and u.creator = ?1 order by MODIFY_TIME desc")
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByCreator(String creator);
 	
+	@Query("select u from RelaApplyOfLbuyerorexpertAndGroup u where u.isDeleted = '1' and u.lotteryGroup.id = ?1 order by CREATE_TIME desc")
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByGroupId(String groupId);
 	
+	@Query("select u from RelaApplyOfLbuyerorexpertAndGroup u where u.isDeleted = '1' and u.status is null and  u.creator = ?1 and  u.lotteryGroup.id = ?2  order by CREATE_TIME desc")
+	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndGroupId(String creator,String groupId);
 }

@@ -61,11 +61,19 @@ public class LotteryGroupDTO {
 	
 	private String isOwner;//指定用户是否为此群群主
 	
-	
+	private String alreadyApplyOfUser;//当前用户已经申请加入（1：已申请（正在审核） 0：未申请）
 	
 
 	
 	
+	public String getAlreadyApplyOfUser() {
+		return alreadyApplyOfUser;
+	}
+
+	public void setAlreadyApplyOfUser(String alreadyApplyOfUser) {
+		this.alreadyApplyOfUser = alreadyApplyOfUser;
+	}
+
 	public String getIsOwner() {
 		return isOwner;
 	}
