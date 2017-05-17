@@ -80,8 +80,111 @@ function initDatagrid()
 //TODO:添加群成员
 function addGroupMember(groupId)
 {
+	$('#addMemberDiv').dialog('open');
+	var params = new Object();
+	
+	params.groupId = groupId;
+	
+	$('#addMemberDatagrid').datagrid({
+		singleSelect:true,
+		rownumbers:false,
+		queryParams: params,
+		url:contextPath + '/lgroup/getMembersOfNotJoinGroup.action',//'datagrid_data1.json',
+		method:'get',
+		border:false,
+		singleSelect:false,
+		fit:true,//datagrid自适应
+		fitColumns:true,
+		pagination:true,
+		collapsible:false,
+		pageSize:20,//初始化页面显示条数的值是根据pageList的数组中的值来设置的，否则无法正确设置
+		pageList:[10,20,30,50],
+		columns:[[
+				{field:'ck',checkbox:true},
+				{field:'id',hidden:true},
+				{field:'name',title:'昵称',width:'10%',align:'center'},
+				{field:'isPhone',width:'10%',title:'手机用户',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var numOrCharName ='';
+		            	switch(value)
+		            	{
+		            		case '0':numOrCharName='否';break;
+		            		case '1':numOrCharName='是';break;
+		            	}
+		            	return numOrCharName;  
+		            }  },
+		        {field:'provinceName',title:'省',width:'10%',align:'center'},
+		        {field:'cityName',title:'市',width:'10%',align:'center'},
+		        {field:'cailiaoName',title:'彩聊名',width:'15%',align:'center'},
+		        {field:'isGroupOwner',width:'15%',title:'群主',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var numOrCharName ='';
+		            	switch(value)
+		            	{
+		            		case '0':numOrCharName='否';break;
+		            		case '1':numOrCharName='是';break;
+		            	}
+		            	return numOrCharName;  
+		            }  },{field:'opt',title:'操作',width:'15%',align:'center',  
+			            formatter:function(value,row,index){  
+			            	 var btn = '<a class="addmember" onclick="addMemberToGroup(&quot;'+row.id+'&quot;,&quot;'+groupId+'&quot;)" href="javascript:void(0)">删除</a>';
+			            	return btn;  
+			            }  
+			        }  
+		    ]],  
+		    onLoadSuccess:function(data){  
+	        $('.addmember').linkbutton({text:'添加到群',plain:true,iconCls:'icon-add'});  
+	        if(data.rows.length==0){
+				var body = $(this).data().datagrid.dc.body2;
+				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="10">没有数据</td></tr>');
+			}
+	        
+	        
+	    },
+        onClickRow: function(rowIndex, rowData){
+           
+        }
+	});
+}
+
+//添加用户到群成员
+function addMemberToGroup(userId,groupId)
+{
+	var data1 = new Object();
+	var codearr = [];
+	codearr.push(userId);
+	
+	data1.joinUsers = codearr.toString();
+	data1.groupId = groupId;
+	$.messager.confirm("提示", "您确认添加此用户到群？", function (r) {  
+        if (r) {  
+        	
+        	var url = contextPath+'/outerLGroup/joinUserInGroup.action';
+        	$.ajax({
+        		async: false, //设置为同步获取数据形式
+                type: "get",
+                url: url,
+                data:data1,
+                dataType: "json",
+                success: function (data) {
+                	
+                	$.messager.alert('提示', data.message);
+                	addGroupMember(groupId);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    window.parent.location.href = contextPath + "/menu/error.action";
+                }
+        	});
+        	
+        }  
+    });  
 	
 }
+
+/*function batchAddMemberToGroup()
+{
+	
+}*/
 
 
 //群成员管理
@@ -457,6 +560,7 @@ function closeDialog()
 //	$("#ddA").dialog('close');
 	$("#uploadShowAimgPreview").dialog('close');
 	$("#manageMemberDiv").dialog('close');
+	$("#addMemberDiv").dialog('close');
 }
 
 /**

@@ -33,6 +33,7 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -414,5 +415,71 @@ public class LotteryGroupController extends GlobalExceptionHandler
 		return bean;
 	}
 	
+	/**
+	 * 获取没加入当前群的用户列表
+	* @Title: getMembersOfNotJoinGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param page
+	* @param @param rows
+	* @param @param groupId
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月17日 下午12:04:48 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getMembersOfNotJoinGroup", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getMembersOfNotJoinGroup(
+			@RequestParam(value="page",required=false)   Integer page,//当前页数
+			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
+			String groupId,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		Pageable pageable = null;
+		if(null != rows && 0 != rows)
+		{
+			pageable = new PageRequest(page-1,rows);
+		}
+		else
+		{
+			pageable = new PageRequest(0,Integer.MAX_VALUE);
+		}
+		LotteryGroup lotteryGroup = lotteryGroupService.getLotteryGroupById(groupId);
+		//连接已加入群的用户
+		List<RelaBindOfLbuyerorexpertAndGroup> andGroups = lotteryGroup.getRelaBindOfLbuyerorexpertAndGroups();
+		StringBuffer joinUser = new StringBuffer();
+		int size = andGroups.size();
+		for (int i=0;i<size;i++) 
+		{
+			if(i == size-1)
+			{
+				joinUser.append("'"+andGroups.get(i).getLotterybuyerOrExpert().getId()+"'");
+			}
+			else
+			{
+				joinUser.append("'"+andGroups.get(i).getLotterybuyerOrExpert().getId()+"'").append(",");
+			}
+		
+		}
+		
+		//不带分页的群成员查询
+		QueryResult<LotterybuyerOrExpert> lQueryResult = relaBindbuyerAndGroupService.getUsersOfNotJoinGroup(pageable, joinUser.toString());
+		List<LotterybuyerOrExpert> relalist = lQueryResult.getResultList();
+		
+		List<LotterybuyerOrExpertDTO> userDtos = lotterybuyerOrExpertService.toDTOs(relalist);
+			
+		 map.put("flag", true);
+		 map.put("message", "获取成功");
+		 map.put("memberDtos", userDtos);
+		 map.put("rows",userDtos);
+		 map.put("total", lQueryResult.getTotalCount());
+		
+		
+		return map;
+	}
 	
 }

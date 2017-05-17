@@ -18,6 +18,16 @@
   	    	
   	    }
   	} ];
+  	
+  	/* var addmemberToolbar = [{
+  	    text:'批量添加用户到群',
+  	    iconCls:'icon-add',
+  	    handler:function(){
+  	    	
+  	    	batchAddMemberToGroup();
+  	    	
+  	    }
+  	} ]; */
   	  
   	
 		
@@ -368,6 +378,25 @@
                 }]
             ">
      	 <table id="memberDatagrid" class="easyui-datagrid"  title="群成员列表" >
+			</table>
+     </div>
+     
+      <!-- 添加群成员dialog -->
+     <div id="addMemberDiv" class="easyui-dialog" fit="true" title="添加群成员" style="width:800px;height:600px;padding:0px;border:0;top:1px;"
+            data-options="
+            modal:true,
+                iconCls: 'icon-save',
+                buttons: [{
+                    text:'关闭',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#addMemberDiv').dialog('close');
+                        $('#addMemberDatagrid').datagrid('loadData', { total: 0, rows: [] });  
+                        ownerId = '';
+                    }
+                }]
+            ">
+     	 <table id="addMemberDatagrid" class="easyui-datagrid"  title="用户列表" >
 			</table>
      </div>
     

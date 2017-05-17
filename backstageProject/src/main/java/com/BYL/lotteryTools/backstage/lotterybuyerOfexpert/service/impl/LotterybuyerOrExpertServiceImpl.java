@@ -95,15 +95,15 @@ public class LotterybuyerOrExpertServiceImpl implements
 				if(null != entity.getProvinceCode() && !"".equals(entity.getProvinceCode()))
 				{
 					Province province  = provinceService.getProvinceByPcode(entity.getProvinceCode());
-					
-					dto.setProvinceName(province.getPname());
+					if(null != province)
+						dto.setProvinceName(province.getPname());
 				}
 				
 				if(null != entity.getCityCode() && !"".equals(entity.getCityCode()))
 				{
 					City city =  cityService.getCityByCcode(entity.getCityCode());
-					
-					dto.setCityName(city.getCname());
+					if(null != city)
+						dto.setCityName(city.getCname());
 				}
 				
 				//是否为群主
@@ -114,6 +114,16 @@ public class LotterybuyerOrExpertServiceImpl implements
 				else
 				{
 					dto.setIsGroupOwner("0");
+				}
+				
+				if(null == entity.getColorCoins())
+				{
+					dto.setColorCoins(new BigDecimal(0));
+				}
+				
+				if(null == entity.getHandSel())
+				{
+					dto.setHandSel(new BigDecimal(0));
 				}
 				
 			} catch (Exception e) {

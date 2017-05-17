@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.RelaBindOfBuyyerorexpertAndGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.LotterybuyerOrExpertRepository;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("relaBindbuyerAndGroupService")
@@ -22,6 +24,9 @@ public class RelaBindbuyerAndGroupServiceImpl implements
 
 	@Autowired
 	private RelaBindOfBuyyerorexpertAndGroupRespository relaBindOfBuyyerorexpertAndGroupRespository;
+	
+	@Autowired
+	private LotterybuyerOrExpertRepository lotterybuyerOrExpertRepository;
 	
 	public void save(RelaBindOfLbuyerorexpertAndGroup entity)
 	{
@@ -73,6 +78,20 @@ public class RelaBindbuyerAndGroupServiceImpl implements
 				getScrollDataBySql(RelaBindOfLbuyerorexpertAndGroup.class, sql.toString(), params.toArray(), pageable);
 		
 //		list = queryResult.getResultList();
+		
+		return queryResult;
+	}
+	
+	public QueryResult<LotterybuyerOrExpert> getUsersOfNotJoinGroup(Pageable pageable,String inUsers) 
+	{
+		List<Object> params = new ArrayList<Object>();
+		
+		StringBuffer sql = new StringBuffer("SELECT u.* FROM T_LT_LOTTERYBUYER_OR_EXPERT u  "
+				+ "WHERE u.IS_DELETED='1' and u.IS_ROBOT='0'  AND u.ID NOT IN ("+inUsers+")");
+		
+		QueryResult<LotterybuyerOrExpert> queryResult = lotterybuyerOrExpertRepository.
+				getScrollDataBySql(LotterybuyerOrExpert.class, sql.toString(), params.toArray(), pageable) ;
+		
 		
 		return queryResult;
 	}
