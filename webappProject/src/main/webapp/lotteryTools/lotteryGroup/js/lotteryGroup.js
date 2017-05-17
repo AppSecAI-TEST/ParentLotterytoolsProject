@@ -167,9 +167,8 @@ function addMemberToGroup(userId,groupId)
                 data:data1,
                 dataType: "json",
                 success: function (data) {
-                	
-                	$.messager.alert('提示', data.message);
                 	addGroupMember(groupId);
+                	$.messager.alert('提示', data.message);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     window.parent.location.href = contextPath + "/menu/error.action";
@@ -243,7 +242,7 @@ function manageGroupMember(groupId)
 			        }  
 		    ]],  
 		    onLoadSuccess:function(data){  
-	        $('.removemember').linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
+	        $('.removemember').linkbutton({text:'移除群成员',plain:true,iconCls:'icon-remove'});  
 	        if(data.rows.length==0){
 				var body = $(this).data().datagrid.dc.body2;
 				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="10">没有数据</td></tr>');
