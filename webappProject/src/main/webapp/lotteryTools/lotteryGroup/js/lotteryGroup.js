@@ -52,10 +52,11 @@ function initDatagrid()
 				{field:'ownerName',title:'群主昵称',width:'8%',align:'center'},
 				{field:'groupNumber',title:'群号',width:'10%',align:'center'},
 				{field:'createTimeStr',title:'创建时间',width:'15%',align:'center'},
-				{field:'opt',title:'操作',width:'15%',align:'center',  
+				{field:'opt',title:'操作',width:'20%',align:'center',  
 			            formatter:function(value,row,index){  
 			            	 var btn = '<a class="editcls" onclick="updateLGroup(&quot;'+row.id+'&quot;)" href="javascript:void(0)">修改</a>'
 			            				+'<a class="memberManage" onclick="manageGroupMember(&quot;'+row.id+'&quot;)" href="javascript:void(0)">群成员管理</a>'
+			            				+'<a class="addMember" onclick="addGroupMember(&quot;'+row.id+'&quot;)" href="javascript:void(0)">添加群成员</a>'
 					                	+'<a class="delete" onclick="deleteLotteryGroup(&quot;'+row.id+'&quot;)" href="javascript:void(0)">删除</a>';
 			            	return btn;  
 			            }  
@@ -64,7 +65,8 @@ function initDatagrid()
 	    onLoadSuccess:function(data){  
 	        $('.editcls').linkbutton({text:'修改',plain:true,iconCls:'icon-edit'}); 
 	        $('.delete').linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
-	        $('.memberManage').linkbutton({text:'群成员管理',plain:true,iconCls:'icon-reload'});  
+	        $('.memberManage').linkbutton({text:'群成员管理',plain:true,iconCls:'icon-reload'});
+	        $('.addMember').linkbutton({text:'添加群成员',plain:true,iconCls:'icon-reload'});
 	        if(data.rows.length==0){
 				var body = $(this).data().datagrid.dc.body2;
 				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="10">没有数据</td></tr>');
@@ -74,6 +76,13 @@ function initDatagrid()
 	    }
 	});
 }
+
+//TODO:添加群成员
+function addGroupMember(groupId)
+{
+	
+}
+
 
 //群成员管理
 function manageGroupMember(groupId)
@@ -302,6 +311,57 @@ function addLotteryGroup()
 	initOwnerListDatagrid('ownerListA');
 	
 	$("#addLotteryGroup").dialog('open');
+}
+
+//关闭添加彩聊群弹框
+function closeAddGroupDialog()
+{
+ //若已经上传了头像，则删除头像图片
+  checkDeleteFujian();
+  $('#addLotteryGroup').dialog('close');
+  $('#ff').form('clear');//清空表单内容
+}
+
+/**
+ * 校验是否需要删除冗余附件数据
+ */
+function checkDeleteFujian()
+{
+	//若点击添加文章后已经上传了附件，则要将附件数据删除，若没有上传附件则可以正常退出
+	var uploadId = '';//上传附件id
+	if(''!=$("#touXiangA").val())
+	{
+		uploadId = $("#touXiangA").val();
+		//调用删除方法
+		deleteImgsByNewsuuid(uploadId);
+	}
+}
+
+
+
+//删除图片
+function deleteImgsByNewsuuid(newsUuid)
+{
+	var data = new Object();
+	data.newsUuid = newsUuid;
+	$.ajax({
+		async: false,   //设置为同步获取数据形式
+        type: "get",
+        url: contextPath+'/lbuyerOrexpert/deleteImgsByNewsuuid.action',
+        data:data,
+        dataType: "json",
+        success: function (returndata) {
+        	
+      			console.log("删除成功");
+        	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+   });
+	        	
+	
+	
 }
 
 function reset()

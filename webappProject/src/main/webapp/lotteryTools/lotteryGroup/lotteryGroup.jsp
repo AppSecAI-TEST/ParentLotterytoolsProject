@@ -130,8 +130,8 @@
                     text:'取消',
                     iconCls:'icon-cancel',
                     handler:function(){
-                        $('#addLotteryGroup').dialog('close');
-                        $('#ff').form('clear');//清空表单内容
+                    	closeAddGroupDialog();
+                       
                     }
                 }]
             ">

@@ -22,7 +22,6 @@
         		function()
         		{
         			uploadId=getQueryString("uploadId");//附件id
-        			alert(uploadId);
         		}
         );
          var realname="";//存储的名称
