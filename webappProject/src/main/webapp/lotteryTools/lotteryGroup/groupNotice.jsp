@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>彩票站管理</title>
+    <title>群公告管理</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link href="<%=request.getContextPath() %>/css/ztree/zTreeStyle.css" rel="stylesheet" type="text/css" />
     <jsp:include page="../../common/top.jsp" flush="true" /> 

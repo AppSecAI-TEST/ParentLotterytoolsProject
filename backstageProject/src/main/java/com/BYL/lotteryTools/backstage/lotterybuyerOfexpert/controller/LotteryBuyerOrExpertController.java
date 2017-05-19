@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
@@ -34,6 +36,7 @@ import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.LoginUtils;
+import com.BYL.lotteryTools.common.util.MyMD5Util;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 /**
@@ -201,7 +204,13 @@ public class LotteryBuyerOrExpertController
 			if(null != lotterybuyerOrExpert)
 			{//修改用户
 				//比较用户名是否修改
-				lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
+				String lastName = lotterybuyerOrExpert.getName();
+				boolean refreshFlag = false;
+				if(!lastName.equals(lotterybuyerOrExpertDTO.getName()))
+				{
+					lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
+					refreshFlag = true;
+				}
 				//TODO:确认可以在后台修改用户的哪些信息
 				
 				//更改头像
@@ -209,20 +218,28 @@ public class LotteryBuyerOrExpertController
 				Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
 				if(null != uploadfile)
 				{
+					refreshFlag = true;
+				}
+				
+				if(refreshFlag)
+				{
 					imguri.append(request.getContextPath()).
 					append(uploadfile.getUploadfilepath()).
 					append(uploadfile.getUploadRealName());
 					logger.info("touxiang",imguri);//输出头像
 					
 					//刷新融云的用户头像
-					String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
+					CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
 							lotterybuyerOrExpert.getName(), imguri.toString());
-					lotterybuyerOrExpert.setToken(token);
+					if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode()))
+					{
+						logger.error("refreshUser error:", result.getErrorMessage());
+					}
 				}
 				
 				lotterybuyerOrExpert.setColorCoins(lotterybuyerOrExpertDTO.getColorCoins());
 				lotterybuyerOrExpert.setHandSel(lotterybuyerOrExpertDTO.getHandSel());
-				lotterybuyerOrExpert.setIsRobot(lotterybuyerOrExpertDTO.getIsRobot());
+				lotterybuyerOrExpert.setIsRobot("0");
 				lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
 				lotterybuyerOrExpert.setIsPhone(lotterybuyerOrExpertDTO.getIsPhone());
 				lotterybuyerOrExpert.setAddress(lotterybuyerOrExpertDTO.getAddress());
@@ -254,8 +271,9 @@ public class LotteryBuyerOrExpertController
 				//创建融云用户id
 				String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
 						lotterybuyerOrExpert.getName(), imguri.toString());
+				lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
 				lotterybuyerOrExpert.setToken(token);
-				
+				lotterybuyerOrExpert.setIsRobot("0");//机器人用户不可以被新建
 				lotterybuyerOrExpert.setFromApp("0");//非app注册入口进入则为非app用户
 				lotterybuyerOrExpert.setIsDeleted(Constants.IS_NOT_DELETED);
 				lotterybuyerOrExpert.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));

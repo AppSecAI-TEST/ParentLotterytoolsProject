@@ -8,9 +8,9 @@ public class LotterybuyerOrExpertDTO {
 
 	private String id;
 	
-	private String code;//用户名
+	private String code;//用户名(目前没有值)
 	
-	private String name;//姓名
+	private String name;//昵称
 	
 	private String lastTouXiang;//旧头像
 	

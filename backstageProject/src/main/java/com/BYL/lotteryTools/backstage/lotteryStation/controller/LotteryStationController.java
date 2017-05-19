@@ -359,6 +359,10 @@ public class LotteryStationController
 			 		lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 			 		lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			 		
+			 		//删除彩票站关联数据
+			 		
+			 		
+			 		
 			 		
 			 		lotteryStationService.update(lotteryStation);
 			 		

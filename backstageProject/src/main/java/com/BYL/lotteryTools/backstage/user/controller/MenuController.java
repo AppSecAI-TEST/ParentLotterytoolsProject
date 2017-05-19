@@ -1028,8 +1028,11 @@ public class MenuController {
 				@RequestParam(value="isHasall",required=false) boolean isHasall,
 				ModelMap model,HttpSession httpSession) throws Exception
 		{
-		 	
-		 	List<City> cities = cityService.findCitiesOfProvice(pcode);
+		 	List<City> cities = null;
+		 	if(null != pcode && !"".equals(pcode))
+		 	{
+		 		cities = cityService.findCitiesOfProvice(pcode);
+		 	}
 		 	if(!isHasall){
 			 	return cities;
 		 	}else{
@@ -1048,7 +1051,12 @@ public class MenuController {
 				@RequestParam(value="ccode",required=false) String ccode,
 				ModelMap model,HttpSession httpSession) throws Exception
 		{
-		 	List<Region> regions = regionService.findRegionsOfCity(ccode);
+		 List<Region> regions = null;
+		 	if(null != ccode && !"".equals(ccode))
+		 	{
+		 		regions = regionService.findRegionsOfCity(ccode);
+		 	}
+		 
 		 	if(isHasall){
 			 	Region regionAll = new Region();
 			 	regionAll.setAcode(Constants.REGION_ALL);
