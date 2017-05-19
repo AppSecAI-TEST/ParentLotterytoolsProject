@@ -38,8 +38,8 @@ public class PushController
 {
 	private static Logger logger = LoggerFactory.getLogger(PushController.class);
 	
-	 protected static final String APP_KEY ="8e05860e3bed7d7dba91824e";
-	 protected static final String MASTER_SECRET = "0e513ffa6004b9984b7cd136";
+	 protected static final String APP_KEY ="1ac163a5a1cdd796a873513a";
+	 protected static final String MASTER_SECRET = "a73cf9a375c57af5f3f9538e";
 	 
 	 private static final String TITLE = "title";
      private static final String MSG_CONTENT = "msg_content";
