@@ -54,7 +54,100 @@ public class OuterInterfaceController
 	private PredictionTypeService predictionTypeService;
 	
 	
+private static final String NO5 = "5";
 	
+	private static final String NO3 = "3";
+	
+	public static int FiveInEle_QianErZhi = 110;//11选5前二直选理论周期
+	
+	public static int FiveInEle_QianErZuXuan = 55;//11选5前二组选理论周期
+	
+	public static int FiveInEle_QianErZuXuanSanma = 18;//11选5前二组选三码理论周期
+	
+	public static int FiveInEle_QianErZuXuanSima = 9;//11选5前二组选四码理论周期
+	
+	public static int FiveInEle_QianErZuXuanWuma = 6;//11选5前二组选五码理论周期
+	
+	public static int FiveInEle_QianErZuXuanLiuma = 4;//11选5前二组选六码理论周期
+	
+	public static int FiveInEle_QianErZuXuanQima = 2;//11选5前二组选七码理论周期
+	
+	public static int FiveInEle_QianSanZhi = 990;//11选5前三直选理论周期
+	
+	public static int FiveInEle_QianSanZuXuan = 165;//11选5前三组选理论周期
+	
+	public static int FiveInEle_QianSanSiMa = 41;//11选5前三四码理论周期
+	
+	public static int FiveInEle_QianSanWuMa = 17;//11选5前三四码理论周期
+	
+	public static int FiveInEle_QianSanLiuMa = 8;//11选5前三六码理论周期
+	
+	public static int FiveInEle_RenEr = 6;//11选5任二理论周期
+	
+	public static int FiveInEle_RenSan = 17;//11选5任三理论周期
+	
+	public static int FiveInEle_RenSanSi = 4;//11选5任三四理论周期
+	
+	public static int FiveInEle_RenSi = 66;//11选5任四理论周期
+	
+	public static int FiveInEle_RenSiWuma = 13;//11选5任四五码理论周期
+	
+	public static int FiveInEle_RenSiLiuma = 4;//11选5任四六码理论周期
+	
+	public static int FiveInEle_RenWu = 462;//11选5任五理论周期
+	
+	public static int FiveInEle_RenLiu = 77;//11选5任六理论周期
+	
+	public static int FiveInEle_RenQi = 22;//11选5任七理论周期
+	
+	public static int FiveInEle_RenBa = 9;//11选5任八理论周期
+	
+	//12选5的理论周期
+	public static int FiveInTwe_QianErZhi = 132;//12选5前二直选理论周期
+	
+	public static int FiveInTwe_QianErZuXuan = 66;//12选5前二组选理论周期
+	
+	public static int FiveInTwe_QianErZuXuanSanma = 22;//12选5前二组选三码理论周期
+	
+	public static int FiveInTwe_QianErZuXuanSima = 11;//12选5前二组选四码理论周期
+	
+	public static int FiveInTwe_QianErZuXuanWuma = 7;//12选5前二组选五码理论周期
+	
+	public static int FiveInTwe_QianErZuXuanLiuma = 6;//12选5前二组选六码理论周期
+	
+	public static int FiveInTwe_QianErZuXuanQima = 3;//12选5前二组选七码理论周期
+	
+	public static int FiveInTwe = 2;//11选5前二组选七码理论周期
+	
+	public static int FiveInTwe_QianSanZhi = 1320;//12选5前三直选理论周期
+	
+	public static int FiveInTwe_QianSanZuXuan = 220;//12选5前三组选理论周期
+	
+	public static int FiveInTwe_QianSanSiMa = 55;//12选5前三四码理论周期
+	
+	public static int FiveInTwe_QianSanWuMa = 22;//12选5前三五码理论周期
+	
+	public static int FiveInTwe_QianSanLiuMa = 11;//12选5前三六码理论周期
+	
+	public static int FiveInTwe_RenEr = 7;//12选5任二理论周期
+	
+	public static int FiveInTwe_RenSan = 22;//12选5任三理论周期
+	
+	public static int FiveInTwe_RenSanSi = 5;//12选5任三四理论周期
+	
+	public static int FiveInTwe_RenSi = 99;//12选5任四理论周期
+	
+	public static int FiveInTwe_RenSiWuma = 20;//12选5任四五码理论周期
+	
+	public static int FiveInTwe_RenSiLiuma = 6;//12选5任四六码理论周期
+	
+	public static int FiveInTwe_RenWu = 792;//12选5任五理论周期
+	
+	public static int FiveInTwe_RenLiu = 132;//12选5任六理论周期
+	
+	public static int FiveInTwe_RenQi = 38;//12选5任七理论周期
+	
+	public static int FiveInTwe_RenBa = 15;//12选5任八理论周期
 	
 	/**
 	 * 
@@ -301,6 +394,80 @@ public class OuterInterfaceController
 		
 		
 		return map;
+	}
+	
+	/**
+	 * 获取11选5的遗漏数据
+	* @Title: getFiveNumberMissAnalysisData 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryPlayId
+	* @param @param type
+	* @param @param selectnum
+	* @param @param groupnumarr
+	* @param @param orderby
+	* @param @param ascOrDesc
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月22日 下午5:01:27 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/getFiveNumberMissAnalysisData", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getFiveNumberMissAnalysisData(
+			@RequestParam(value="lotteryPlayId",required=false)String lotteryPlayId,
+			@RequestParam(value="type",required=false)String type,
+			@RequestParam(value="selectnum",required=false)String selectnum,
+			@RequestParam(value="groupnum",required=false)String[] groupnumarr,
+			@RequestParam(value="orderby",required=false)String orderby,
+			@RequestParam(value="ascOrDesc",required=false)String ascOrDesc)
+	{
+//		List<Fast3Analysis> list = new ArrayList();
+		Map<String,Object> returnMap = new HashMap<String, Object>();
+		
+		LotteryPlay lotteryPlay = lotteryPlayService.getLotteryPlayById(lotteryPlayId);//获取补录信息数据，使用这个数据中的表名和开奖数字个数的信息
+		
+		String tableName = lotteryPlay.getCorrespondingTable();//获取关联表
+		
+//		String kjNum = lotteryPlay.getLotteryNumber();//获取开奖字数个数
+//		
+//		String lotteryType = lotteryPlay.getLotteryType();//获取彩种（体彩/福彩）
+//		
+//		String province = lotteryPlay.getProvince();//获取省份
+		
+		String[] tableNameStart = tableName.split("_");
+		
+		String endNumber = lotteryPlay.getLotteryPlayBulufangan().getEndNumber();
+		
+		String yilouTableEnd = "MISSANALYSIS";
+		//0：T 1：省份 2：玩法名称
+		tableName = tableNameStart[0] + "_" + tableNameStart[1] + "_" + tableNameStart[2] + "_" + yilouTableEnd; 
+		
+		String groupnum = "";
+		for (String number : groupnumarr) 
+		{
+			if(number.equals("10"))
+			{
+				groupnum = groupnum + "A";
+			}
+			else
+				if(number.equals("11"))
+				{
+					groupnum = groupnum + "J";
+				}
+				else
+					if(number.equals("12"))
+					{
+						groupnum = groupnum + "Q";
+					}
+					else{
+						groupnum = groupnum + number;
+					}
+		}
+		
+		returnMap = outerInterfaceService.getMissAnalysisData(type, selectnum, groupnum, tableName,orderby,endNumber,ascOrDesc);
+		
+		
+		return returnMap;
 	}
 	
 	

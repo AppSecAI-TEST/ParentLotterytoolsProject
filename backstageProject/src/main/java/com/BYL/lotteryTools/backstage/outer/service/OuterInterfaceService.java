@@ -1,8 +1,8 @@
 package com.BYL.lotteryTools.backstage.outer.service;
 
 import java.util.List;
+import java.util.Map;
 
-import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
@@ -23,4 +23,6 @@ public interface OuterInterfaceService
 	public SrcfivedataDTO getSrcfivedataDTOByIssueNumber(String issueNumber);
 	
 	public List<SrcthreedataDTO> getLotteryListOfThree(String tbName,String maxIssueId,String minIssueId);
+
+	public Map<String,Object> getMissAnalysisData(String type,String selectnum,String groupnum,String tableName,String orderby,String endNumber,String ascOrDesc);
 }
