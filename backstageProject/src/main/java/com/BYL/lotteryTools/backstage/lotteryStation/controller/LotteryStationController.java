@@ -285,6 +285,12 @@ public class LotteryStationController
 			if("1".equals(lotteryStationDTO.getStatus()))
 			{//审核通过生成邀请码
 				lotteryStation.setInviteCode(this.generateInviteCode());
+				
+				if("1".equals(lotteryStation.getIsBylStation()))
+				{
+					LotterybuyerOrExpert owner = lotteryStation.getLotteryBuyerOrExpert();
+					//TODO:认证成功后，赠一张建群卡
+				}
 			}
 			
 			

@@ -9,7 +9,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @author banna
 * @date 2017年5月9日 上午9:08:12
  */
-public class RelaApplyOfLbuyerorexpertAndGroupDTO extends BaseEntity
+public class RelaApplyOfLbuyerorexpertAndGroupDTO 
 {
 	private String id;
 	
@@ -30,8 +30,38 @@ public class RelaApplyOfLbuyerorexpertAndGroupDTO extends BaseEntity
 	
 	private String creatorName;//申请加群人的昵称
 	
+	private String statusName;//审核状态0:不通过1：通过
+	
+	private String createTime;//创建时间
+	
+	private String creator;//申请人
 	
 	
+	
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
 
 	public String getCreatorName() {
 		return creatorName;

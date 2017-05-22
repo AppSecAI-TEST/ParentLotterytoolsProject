@@ -17,6 +17,7 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGrou
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
+import com.BYL.lotteryTools.common.util.DateUtil;
 
 @Service("relaApplybuyerAndGroupService")
 @Transactional(propagation=Propagation.REQUIRED)
@@ -93,11 +94,12 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 				
 				if(null != entity.getStatus())
 				{
-					dto.setStatus("1".equals(entity.getStatus())?"通过":"不通过");
+					dto.setStatusName("1".equals(entity.getStatus())?"通过":"不通过");
 				}
 				else
 				{
-					dto.setStatus("审核中");
+					dto.setStatus("2");//审核中
+					dto.setStatusName("审核中");
 				}
 				
 				if(null != entity.getCreator())
@@ -105,6 +107,11 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 					LotterybuyerOrExpert creator = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(entity.getCreator());
 					//当前返回给群主看的申请加群的用户信息只返回用户的昵称
 					dto.setCreatorName(creator.getName());
+				}
+				
+				if(null != entity.getCreateTime())
+				{
+					dto.setCreateTime(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
 				}
 				
 				

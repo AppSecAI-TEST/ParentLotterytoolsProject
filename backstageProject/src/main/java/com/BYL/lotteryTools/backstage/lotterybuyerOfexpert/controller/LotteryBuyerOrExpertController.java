@@ -25,6 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
@@ -59,6 +63,12 @@ public class LotteryBuyerOrExpertController
 	
 	@Autowired
 	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private RelaApplybuyerAndGroupService relaApplybuyerAndGroupService;
+	
+	@Autowired
+	private RelaBindbuyerAndGroupService relaBindbuyerAndGroupService;
 	
 	/**
 	 * 获取用户详情
@@ -335,6 +345,20 @@ public class LotteryBuyerOrExpertController
 			 		lotterybuyerOrExpert.setIsDeleted("0");
 			 		lotterybuyerOrExpert.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
 			 		lotterybuyerOrExpert.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			 		
+			 		//删除头像图片
+			 		List<Uploadfile> uploadfiles = uploadfileService.getUploadfilesByNewsUuid(lotterybuyerOrExpert.getTouXiang());
+					uploadfileService.deleteUploadFile(uploadfiles, httpSession);
+					
+					//TODO:删除关联关系
+					List<RelaBindOfLbuyerorexpertAndGroup> addGroups = lotterybuyerOrExpert.getRelaBindOfLbuyerorexpertAndGroups();
+					for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : addGroups) {
+						relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
+					}
+					List<RelaApplyOfLbuyerorexpertAndGroup> applyGroups = lotterybuyerOrExpert.getRelaApplyOfLbuyerorexpertAndGroups();
+					for (RelaApplyOfLbuyerorexpertAndGroup relaApplyOfLbuyerorexpertAndGroup : applyGroups) {
+						relaApplybuyerAndGroupService.delete(relaApplyOfLbuyerorexpertAndGroup);
+					}
 			 		
 			 		
 			 		lotterybuyerOrExpertService.update(lotterybuyerOrExpert);

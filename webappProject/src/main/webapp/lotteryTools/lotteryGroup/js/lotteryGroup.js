@@ -103,7 +103,7 @@ function addGroupMember(groupId)
 				{field:'ck',checkbox:true},
 				{field:'id',hidden:true},
 				{field:'name',title:'昵称',width:'10%',align:'center'},
-				{field:'isPhone',width:'10%',title:'手机用户',align:'center',  
+				{field:'isPhone',width:'6%',title:'手机用户',align:'center',  
 		            formatter:function(value,row,index){  
 		            	var numOrCharName ='';
 		            	switch(value)
@@ -113,10 +113,50 @@ function addGroupMember(groupId)
 		            	}
 		            	return numOrCharName;  
 		            }  },
-		        {field:'provinceName',title:'省',width:'10%',align:'center'},
-		        {field:'cityName',title:'市',width:'10%',align:'center'},
-		        {field:'cailiaoName',title:'彩聊名',width:'15%',align:'center'},
-		        {field:'isGroupOwner',width:'15%',title:'群主',align:'center',  
+		        {field:'provinceName',title:'省',width:'6%',align:'center'},
+		        {field:'cityName',title:'市',width:'6%',align:'center'},
+		        {field:'cailiaoName',title:'彩聊名',width:'10%',align:'center'},
+		        {field:'isPhone',width:'6%',title:'手机用户',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var isPhoneName ='';
+		            	switch(value)
+		            	{
+		            		case '1':isPhoneName='是';break;
+		            		case '0':isPhoneName='否';break;
+		            	}
+		            	return isPhoneName;  
+		            }  },
+	            {field:'fromApp',width:'6%',title:'来自App',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var isPhoneName ='';
+		            	switch(value)
+		            	{
+		            		case '1':isPhoneName='是';break;
+		            		case '0':isPhoneName='否';break;
+		            	}
+		            	return isPhoneName;  
+		            }  },
+	            {field:'isVirtual',width:'6%',title:'虚拟用户',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var name ='';
+		            	switch(value)
+		            	{
+		            		case '1':name='是';break;
+		            		case '0':name='否';break;
+		            	}
+		            	return name;  
+		            }  },
+	            {field:'isExpert',width:'6%',title:'专家',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var name ='';
+		            	switch(value)
+		            	{
+		            		case '1':name='是';break;
+		            		case '0':name='否';break;
+		            	}
+		            	return name;  
+		            }  },
+		        {field:'isGroupOwner',width:'6%',title:'群主',align:'center',  
 		            formatter:function(value,row,index){  
 		            	var numOrCharName ='';
 		            	switch(value)
