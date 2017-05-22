@@ -54,9 +54,9 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String isExpert;//是否为彩民 1：彩民 0：非彩民
 	
-	private BigDecimal handSel;//彩金余额
+	private BigDecimal handSel = new BigDecimal(0);//彩金余额
 	
-	private BigDecimal colorCoins;//彩币余额
+	private BigDecimal colorCoins = new BigDecimal(0);//彩币余额
 
 	private String createTimeStr;
 	

@@ -223,15 +223,15 @@ public class LotteryBuyerOrExpertController
 				
 				if(refreshFlag)
 				{
-					imguri.append(request.getContextPath()).
-					append(uploadfile.getUploadfilepath()).
+					imguri.append(request.getSession().getServletContext().getRealPath(uploadfile.getUploadfilepath())).
+					append(File.separator).
 					append(uploadfile.getUploadRealName());
-					logger.info("touxiang",imguri);//输出头像
+					logger.info("touxiang",imguri.toString());//输出头像
 					
 					//刷新融云的用户头像
 					CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
 							lotterybuyerOrExpert.getName(), imguri.toString());
-					if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode()))
+					if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 					{
 						logger.error("refreshUser error:", result.getErrorMessage());
 					}
@@ -243,6 +243,7 @@ public class LotteryBuyerOrExpertController
 				lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
 				lotterybuyerOrExpert.setIsPhone(lotterybuyerOrExpertDTO.getIsPhone());
 				lotterybuyerOrExpert.setAddress(lotterybuyerOrExpertDTO.getAddress());
+				lotterybuyerOrExpert.setIsExpert(lotterybuyerOrExpertDTO.getIsExpert());
 				//TODO：后续根据需要更新需要后台维护的用户信息
 				
 				lotterybuyerOrExpert.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
@@ -263,10 +264,10 @@ public class LotteryBuyerOrExpertController
 				Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
 				if(null != uploadfile)
 				{
-					imguri.append(request.getContextPath()).
-					append(uploadfile.getUploadfilepath()).
+					imguri.append(request.getSession().getServletContext().getRealPath(uploadfile.getUploadfilepath())).
+					append(File.separator).
 					append(uploadfile.getUploadRealName());
-					logger.info("touxiang",imguri);//输出头像
+					logger.info("touxiang",imguri.toString());//输出头像
 				}
 				//创建融云用户id
 				String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),

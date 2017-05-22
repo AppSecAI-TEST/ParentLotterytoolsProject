@@ -131,8 +131,7 @@
                     text:'取消',
                     iconCls:'icon-cancel',
                     handler:function(){
-                        $('#addLotteryUserDiv').dialog('close');
-                        $('#ff').form('clear');//清空表单内容
+                        closeAddUserDialog();
                     }
                 }]
             ">
@@ -181,7 +180,7 @@
 				        
 				         <div class="ftitle">
 				            <label for="priceA">虚拟用户:</label>
-				            <select class="easyui-combobox" id="isVirtualA" name="isVirtual" style="width:100px;">
+				            <select class="easyui-combobox" id="isVirtualA" name="isVirtual" style="width:200px;">
 								<option value="0">否</option>
 								<option value="1">是</option>
 							</select>
@@ -206,6 +205,14 @@
 					         	 validType="length[0,100]" style="resize:none;width:350px;height:100px;border-radius:5px;margin-left: 30px;"></textarea>
 					    </div>
 					    
+					     <div class="ftitle">
+				            <label for="priceA">是否为专家:</label>
+				            <select class="easyui-combobox" id="isExpertA" name="isExpert" style="width:200px;">
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+				        </div>
+					    
 				        <div class="ftitle">
 				            <label for="subject">头像:</label>
 				            <input type="hidden" id="touXiangA" name="touXiang">
@@ -229,7 +236,7 @@
                     text:'提交',
                     iconCls:'icon-ok',
                     handler:function(){
-                        submitUpdateLotteryPlay();
+                        submitUpdateLotteryUser();
                     }
                 },{
                     text:'取消',
@@ -299,6 +306,14 @@
 				            <textarea id="signaturenU" name="signature" class="easyui-validatebox" placeholder="请输入个人签名"
 					         	 validType="length[0,100]" style="resize:none;width:350px;height:100px;border-radius:5px;margin-left: 30px;"></textarea>
 					    </div>
+					    
+					     <div class="ftitle">
+				            <label for="priceA">是否为专家:</label>
+				            <select class="easyui-combobox" id="isExpertU" name="isExpert" style="width:200px;">
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+				        </div>
 					    
 				        <div class="ftitle">
 				            <label for="subject">头像:</label>

@@ -138,8 +138,14 @@ function deleteLotteryUser(id)
 function addLotteryUser()
 {
 	$("#addLotteryUserDiv").dialog('open');
+	
+	$('#ff').form('clear');//清空表单内容
 	//初始化值
 	initProvince('add', 'provinceA', '');
+	$("#isPhoneA").combobox('setValue','0');
+	$("#isVirtualA").combobox('setValue','0');
+	$("#ssKjChaxunA").combobox('setValue','0');
+	$("#isExpert").combobox('setValue','0');
 }
 
 function updateUser(id)
@@ -165,7 +171,9 @@ function updateUser(id)
 					isVirtual:data.isVirtual,
 					cailiaoName:data.cailiaoName,
 					signature:data.signature,
-					touXiang:data.touXiang
+					touXiang:data.touXiang,
+					isExpert:data.isExpert
+					
 					
 				});
 				
@@ -256,6 +264,57 @@ function openDialog(dialogId,addorupdate){
 	});
 	
 	
+}
+
+/**
+ * 校验是否需要删除冗余附件数据
+ */
+function checkDeleteFujian()
+{
+	//若点击添加文章后已经上传了附件，则要将附件数据删除，若没有上传附件则可以正常退出
+	var uploadId = '';//上传附件id
+	if(''!=$("#touXiangA").val())
+	{
+		uploadId = $("#touXiangA").val();
+		//调用删除方法
+		deleteImgsByNewsuuid(uploadId);
+	}
+}
+
+
+
+//删除图片
+function deleteImgsByNewsuuid(newsUuid)
+{
+	var data = new Object();
+	data.newsUuid = newsUuid;
+	$.ajax({
+		async: false,   //设置为同步获取数据形式
+        type: "get",
+        url: contextPath+'/lbuyerOrexpert/deleteImgsByNewsuuid.action',
+        data:data,
+        dataType: "json",
+        success: function (returndata) {
+        	
+      			console.log("删除成功");
+        	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+   });
+	        	
+	
+	
+}
+
+function closeAddUserDialog()
+{
+	//若已经上传了头像，则删除头像图片
+	  checkDeleteFujian();
+	$('#addLotteryUserDiv').dialog('close');
+    $('#ff').form('clear');//清空表单内容
+    
 }
 
 //初始化图片展示
@@ -466,14 +525,7 @@ function submitAddLotteryUser()
 			var flag = false;
 			if($('#ff').form('enableValidation').form('validate') )
 				{
-					if(null != ownerId && '' != ownerId)
-						{
-							flag = true;
-						}
-					else
-						{
-							$.messager.alert('提示', "请选择群主!");
-						}
+					flag = true;
 				}
 			return flag;
 		},
@@ -498,7 +550,7 @@ function submitUpdateLotteryUser()
 			var flag = false;
 			if($('#ffUpdate').form('enableValidation').form('validate') )
 				{
-				
+					flag = true;
 				}
 			return flag;
 		},
