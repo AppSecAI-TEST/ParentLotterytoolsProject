@@ -266,7 +266,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 			{
 				execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 			}
-			execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+			execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 			if("12".equals(endNumber))
 			{//12选5前三直理论周期
 				lilunzhouqi = OuterInterfaceController.FiveInTwe_QianSanZhi;
@@ -288,7 +288,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 					{
 						execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 					}
-					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 					if("12".equals(endNumber))
 					{//12选5前三直理论周期
 						lilunzhouqi = OuterInterfaceController.FiveInTwe_QianSanZuXuan;
@@ -307,7 +307,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 					{
 						execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 					}
-					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 					if("4".equals(selectnum))
 					{//前三四码
 						if("12".equals(endNumber))
@@ -358,7 +358,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 					{
 						execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 					}
-					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 					if("12".equals(endNumber))
 					{//12选5前三直理论周期
 						lilunzhouqi = OuterInterfaceController.FiveInTwe_QianErZhi;
@@ -381,7 +381,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 							{
 								execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 							}
-							execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+							execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 							if("12".equals(endNumber))
 							{//12选5前三直理论周期
 								lilunzhouqi = OuterInterfaceController.FiveInTwe_QianErZuXuan;
@@ -400,7 +400,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 							{
 								execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 							}
-							execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+							execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 							
 							if("3".equals(selectnum))
 							{//前二三码复式
@@ -480,7 +480,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 								{
 									execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 								}
-								execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+								execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 								if("12".equals(endNumber))
 								{//12选5前三直理论周期
 									lilunzhouqi = OuterInterfaceController.FiveInTwe_RenSan;
@@ -499,7 +499,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 								{
 									execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 								}
-								execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+								execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 								if(selectnum.equals("4"))
 								{//任三四码
 									if("12".equals(endNumber))
@@ -525,7 +525,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 									{
 										execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 									}
-									execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+									execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 									if("12".equals(endNumber))
 									{//12选5前三直理论周期
 										lilunzhouqi = OuterInterfaceController.FiveInTwe_RenSi;
@@ -544,7 +544,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 									{
 										execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 									}
-									execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+									execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 									if("5".equals(selectnum))
 									{//任四五码复式
 										if("12".equals(endNumber))
@@ -580,7 +580,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 								{
 									execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
 								}
-								execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " limit 30;")  ;
+								execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
 								if(selectnum.equals("5"))
 								{//任五
 									if("12".equals(endNumber))
