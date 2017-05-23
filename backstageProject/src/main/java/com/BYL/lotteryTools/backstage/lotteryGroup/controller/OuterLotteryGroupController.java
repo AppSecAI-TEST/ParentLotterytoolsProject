@@ -633,7 +633,7 @@ public class OuterLotteryGroupController
 		
 		//TODO:将群主审核的结果推送给申请加群的用户,群主审核的tag是apply
 		String[] tagsand = {entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
-		PushController.sendPushWithCallback(tagsand, null, "0", entity.getLotterybuyerOrExpert().getTelephone());//推送给用户展示的是“0”
+		PushController.sendPushWithCallback(tagsand, null, "0", groupOwnerId);//推送给用户展示的是“0”
 		
 		resultBean.setFlag(true);
 		resultBean.setMessage("审核成功");
