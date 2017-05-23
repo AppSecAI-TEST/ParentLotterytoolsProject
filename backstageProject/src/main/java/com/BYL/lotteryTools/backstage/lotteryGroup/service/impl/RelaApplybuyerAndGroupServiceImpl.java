@@ -102,11 +102,10 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 					dto.setStatusName("审核中");
 				}
 				
-				if(null != entity.getCreator())
+				if(null != entity.getLotterybuyerOrExpert())
 				{
-					LotterybuyerOrExpert creator = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(entity.getCreator());
 					//当前返回给群主看的申请加群的用户信息只返回用户的昵称
-					dto.setCreatorName(creator.getName());
+					dto.setCreatorName(entity.getLotterybuyerOrExpert().getName());
 				}
 				
 				if(null != entity.getCreateTime())
