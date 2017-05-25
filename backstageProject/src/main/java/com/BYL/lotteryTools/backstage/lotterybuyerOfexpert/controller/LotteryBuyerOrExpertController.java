@@ -327,7 +327,7 @@ public class LotteryBuyerOrExpertController
 	* @return ResultBean    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value = "/deleteLborExpert", method = RequestMethod.POST)
+	@RequestMapping(value = "/deleteLborExpert")
 	public @ResponseBody ResultBean  deleteLborExpert(
 			@RequestParam(value="ids",required=false) String[] ids,
 			ModelMap model,HttpSession httpSession) throws Exception 

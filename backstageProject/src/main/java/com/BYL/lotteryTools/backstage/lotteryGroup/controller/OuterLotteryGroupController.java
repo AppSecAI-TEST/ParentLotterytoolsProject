@@ -239,8 +239,7 @@ public class OuterLotteryGroupController
 			{
 				LotterybuyerOrExpertDTO dto = new  LotterybuyerOrExpertDTO();
 				dto = lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert());
-				if(owner.equals(rela.getLotterybuyerOrExpert()))
-					dto.setIsGroupOwner("1");//若为当前群群主，则设置为1
+				dto.setIsGroupOwner(rela.getIsGroupOwner());
 				userDtos.add(dto);
 					
 			}
@@ -498,6 +497,7 @@ public class OuterLotteryGroupController
 						LotteryGroupDTO dto = new LotteryGroupDTO();
 //						BeanUtil.copyBeanProperties(dto, relaGroup.getLotteryGroup());
 						dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
+						dto.setIsOwner(relaGroup.getIsGroupOwner());
 						groupDtos.add(dto);
 					}
 				 }
