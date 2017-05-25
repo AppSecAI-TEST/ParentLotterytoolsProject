@@ -89,7 +89,7 @@ public class PushController
                         )
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)
-                        .addExtra("from", province)
+                        .addExtra("type", province)
                         .build())
                 .build();
     }

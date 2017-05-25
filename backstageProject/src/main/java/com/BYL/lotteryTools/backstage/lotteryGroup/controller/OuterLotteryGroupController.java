@@ -571,7 +571,7 @@ public class OuterLotteryGroupController
 		//TODO:将申请信息推送给群主,推送给群主是approval
 		LotterybuyerOrExpert groupOwner = lotteryGroup.getLotteryBuyerOrExpert();
 		String[] tagsand = {groupOwner.getTelephone()};//推送给群主id，推送给群主审核
-		PushController.sendPushWithCallback(tagsand, null, "1", userId);//推送给群主展示的是“1”
+		PushController.sendPushWithCallback(tagsand, null, "1", "group");//推送给群主展示的是“1”
 		
 		return resultBean;
 	}
@@ -607,7 +607,7 @@ public class OuterLotteryGroupController
 				getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
 		
 		RelaApplyOfLbuyerorexpertAndGroup entity = null;
-		if(null != entities )
+		if(null != entities  && entities.size()>0)
 		{
 			entity = entities.get(0);
 			entity.setStatus(isPass);//放置审核状态
@@ -633,7 +633,7 @@ public class OuterLotteryGroupController
 		
 		//TODO:将群主审核的结果推送给申请加群的用户,群主审核的tag是apply
 		String[] tagsand = {entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
-		PushController.sendPushWithCallback(tagsand, null, "0", groupOwnerId);//推送给用户展示的是“0”
+		PushController.sendPushWithCallback(tagsand, null, "0", "group");//推送给用户展示的是“0”
 		
 		resultBean.setFlag(true);
 		resultBean.setMessage("审核成功");

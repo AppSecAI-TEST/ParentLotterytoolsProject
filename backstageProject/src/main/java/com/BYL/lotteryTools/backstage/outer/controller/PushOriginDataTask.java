@@ -116,6 +116,7 @@ public class PushOriginDataTask
 					//将推送内容进行推送
 					if(tuisongFlag)
 					{
+						String extra = "推送内容类型";
 						String[] tagsand = {lotteryPlay.getProvince(),lotteryPlay.getLotteryType()};
 						StringBuffer msgContent = new StringBuffer();
 						if("5".equals(lotteryPlay.getLotteryNumber()))
@@ -126,6 +127,16 @@ public class PushOriginDataTask
 							msgContent.append(maxdto.getNo3()).append(",");
 							msgContent.append(maxdto.getNo4()).append(",");
 							msgContent.append(maxdto.getNo5());
+							String endNumber = lotteryPlay.getLotteryPlayBulufangan().getEndNumber();
+							if("11".equals(endNumber))
+							{
+								extra = "5in11";
+							}
+							else
+								if("12".equals(endNumber))
+								{
+									extra = "5in12";
+								}
 						}
 						else
 							if("3".equals(lotteryPlay.getLotteryNumber()))
@@ -134,9 +145,10 @@ public class PushOriginDataTask
 								msgContent.append(maxThreedto.getNo1()).append(",");
 								msgContent.append(maxThreedto.getNo2()).append(",");
 								msgContent.append(maxThreedto.getNo3());
+								extra = "kuai3";
 							}
-						
-						PushController.sendPushWithCallback(tagsand, null, msgContent.toString(), lotteryPlay.getProvince());
+						//extra:0:
+						PushController.sendPushWithCallback(tagsand, null, msgContent.toString(), extra);
 					}
 					
 				}
