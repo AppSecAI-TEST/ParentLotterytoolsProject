@@ -63,9 +63,19 @@ public class LotteryGroupDTO {
 	
 	private String alreadyApplyOfUser;//当前用户已经申请加入（1：已申请（正在审核） 0：未申请）
 	
+	private String isTop;//是否置顶（0：未置顶 1：置顶）
+	
+	
+	
+	
+	public String getIsTop() {
+		return isTop;
+	}
 
-	
-	
+	public void setIsTop(String isTop) {
+		this.isTop = isTop;
+	}
+
 	public String getAlreadyApplyOfUser() {
 		return alreadyApplyOfUser;
 	}

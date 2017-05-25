@@ -498,6 +498,7 @@ public class OuterLotteryGroupController
 //						BeanUtil.copyBeanProperties(dto, relaGroup.getLotteryGroup());
 						dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
 						dto.setIsOwner(relaGroup.getIsGroupOwner());
+						dto.setIsTop(relaGroup.getIsTop());
 						groupDtos.add(dto);
 					}
 				 }
@@ -1155,6 +1156,8 @@ public class OuterLotteryGroupController
 			{
 				LotteryGroupDTO dto = new LotteryGroupDTO();
 				dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
+				dto.setIsOwner(relaGroup.getIsGroupOwner());
+				dto.setIsTop(relaGroup.getIsTop());
 				dtos.add(dto);
 			}
 		 }
