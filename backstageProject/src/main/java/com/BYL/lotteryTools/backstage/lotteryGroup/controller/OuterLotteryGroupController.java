@@ -1073,8 +1073,13 @@ public class OuterLotteryGroupController
 					map.put("flag", true);
 					
 					//TODO:1.创建成功后，将当前群主的建群卡个数减1
-					
-					
+					RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
+							getRelaLBEUserAndLtcardByUserIdAndCardId(dto.getOwnerId(), dto.getLotteryType());
+					card.setNotUseCount(card.getNotUseCount()-1);
+					card.setUseCount(card.getUseCount()+1);
+					card.setModify(dto.getOwnerId());
+					card.setModifyTime(new Timestamp(System.currentTimeMillis()));
+					lotterybuyerOrExpertService.updateRelaLBEUserAndLtcard(card);
 				}
 				
 			}
