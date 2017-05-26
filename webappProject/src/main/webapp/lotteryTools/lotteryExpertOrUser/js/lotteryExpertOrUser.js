@@ -1,3 +1,4 @@
+var map = new map();
 $(function(){
 	bindComboboxChange();//绑定级联事件
 	
@@ -15,6 +16,7 @@ function closeDialog()
 	$("#addLotteryUserDiv").dialog('close');
 	$("#updateLotteryUserDiv").dialog('close');
 	$("#uploadShowAimgPreview").dialog('close');
+	$("#cardManageDiv").dialog('close');
 }
 
 
@@ -87,14 +89,16 @@ function initDatagrid()
 				{field:'opt',title:'操作',width:'20%',align:'center',  
 			            formatter:function(value,row,index){  
 			            	 var btn = '<a class="editcls" onclick="updateUser(&quot;'+row.id+'&quot;)" href="javascript:void(0)">修改</a>'
-					                	+'<a class="delete" onclick="deleteLotteryUser(&quot;'+row.id+'&quot;)" href="javascript:void(0)">删除</a>';
-			            	return btn;  
+					                	+'<a class="delete" onclick="deleteLotteryUser(&quot;'+row.id+'&quot;)" href="javascript:void(0)">删除</a>'
+					                	+'<a class="peizhi" onclick="initCardmanage(&quot;'+row.id+'&quot;)" href="javascript:void(0)">配置卡包</a>';
+			            	 return btn;  
 			            }  
 			        }  
 		    ]],  
 	    onLoadSuccess:function(data){  
 	        $('.editcls').linkbutton({text:'修改',plain:true,iconCls:'icon-edit'}); 
 	        $('.delete').linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
+	        $('.peizhi').linkbutton({text:'配置卡包',plain:true,iconCls:'icon-add'});  
 	        if(data.rows.length==0){
 				var body = $(this).data().datagrid.dc.body2;
 				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="10">没有数据</td></tr>');
@@ -345,6 +349,72 @@ function initImgShow(uploadId,addorupdate)
 	
 }
 
+function initCardmanage(userId)
+{
+	var data1 = new Object();
+	data1.userId = userId;
+	var url = contextPath+'/outerLGroup/getAllLotteryChatCardsOfUser.action';
+	$.ajax({
+		async: false, //设置为同步获取数据形式
+        type: "get",
+        url: url,
+        data:data1,
+        dataType: "json",
+        success: function (data) {
+        	
+        	var cards = data.cards;
+        	var html='';
+        	var card ;
+        	for(var i=0;i<cards.length;i++)
+        		{
+        			card = cards[i];
+        			html +='<div class="cardClass">'+
+        	            '<label for="subject">'+card.name+':</label>'+
+        				'<input id="ss'+card.id+'" class="easyui-numberspinner" style="width:80px;" value="'+card.count+'"'+
+       					'	required="required" data-options="min:0,max:10,editable:false">'+
+        					'<a id="btn" href="#" class="easyui-linkbutton" onclick="submitCards(&quot;'+userId+'&quot;,&quot;'+card.id+'&quot;,&quot;ss'+card.id+'&quot;)" data-options="iconCls:&quot;icon-add&quot;">确定</a>'+
+       					'	</div>';
+        		}
+        	
+        	$("#cardManageDiv").html(html);
+        	$.parser.parse();
+        	closeDialog();
+        	$("#cardManageDiv").dialog('open');
+        	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+	});
+	
+}
+
+//更改用户的卡片个数
+function submitCards(userId,cardId,spinnerId)
+{
+	var data1 = new Object();
+	data1.userId = userId;
+	data1.cardId = cardId;
+	data1.number = $("#"+spinnerId).numberspinner('getValue'); //获取当前选中卡片数
+	
+	var url = contextPath+'/outerLGroup/updateNumberOfCardForUser.action';
+	$.ajax({
+		async: false, //设置为同步获取数据形式
+        type: "get",
+        url: url,
+        data:data1,
+        dataType: "json",
+        success: function (data) {
+        	
+        	$.messager.alert('提示', data.message);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+	});
+	
+}
+
 /**
  * 初始化模糊查询“省”下拉框数据
  */
@@ -566,3 +636,4 @@ function submitUpdateLotteryUser()
 	    }
 	});
 }
+

@@ -28,6 +28,19 @@
 			.ztree li button.switch.center_docu {visibility:visible; width:16px;}
 			.ztree li button.switch.bottom_docu {visibility:visible; width:16px;}
 			
+			.cardClass{
+				width:100%;
+	  			float : left;
+	  			margin-top: 10px;
+	  			margin-bottom: 20px;
+	  			font-family:'微软雅黑',
+			}
+			
+			.cardClass label{
+	  			float : left;
+	  			margin-left: 30px;
+	  		}
+			
 			 .ftitle{
 	  			width:50%;
 	  			float : left;
@@ -329,6 +342,27 @@
      <!-- 上传图片弹框 -->
      <div id="ddA">Dialog Content.</div>
     <div id="uploadShowAimgPreview" title="图片预览" class="easyui-dialog" data-options="modal:true"  style="width:700px; height:500px;"> </div>
+   
+    <!-- 设置用户的卡片 -->
+       <div id="cardManageDiv" class="easyui-dialog" title="卡包管理" style="width:500px;height:600px;padding:0px;border:0;top:1px;"
+            data-options="
+            modal:true,
+                iconCls: 'icon-save',
+                buttons: [{
+                    text:'关闭',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#cardManageDiv').dialog('close');
+                    }
+                }]
+            ">
+            <div class="cardClass">
+	            <label for="subject">福彩建群卡:</label>
+	             <input id="ss" class="easyui-numberspinner" style="width:80px;" value="0"
+    						required="required" data-options="min:0,max:10,editable:false"><a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">确定</a>
+	        </div>
+    </div>
+    
 </body>
 	
 	

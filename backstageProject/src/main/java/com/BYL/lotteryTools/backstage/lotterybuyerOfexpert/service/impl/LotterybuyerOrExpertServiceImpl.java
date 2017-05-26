@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
@@ -40,7 +41,7 @@ import com.BYL.lotteryTools.common.util.MyMD5Util;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("lotterybuyerOrExpertService")
-@Transactional(propagation= Propagation.REQUIRED)
+@Transactional(propagation= Propagation.REQUIRED,rollbackForClassName={"Exception"})
 public class LotterybuyerOrExpertServiceImpl implements
 		LotterybuyerOrExpertService {
 
@@ -324,6 +325,11 @@ public class LotterybuyerOrExpertServiceImpl implements
 		return lotteryChatCardRepository.getLotteryChatCardById(id);
 	}
 	
+	public List<LotteryChatCard> findAllLotteryChatCards()
+	{
+		return lotteryChatCardRepository.findAll();
+	}
+	
 	/**
 	 * 
 	* @Title: updateCardsOfUser 
@@ -381,5 +387,37 @@ public class LotterybuyerOrExpertServiceImpl implements
 		card.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		
 		this.updateRelaLBEUserAndLtcard(card);
+	}
+	
+	public LotteryChatCardDTO  toLotteryChatCardDTO(LotteryChatCard entity)
+	{
+		LotteryChatCardDTO dto = new LotteryChatCardDTO();
+		
+		if(null != entity)
+		{
+			try {
+				BeanUtil.copyBeanProperties(dto, entity);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return dto;
+	}
+	
+	public List<LotteryChatCardDTO> toLotteryChatCardDTOs(List<LotteryChatCard> entites)
+	{
+		List<LotteryChatCardDTO> dtos = new ArrayList<LotteryChatCardDTO>();
+		
+		if(null != entites)
+		{
+			for (LotteryChatCard entity : entites) {
+				LotteryChatCardDTO dto = this.toLotteryChatCardDTO(entity);
+				
+				dtos.add(dto);
+			}
+		}
+		
+		return dtos;
 	}
 }

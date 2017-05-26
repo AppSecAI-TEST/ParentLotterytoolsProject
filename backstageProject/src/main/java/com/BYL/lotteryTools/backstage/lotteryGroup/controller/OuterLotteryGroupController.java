@@ -36,7 +36,9 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGrou
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
 import com.BYL.lotteryTools.backstage.lotteryStation.controller.LotteryStationController;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
@@ -217,7 +219,6 @@ public class OuterLotteryGroupController
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
-		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
 		//获取当前群和用户的关联关系(TODO:当前方法获取的群成员不包括群主和群内机器人)
 		Pageable pageable = null;
 		if(null != rows && 0 != rows)
@@ -234,7 +235,6 @@ public class OuterLotteryGroupController
 		List<RelaBindOfLbuyerorexpertAndGroup> relalist = lQueryResult.getResultList();
 		
 		List<LotterybuyerOrExpertDTO> userDtos = new ArrayList<LotterybuyerOrExpertDTO>();
-		LotterybuyerOrExpert owner = group.getLotteryBuyerOrExpert();
 		try
 		{
 			for (RelaBindOfLbuyerorexpertAndGroup rela : relalist)
@@ -1230,7 +1230,91 @@ public class OuterLotteryGroupController
 	}
 	
 	
+	/**
+	 * 获取所有的类型彩聊卡
+	* @Title: getAllLotteryChatCards 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月26日 上午10:17:19 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getAllLotteryChatCards", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getAllLotteryChatCards()
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		List<LotteryChatCard> cards = lotterybuyerOrExpertService.findAllLotteryChatCards();
+		
+		List<LotteryChatCardDTO> dtos = lotterybuyerOrExpertService.toLotteryChatCardDTOs(cards);
+		
+		map.put("cards", dtos);
+		
+		return map;
+	}
 	
+	/**
+	 * 
+	* @Title: getAllLotteryChatCardsOfUser 
+	* @Description: 获取当前用户的卡包
+	* @param @param userId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月26日 下午4:36:00 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getAllLotteryChatCardsOfUser", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getAllLotteryChatCardsOfUser(@RequestParam(value="userId",required=false) String userId)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		List<LotteryChatCard> cards = lotterybuyerOrExpertService.findAllLotteryChatCards();
+		
+		List<LotteryChatCardDTO> dtos = lotterybuyerOrExpertService.toLotteryChatCardDTOs(cards);
+		
+		for (LotteryChatCardDTO lotteryChatCardDTO : dtos) {
+			RelaLBEUserAndLtcard relaCard = lotterybuyerOrExpertService.
+					getRelaLBEUserAndLtcardByUserIdAndCardId(userId, lotteryChatCardDTO.getId());
+			if(null != relaCard)
+				lotteryChatCardDTO.setCount(relaCard.getNotUseCount());
+			else
+				lotteryChatCardDTO.setCount(0);
+		}
+		
+		map.put("cards", dtos);
+		
+		return map;
+	}
 	
-	
+	/**
+	 * 更新用户的卡片数
+	* @Title: updateNumberOfCardForUser 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param cardId
+	* @param @param number
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月26日 上午10:19:52 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/updateNumberOfCardForUser", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> updateNumberOfCardForUser(
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="cardId",required=false) String cardId,
+			@RequestParam(value="number",required=false) Integer number)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();	
+		
+		LotterybuyerOrExpert owner = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
+		//更新用户的卡片数
+		lotterybuyerOrExpertService.updateCardsOfUser(owner, cardId, number);
+		
+		map.put("message", "更新成功");
+		
+		return map;
+	}
 }

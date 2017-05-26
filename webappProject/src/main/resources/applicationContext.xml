@@ -45,8 +45,10 @@
                     <entry key="hibernate.max_fetch_depth" value="2" />
                     <entry key="hibernate.generate_statistics" value="true" />
                     <entry key="hibernate.bytecode.use_reflection_optimizer" value="true" />
-                    <entry key="hibernate.cache.use_second_level_cache" value="false" />
-                    <entry key="hibernate.cache.use_query_cache" value="false" />
+                    <entry key="hibernate.cache.use_second_level_cache" value="true" /><!-- 配置是否使用二级缓存 -->
+                    <entry key="hibernate.cache.use_query_cache" value="true" /><!-- 配置是否使用查询缓存 ,使用：不经常修改的数据，且经常被以实体查询的-->
+                    <entry key="hibernate.cache.provider_configuration" value="classpath:ehcache.xml"></entry><!-- 指定ehcache配置文件位置 -->
+                    <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"></entry>
                     <entry key="hibernate.hbm2ddl.auto" value="update" /><!-- 这个标签是用来基于你配置好了实体间的关系，然后可以自动生成表的 -->
                 </map>
             </property>

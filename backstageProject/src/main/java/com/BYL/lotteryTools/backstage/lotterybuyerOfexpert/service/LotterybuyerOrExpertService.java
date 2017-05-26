@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
@@ -43,6 +44,12 @@ public interface LotterybuyerOrExpertService {
 	
 	//彩聊卡操作
 	public LotteryChatCard getLotteryChatCardById(String id);
+	
+	public List<LotteryChatCard> findAllLotteryChatCards();
+	
+	public List<LotteryChatCardDTO> toLotteryChatCardDTOs(List<LotteryChatCard> entites);
+	
+	public LotteryChatCardDTO  toLotteryChatCardDTO(LotteryChatCard entity);
 	
 	//添加一张建群卡
 	public void updateCardsOfUser(LotterybuyerOrExpert owner,String cardId,Integer num);

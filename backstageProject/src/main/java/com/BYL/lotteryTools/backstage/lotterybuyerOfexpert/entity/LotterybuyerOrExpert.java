@@ -3,12 +3,16 @@ package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
@@ -25,6 +29,8 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @author banna
 * @date 2017年2月28日 下午3:03:15
  */
+@Cacheable(true)/*配置查询缓存*/
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE,region="entityCache")/*配置二级缓存*/
 @Entity
 @Table(name="T_LT_LOTTERYBUYER_OR_EXPERT")
 public class LotterybuyerOrExpert extends BaseEntity

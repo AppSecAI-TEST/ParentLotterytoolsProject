@@ -214,4 +214,64 @@
       });
 	
 	
+	/****封装map****/
+	function map()
+	{
+		this.keys = [];
+	    this.data = {};
+	 
+	    /**
+	     * 放入一个键值对
+	     * @param {String} key
+	     * @param {Object} value
+	     */
+	    this.put = function(key, value) {
+	        if (this.data[key] == null) {
+	            this.keys.push(key);
+	        }
+	        this.data[key] = value;
+	    };
+	 
+	    /**
+	     * 获取某键对应的值
+	     * @param {String}  key
+	     * @return {Object} value
+	     */
+	    this.get = function(key) {
+	        return this.data[key];
+	    };
+	 
+	    /**
+	     * 是否包含该键
+	     */
+	    this.contain = function(key) {
+	        
+	        var value = this.data[key];
+	        if (value)
+	            return true;
+	        else
+	            return false;
+	    };
+	    
+	    this.getKeys = function()
+	    {
+	    	return keys;
+	    };
+	 
+	    /**
+	     * 删除一个键值对
+	     * @param {String} key
+	     */
+	    this.remove = function(key) {
+	        for(var index=0;index<this.keys.length;index++){
+	            if(this.keys[index]==key){
+	                this.keys.splice(index,1);
+	                break;
+	            }
+	        }
+	        //this.keys.remove(key);
+	        this.data[key] = null;
+	    };
+	}
+	
 </script>
