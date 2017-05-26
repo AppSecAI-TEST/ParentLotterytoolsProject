@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 public interface LotterybuyerOrExpertService {
@@ -29,4 +31,22 @@ public interface LotterybuyerOrExpertService {
 	public List<LotterybuyerOrExpert> getLotterybuyerOrExpertByCailiaoName(String cailiaoName);
 	
 	public String createRobotUser(String province,String city,String lotteryType);
+	
+	//用户和卡关联操作
+	public RelaLBEUserAndLtcard getRelaLBEUserAndLtcardByUserIdAndCardId(String userId,String cardId);
+	
+	public RelaLBEUserAndLtcard getRelaLBEUserAndLtcardById(String id);
+	
+	public void saveRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity);
+	
+	public void updateRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity);
+	
+	//彩聊卡操作
+	public LotteryChatCard getLotteryChatCardById(String id);
+	
+	//添加一张建群卡
+	public void updateCardsOfUser(LotterybuyerOrExpert owner,String cardId,Integer num);
+	
+	//减少一张建群卡
+	public void reduceCardsOfUser(LotterybuyerOrExpert owner,String cardId);
 }

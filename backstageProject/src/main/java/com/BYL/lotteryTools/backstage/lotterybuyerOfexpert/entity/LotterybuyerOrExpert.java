@@ -158,9 +158,21 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@OneToMany(mappedBy="lotteryBuyerOrExpert",fetch=FetchType.LAZY)
 	private List<LotteryGroup> lotteryGroups;//一个用户可以成为多个群的群主
 	
+	//一个用户可以有多个类型的卡
+	@OneToMany(mappedBy="lotterybuyerOrExpert",fetch=FetchType.LAZY)
+	private List<RelaLBEUserAndLtcard> relaLBEUserAndLtcards ;
 	
 	
 	
+	public List<RelaLBEUserAndLtcard> getRelaLBEUserAndLtcards() {
+		return relaLBEUserAndLtcards;
+	}
+
+	public void setRelaLBEUserAndLtcards(
+			List<RelaLBEUserAndLtcard> relaLBEUserAndLtcards) {
+		this.relaLBEUserAndLtcards = relaLBEUserAndLtcards;
+	}
+
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroups() {
 		return relaApplyOfLbuyerorexpertAndGroups;
 	}

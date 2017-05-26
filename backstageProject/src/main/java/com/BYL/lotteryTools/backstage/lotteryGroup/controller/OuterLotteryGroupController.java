@@ -35,8 +35,10 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
+import com.BYL.lotteryTools.backstage.lotteryStation.controller.LotteryStationController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.controller.PushController;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -1166,6 +1168,64 @@ public class OuterLotteryGroupController
 		 map.put("groupDtos", dtos);
 		
 		
+		return map;
+	}
+	
+	/**
+	 * 查看建群卡用户卡片余额
+	* @Title: checkCardYue 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param groupId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月25日 下午3:51:40 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/checkCreateGroupCardYueOfUser", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> checkCreateGroupCardYueOfUser(
+			@RequestParam(value="userId",required=false) String userId)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
+				getRelaLBEUserAndLtcardByUserIdAndCardId(userId, LotteryStationController.CREATE_GROUP_CARD_ID);
+
+		if(null != card)
+			map.put("couldUse", card.getNotUseCount());
+		else
+			map.put("couldUse", 0);
+				
+		return map;
+	}
+	
+	/**
+	 * 校验当前用户当前卡片的余额
+	* @Title: checkCardYueOfUser 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param cardId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月25日 下午3:54:48 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/checkCardYueOfUser", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> checkCardYueOfUser(
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="cardId",required=false) String cardId)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
+				getRelaLBEUserAndLtcardByUserIdAndCardId(userId, cardId);
+		if(null != card)
+			map.put("couldUse", card.getNotUseCount());
+		else
+			map.put("couldUse", 0);
+				
 		return map;
 	}
 	

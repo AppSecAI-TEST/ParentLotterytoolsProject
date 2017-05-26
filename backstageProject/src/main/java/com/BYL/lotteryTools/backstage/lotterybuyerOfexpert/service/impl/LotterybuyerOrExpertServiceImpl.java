@@ -19,8 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.LotteryChatCardRepository;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.LotterybuyerOrExpertRepository;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.RelaLBEUserAndLtcardRepository;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.backstage.user.entity.City;
@@ -57,6 +61,12 @@ public class LotterybuyerOrExpertServiceImpl implements
 	
 	@Autowired
 	private CityService cityService;
+	
+	@Autowired
+	private RelaLBEUserAndLtcardRepository relaLBEUserAndLtcardRepository;
+	
+	@Autowired
+	private LotteryChatCardRepository lotteryChatCardRepository;
 
 	public void save(LotterybuyerOrExpert entity) 
 	{
@@ -291,5 +301,85 @@ public class LotterybuyerOrExpertServiceImpl implements
 		
 		
 		return robotUserId;
+	}
+
+	public RelaLBEUserAndLtcard getRelaLBEUserAndLtcardByUserIdAndCardId(
+			String userId, String cardId) {
+		return relaLBEUserAndLtcardRepository.getRelaLBEUserAndLtcardByUserIdAndCardId(userId, cardId);
+	}
+
+	public void saveRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity) {
+		relaLBEUserAndLtcardRepository.save(entity);
+	}
+
+	public void updateRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity) {
+		relaLBEUserAndLtcardRepository.save(entity);		
+	}
+
+	public RelaLBEUserAndLtcard getRelaLBEUserAndLtcardById(String id) {
+		return relaLBEUserAndLtcardRepository.getRelaLBEUserAndLtcardById(id);
+	}
+
+	public LotteryChatCard getLotteryChatCardById(String id) {
+		return lotteryChatCardRepository.getLotteryChatCardById(id);
+	}
+	
+	/**
+	 * 
+	* @Title: updateCardsOfUser 
+	* @Description: 卡片数加（addNum）张
+	* @param @param owner
+	* @param @param cardId
+	* @param @param addNum    设定文件 
+	* @author banna
+	* @date 2017年5月25日 下午3:25:16 
+	* @throws
+	 */
+	public void updateCardsOfUser(LotterybuyerOrExpert owner,String cardId,Integer addNum)
+	{
+		RelaLBEUserAndLtcard card = this.
+				getRelaLBEUserAndLtcardByUserIdAndCardId(owner.getId(), cardId);
+		
+		if(null != card)
+		{//已经有卡的，卡数加1
+			card.setNotUseCount(card.getNotUseCount()+addNum);
+		}
+		else
+		{
+			card = new RelaLBEUserAndLtcard();
+			card.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			card.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			card.setIsDeleted(Constants.IS_NOT_DELETED);
+			card.setUseCount(0);
+			card.setNotUseCount(addNum); 
+			card.setLotterybuyerOrExpert(owner);
+			LotteryChatCard lotteryChatCard = this.getLotteryChatCardById(cardId);
+			card.setLotteryChatCard(lotteryChatCard);
+			
+			this.saveRelaLBEUserAndLtcard(card);
+		}
+		
+	}
+	
+	/**
+	 * 
+	* @Title: reduceCardsOfUser 
+	* @Description: 减少一张卡片 
+	* @param @param owner
+	* @param @param cardId    设定文件 
+	* @author banna
+	* @date 2017年5月25日 下午3:25:37 
+	* @throws
+	 */
+	public void reduceCardsOfUser(LotterybuyerOrExpert owner,String cardId)
+	{
+		RelaLBEUserAndLtcard card = this.
+				getRelaLBEUserAndLtcardByUserIdAndCardId(owner.getId(), cardId);
+		
+		card.setUseCount(card.getUseCount()+1);
+		card.setNotUseCount(card.getNotUseCount()-1);
+		card.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		
+		this.updateRelaLBEUserAndLtcard(card);
 	}
 }

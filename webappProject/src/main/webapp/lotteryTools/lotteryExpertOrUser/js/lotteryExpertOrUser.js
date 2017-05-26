@@ -111,7 +111,7 @@ function deleteLotteryUser(id)
 	var url = contextPath + '/lbuyerOrexpert/deleteLborExpert.action';
 	var data1 = new Object();
 	
-	data1.id=id;
+	data1.ids=id;
 	
 	$.messager.confirm("提示", "您确认删除选中数据？", function (r) {  
         if (r) {  

@@ -28,7 +28,6 @@ import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationServi
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
-import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
@@ -55,6 +54,8 @@ public class LotteryStationController
 	
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
+	
+	public static final String CREATE_GROUP_CARD_ID="1";//建群卡id
 	
 	/**
 	 * 
@@ -290,6 +291,7 @@ public class LotteryStationController
 				{
 					LotterybuyerOrExpert owner = lotteryStation.getLotteryBuyerOrExpert();
 					//TODO:认证成功后，赠一张建群卡
+					lotterybuyerOrExpertService.updateCardsOfUser(owner, LotteryStationController.CREATE_GROUP_CARD_ID,1);
 				}
 			}
 			
@@ -313,6 +315,7 @@ public class LotteryStationController
 		
 		return resultBean;
 	}
+	
 	
 	
 	//TODO:生成站点邀请码
