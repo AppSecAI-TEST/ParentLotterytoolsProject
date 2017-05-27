@@ -123,54 +123,8 @@ public class LotteryBuyerOrExpertController
 	{
 	 	Map<String,Object> returnData = new HashMap<String, Object>();
 	 	
-	 	/**补录的表名处理：之后实在没办法就直接写语句执行sql吧，插入补录数据**/
-		
-	 	//放置分页参数
-		Pageable pageable = new PageRequest(page-1,rows);
-		
-		//参数
-		StringBuffer buffer = new StringBuffer();
-		List<Object> params = new ArrayList<Object>();
-		
-		//只查询未删除数据
-		params.add("1");//只查询有效的数据
-		buffer.append(" isDeleted = ?").append(params.size());
-		
-		//连接查询条件
-		if(null != name&&!"".equals(name.trim()))
-		{
-			params.add("%"+name+"%");
-			buffer.append(" and name like ?").append(params.size());
-		}
-		
-		if(null != provinceCode && !"".equals(provinceCode)&& !Constants.PROVINCE_ALL.equals(provinceCode))
-		{
-			params.add(provinceCode);
-			buffer.append(" and province = ?").append(params.size());
-		}
-		
-		//虚拟用户查询条件
-		if(null != isVirtual && !"".equals(isVirtual))
-		{
-			params.add(isVirtual);
-			buffer.append(" and  isVirtual = ?").append(params.size());
-		}
-		
-		//是否为机器人
-		if(null != isRobot && !"".equals(isRobot))
-		{
-			params.add(isRobot);
-			buffer.append(" and  isRobot = ?").append(params.size());
-		}
-		
-		
-		//排序
-		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
-		orderBy.put("createTime", "desc");
-		
 		QueryResult<LotterybuyerOrExpert> lQueryResult = lotterybuyerOrExpertService
-				.getLotterybuyerOrExpertList(LotterybuyerOrExpert.class,
-				buffer.toString(), params.toArray(),orderBy, pageable);
+				.getLotterybuyerOrExpertList(page, rows, name, provinceCode, isVirtual, isRobot);
 				
 		List<LotterybuyerOrExpert> list = lQueryResult.getResultList();
 		Long totalrow = lQueryResult.getTotalRecord();

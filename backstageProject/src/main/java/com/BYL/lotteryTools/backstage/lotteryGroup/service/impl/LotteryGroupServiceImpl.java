@@ -175,6 +175,11 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		}
 		return str.toString();
 	}
+
+	public List<LotteryGroup> getLotteryGroupByProvinceAndLotteryType(
+			String province, String lotteryType) {
+		return lotteryGroupRespository.getLotteryGroupByProvinceAndLotteryType(province, lotteryType);
+	}
 	
 	
 }

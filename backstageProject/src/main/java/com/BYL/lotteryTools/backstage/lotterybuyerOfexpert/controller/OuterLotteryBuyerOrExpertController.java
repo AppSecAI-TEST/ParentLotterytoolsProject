@@ -58,9 +58,9 @@ public class OuterLotteryBuyerOrExpertController
 	
 	public static Map<String,String> sessionMap = new HashMap<String, String>();
 	
-	private static final String DOMAIN="http://36.7.190.20:1881/";
+	public static final String DOMAIN="http://36.7.190.20:1881/";
 	
-	private static String morenTouxiang = "0";//默认头像newsUuid
+	public static String morenTouxiang = "0";//默认头像newsUuid
 	
 	/**
 	 * 获取注册用户手机验证码

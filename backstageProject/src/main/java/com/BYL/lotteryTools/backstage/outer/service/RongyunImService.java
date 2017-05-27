@@ -162,4 +162,35 @@ public interface RongyunImService {
 	 */
 	public CodeSuccessResult refreshGroup(String groupId,String groupName);
 	
+	/**
+	 * 发送文本消息到群
+	* @Title: sendMessgeToGroups 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param fromUseId
+	* @param @param messagePublishGroupToGroupId
+	* @param @param message
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月27日 上午10:53:33 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult sendMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String message);
+	
+	/**
+	 * 发送图片消息到群
+	* @Title: sendImgMessgeToGroups 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param fromUseId
+	* @param @param messagePublishGroupToGroupId
+	* @param @param message
+	* @param @param imageUri
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月27日 下午12:11:58 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult sendImgMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String message,String imageUri);
+	
 }

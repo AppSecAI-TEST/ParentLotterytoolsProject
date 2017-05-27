@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller.OuterLotteryBuyerOrExpertController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
@@ -163,12 +166,59 @@ public class LotterybuyerOrExpertServiceImpl implements
 	}
 
 	public QueryResult<LotterybuyerOrExpert> getLotterybuyerOrExpertList(
-			Class<LotterybuyerOrExpert> entityClass, String whereJpql,
-			Object[] queryParams, LinkedHashMap<String, String> orderby,
-			Pageable pageable) {
+			int page,
+			int rows,
+			String name,
+			String provinceCode,
+			String isVirtual,
+			String isRobot) {
+		
+
+	 	//放置分页参数
+		Pageable pageable = new PageRequest(page-1,rows);
+		
+		//参数
+		StringBuffer buffer = new StringBuffer();
+		List<Object> params = new ArrayList<Object>();
+		
+		//只查询未删除数据
+		params.add("1");//只查询有效的数据
+		buffer.append(" isDeleted = ?").append(params.size());
+		
+		//连接查询条件
+		if(null != name&&!"".equals(name.trim()))
+		{
+			params.add("%"+name+"%");
+			buffer.append(" and name like ?").append(params.size());
+		}
+		
+		if(null != provinceCode && !"".equals(provinceCode)&& !Constants.PROVINCE_ALL.equals(provinceCode))
+		{
+			params.add(provinceCode);
+			buffer.append(" and provinceCode = ?").append(params.size());
+		}
+		
+		//虚拟用户查询条件
+		if(null != isVirtual && !"".equals(isVirtual))
+		{
+			params.add(isVirtual);
+			buffer.append(" and  isVirtual = ?").append(params.size());
+		}
+		
+		//是否为机器人
+		if(null != isRobot && !"".equals(isRobot))
+		{
+			params.add(isRobot);
+			buffer.append(" and  isRobot = ?").append(params.size());
+		}
+		
+		
+		//排序
+		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
+		orderBy.put("createTime", "desc");
 		
 		QueryResult<LotterybuyerOrExpert> queryResult = lotterybuyerOrExpertRepository.getScrollDataByJpql
-				(LotterybuyerOrExpert.class, whereJpql, queryParams, orderby, pageable);
+				(LotterybuyerOrExpert.class, buffer.toString(), params.toArray(),orderBy, pageable);
 		
 		return queryResult;
 	}
@@ -200,49 +250,11 @@ public class LotterybuyerOrExpertServiceImpl implements
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String createRobotUser(String province,String city,String lotteryType)
+	public String createRobotUser(String province,String city,String lotteryType,HttpServletRequest request)
 	{
 		//查询当前省份彩种是否有机器人
-		//放置分页参数
-		Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
-		
-		//参数
-		StringBuffer buffer = new StringBuffer();
-		List<Object> params = new ArrayList<Object>();
-		
-		//只查询未删除数据
-		params.add("1");//只查询有效的数据
-		buffer.append(" isDeleted = ?").append(params.size());
-		
-		params.add("1");//查询机器人数据
-		buffer.append(" and  isRobot = ?").append(params.size());
-		
-		//连接查询条件
-		if(null != province && !"".equals(province)&& !Constants.PROVINCE_ALL.equals(province))
-		{
-			params.add(province);
-			buffer.append(" and provinceCode = ?").append(params.size());
-		}
-		
-		if(null != city && !"".equals(city)&& !Constants.CITY_ALL.equals(city))
-		{
-			params.add(city);
-			buffer.append(" and cityCode = ?").append(params.size());
-		}
-		
-		/*if(null != lotteryType && !"".equals(lotteryType))
-		{
-			params.add(lotteryType);
-			buffer.append(" and lotteryType = ?").append(params.size());
-		}*/
-		
-		//排序
-		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
-		orderBy.put("createTime", "desc");
-		
 		QueryResult<LotterybuyerOrExpert> lQueryResult = this
-				.getLotterybuyerOrExpertList(LotterybuyerOrExpert.class,
-				buffer.toString(), params.toArray(),orderBy, pageable);
+				.getLotterybuyerOrExpertList(1, Integer.MAX_VALUE, null, province, null, "1");
 				
 		List<LotterybuyerOrExpert> robotlist = lQueryResult.getResultList();
 		
@@ -258,8 +270,8 @@ public class LotterybuyerOrExpertServiceImpl implements
 		
 		
 		
-		//若超过500个群（有效群，若群删除时则要移除群机器人，要去融云解除用户和群的关系绑定），则需要新建新的机器人
-		if("".equals(robotUserId)|| null == list || list.size()>=500)
+		//若超过200个群（有效群，若群删除时则要移除群机器人，要去融云解除用户和群的关系绑定），则需要新建新的机器人
+		if("".equals(robotUserId)|| null == list || list.size()>=200)
 		{//若机器人的加群数大于500，则要创建新的
 			Province pro = provinceService.getProvinceByPcode(province);//获取省份信息
 			//创建机器人用户
@@ -290,10 +302,14 @@ public class LotterybuyerOrExpertServiceImpl implements
 			robot.setCreateTime(new Timestamp((System.currentTimeMillis())));
 			robot.setModify(robot.getId());
 			robot.setModifyTime(new Timestamp((System.currentTimeMillis())));
-			
+			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(OuterLotteryBuyerOrExpertController.morenTouxiang);
 			//创建机器人的融云账户
+			StringBuffer imguri = new StringBuffer();
+			imguri.append(OuterLotteryBuyerOrExpertController.DOMAIN)
+			.append(request.getContextPath()).append(uploadfile.getUploadfilepath()).append(uploadfile.getUploadRealName());
+			
 			String token = rongyunImService.getUserToken(robot.getId(),
-					robot.getName(), "");
+					robot.getName(), imguri.toString());
 			robot.setToken(token);
 			//保存机器人用户信息
 			this.save(robot);

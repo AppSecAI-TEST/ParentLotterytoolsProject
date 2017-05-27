@@ -34,4 +34,6 @@ public interface LotteryGroupService {
 	public LotteryGroup getLotteryGroupByGroupNumber(String groupNumber);
 	
 	public  String generateGroupNumber();
+	
+	public List<LotteryGroup> getLotteryGroupByProvinceAndLotteryType(String province,String lotteryType);
 }

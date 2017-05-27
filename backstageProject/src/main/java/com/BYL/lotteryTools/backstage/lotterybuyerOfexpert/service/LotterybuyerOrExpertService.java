@@ -3,6 +3,8 @@ package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Pageable;
 
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
@@ -22,8 +24,13 @@ public interface LotterybuyerOrExpertService {
 	
 	public List<LotterybuyerOrExpertDTO> toDTOs(List<LotterybuyerOrExpert> entities);
 	
-	public QueryResult<LotterybuyerOrExpert> getLotterybuyerOrExpertList(Class<LotterybuyerOrExpert> entityClass, String whereJpql, Object[] queryParams, 
-			LinkedHashMap<String, String> orderby, Pageable pageable);
+	public QueryResult<LotterybuyerOrExpert> getLotterybuyerOrExpertList(
+			int page,
+			int rows,
+			String name,
+			String provinceCode,
+			String isVirtual,
+			String isRobot);
 	
 	public LotterybuyerOrExpert getLotterybuyerOrExpertById(String id);
 	
@@ -31,7 +38,7 @@ public interface LotterybuyerOrExpertService {
 	
 	public List<LotterybuyerOrExpert> getLotterybuyerOrExpertByCailiaoName(String cailiaoName);
 	
-	public String createRobotUser(String province,String city,String lotteryType);
+	public String createRobotUser(String province,String city,String lotteryType,HttpServletRequest request);
 	
 	//用户和卡关联操作
 	public RelaLBEUserAndLtcard getRelaLBEUserAndLtcardByUserIdAndCardId(String userId,String cardId);
