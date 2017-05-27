@@ -9,19 +9,18 @@ package com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.jpush.api.push.model.SMS;
 
 public class RongCloud {
 
 	private static ConcurrentHashMap<String, RongCloud> rongCloud = new ConcurrentHashMap<String,RongCloud>();
 	
 	public User user;
-//	public Message message;
+	public Message message;
 //	public Wordfilter wordfilter;
 	public Group group;
 //	public Chatroom chatroom;
 	public Push push;
-	public SMS sms;
+//	public SMS sms;
 
 	private RongCloud(String appKey, String appSecret) {
 		user = new User(appKey, appSecret);

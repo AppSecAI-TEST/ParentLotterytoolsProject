@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.BYL.lotteryTools.backstage.outer.repository.TxtMessage;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.RongCloud;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
@@ -329,6 +330,39 @@ public class RongyunImServiceImpl implements RongyunImService
 		HttpUtil.setBodyParameter(body, conn);
 	    
 	    return (SMSVerifyCodeResult) GsonUtil.fromJson(HttpUtil.returnResult(conn), SMSVerifyCodeResult.class);
+	}
+	
+	/**
+	 * 向群发送消息
+	* @Title: sendMessgeToGroups 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param fromUseId
+	* @param @param messagePublishGroupToGroupId
+	* @param @param messagePublishGroupTxtMessage
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月27日 上午9:53:06 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult sendMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,TxtMessage messagePublishGroupTxtMessage)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
+		CodeSuccessResult messagePublishGroupResult = null;
+		System.out.println("************************Group********************");
+		// 创建群组方法（创建群组，并将用户加入该群组，用户将可以收到该群的消息，同一用户最多可加入 500 个群，每个群最大至 3000 人，App 内的群组数量没有限制.注：其实本方法是加入群组方法 /group/join 的别名。） 
+		try
+		{
+			messagePublishGroupResult = rongCloud.message.
+					publishGroup(fromUseId, messagePublishGroupToGroupId, messagePublishGroupTxtMessage
+							, "thisisapush", "{\"pushData\":\"hello\"}", 1, 1, 0);
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return messagePublishGroupResult;
 	}
 
 }
