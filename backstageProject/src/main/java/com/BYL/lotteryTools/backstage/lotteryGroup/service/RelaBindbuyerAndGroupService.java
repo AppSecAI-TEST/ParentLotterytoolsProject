@@ -24,5 +24,5 @@ public interface RelaBindbuyerAndGroupService {
 	public QueryResult<RelaBindOfLbuyerorexpertAndGroup> getMemberOfJoinGroup(Pageable pageable,String groupId) ;
 	
 	//获取当前未加入当前群的用户列表
-	public QueryResult<LotterybuyerOrExpert> getUsersOfNotJoinGroup(Pageable pageable,String inUsers) ;
+	public QueryResult<LotterybuyerOrExpert> getUsersOfNotJoinGroup(Pageable pageable,String inUsers,String isRobot) ;
 }

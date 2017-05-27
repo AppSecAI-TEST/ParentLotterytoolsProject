@@ -54,7 +54,7 @@ public class OuterInterfaceController
 	private PredictionTypeService predictionTypeService;
 	
 	
-private static final String NO5 = "5";
+	private static final String NO5 = "5";
 	
 	private static final String NO3 = "3";
 	

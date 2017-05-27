@@ -82,12 +82,12 @@ public class RelaBindbuyerAndGroupServiceImpl implements
 		return queryResult;
 	}
 	
-	public QueryResult<LotterybuyerOrExpert> getUsersOfNotJoinGroup(Pageable pageable,String inUsers) 
+	public QueryResult<LotterybuyerOrExpert> getUsersOfNotJoinGroup(Pageable pageable,String inUsers,String isRobot) 
 	{
 		List<Object> params = new ArrayList<Object>();
 		
 		StringBuffer sql = new StringBuffer("SELECT u.* FROM T_LT_LOTTERYBUYER_OR_EXPERT u  "
-				+ "WHERE u.IS_DELETED='1' and u.IS_ROBOT='0'  AND u.ID NOT IN ("+inUsers+")");
+				+ "WHERE u.IS_DELETED='1' and u.IS_ROBOT='"+isRobot+"'  AND u.ID NOT IN ("+inUsers+")");
 		
 		QueryResult<LotterybuyerOrExpert> queryResult = lotterybuyerOrExpertRepository.
 				getScrollDataBySql(LotterybuyerOrExpert.class, sql.toString(), params.toArray(), pageable) ;

@@ -576,6 +576,9 @@ public class OuterLotteryGroupController
 		String[] tagsand = {groupOwner.getTelephone()};//推送给群主id，推送给群主审核
 		PushController.sendPushWithCallback(tagsand, null, "1", "group");//推送给群主展示的是“1”
 		
+		resultBean.setFlag(true);
+		resultBean.setMessage("申请成功");
+		
 		return resultBean;
 	}
 	
@@ -1004,6 +1007,7 @@ public class OuterLotteryGroupController
 				
 				entity.setGroupRobotID(robotUserId);
 				
+				
 				//TODO:放置群等级
 				String level1Id = "1";//等级1群的等级id
 				entity.setMemberCount(20);//以及群
@@ -1056,6 +1060,22 @@ public class OuterLotteryGroupController
 				//保存关联
 				relaBindbuyerAndGroupService.save(rela);
 				
+				//创建机器人和群的关联关系
+				LotterybuyerOrExpert robot = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(robotUserId);
+				RelaBindOfLbuyerorexpertAndGroup relaRobot = new RelaBindOfLbuyerorexpertAndGroup();
+				relaRobot.setIsDeleted(Constants.IS_NOT_DELETED);
+				relaRobot.setIsReceive("1");
+				relaRobot.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				relaRobot.setIsGroupOwner("0");//群主
+				relaRobot.setLotterybuyerOrExpert(robot);
+				relaRobot.setLotteryGroup(entity);
+				relaRobot.setCreator(robotUserId);
+				relaRobot.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				relaRobot.setModify(robotUserId);
+				relaRobot.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				//保存关联
+				relaBindbuyerAndGroupService.save(relaRobot);
+				
 				//在融云创建群信息
 				String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中
 				CodeSuccessResult result = rongyunImService.createGroup(joinUserId, entity.getId(), entity.getName());
@@ -1075,11 +1095,15 @@ public class OuterLotteryGroupController
 					//TODO:1.创建成功后，将当前群主的建群卡个数减1
 					RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
 							getRelaLBEUserAndLtcardByUserIdAndCardId(dto.getOwnerId(), dto.getLotteryType());
-					card.setNotUseCount(card.getNotUseCount()-1);
-					card.setUseCount(card.getUseCount()+1);
-					card.setModify(dto.getOwnerId());
-					card.setModifyTime(new Timestamp(System.currentTimeMillis()));
-					lotterybuyerOrExpertService.updateRelaLBEUserAndLtcard(card);
+					if(null != card)
+					{
+						card.setNotUseCount(0 != card.getNotUseCount()?card.getNotUseCount()-1:0);
+						card.setUseCount(card.getUseCount()+1);
+						card.setModify(dto.getOwnerId());
+						card.setModifyTime(new Timestamp(System.currentTimeMillis()));
+						lotterybuyerOrExpertService.updateRelaLBEUserAndLtcard(card);
+					}
+					
 				}
 				
 			}

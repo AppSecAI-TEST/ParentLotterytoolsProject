@@ -277,7 +277,7 @@ public class LotterybuyerOrExpertServiceImpl implements
 			//创建机器人用户
 			LotterybuyerOrExpert robot = new LotterybuyerOrExpert();
 			robot.setId(UUID.randomUUID().toString());
-			robot.setName(pro.getPname()+"机器人");//拼接机器人名称
+			robot.setName("彩小二");//拼接机器人名称
 			robot.setProvinceCode(province);
 			robot.setCityCode(city);
 			robot.setColorCoins(new BigDecimal(0));
@@ -307,7 +307,7 @@ public class LotterybuyerOrExpertServiceImpl implements
 			StringBuffer imguri = new StringBuffer();
 			imguri.append(OuterLotteryBuyerOrExpertController.DOMAIN)
 			.append(request.getContextPath()).append(uploadfile.getUploadfilepath()).append(uploadfile.getUploadRealName());
-			
+			robot.setTouXiang(uploadfile.getNewsUuid());
 			String token = rongyunImService.getUserToken(robot.getId(),
 					robot.getName(), imguri.toString());
 			robot.setToken(token);

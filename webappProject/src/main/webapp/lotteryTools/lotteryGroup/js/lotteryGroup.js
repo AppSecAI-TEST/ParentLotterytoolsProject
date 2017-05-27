@@ -83,6 +83,7 @@ function addGroupMember(groupId)
 	$('#addMemberDiv').dialog('open');
 	var params = new Object();
 	
+	params.isRobot = '0';
 	params.groupId = groupId;
 	
 	$('#addMemberDatagrid').datagrid({

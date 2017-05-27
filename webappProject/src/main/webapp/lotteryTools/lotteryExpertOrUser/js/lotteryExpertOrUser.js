@@ -19,6 +19,14 @@ function closeDialog()
 	$("#cardManageDiv").dialog('close');
 }
 
+function reset()
+{
+	$("#lotteryTypeC").combobox('setValue','');
+	initQueryProvince();
+	$("#nameC").val("");
+	$("#isRobotC").combobox('setValue','0');
+}
+
 
 function initDatagrid()
 {
@@ -26,7 +34,7 @@ function initDatagrid()
 	params.lotteryType = $("#lotteryTypeC").combobox('getValue');
 	params.province = $("#privinceC").combobox('getValue');
 	params.name = $("#nameC").val();
-	params.isRobot="0";
+	params.isRobot=$("#isRobotC").combobox('getValue');
 	$('#datagrid').datagrid({
 		rownumbers:false,
 		queryParams: params,

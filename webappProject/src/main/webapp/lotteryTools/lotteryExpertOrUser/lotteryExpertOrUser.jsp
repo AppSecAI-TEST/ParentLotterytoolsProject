@@ -109,6 +109,13 @@
 								<option value="2">福彩</option>
 						</select>
 		    		</td>
+		    		<td width="7%" class="td_font">机器人：</td>
+		    		<td width="15%">
+		    			<select class="easyui-combobox" id="isRobotC" name="isRobotC" style="width:100px;">
+								<option value="0" selected>非机器人</option>
+								<option value="1">机器人</option>
+						</select>
+		    		</td>
 		    		<td width="7%" class="td_font">省：</td>
 		    		<td width="15%">
 		    			<select class="easyui-combobox" id="privinceC" name="privinceC" style="width:100px;">

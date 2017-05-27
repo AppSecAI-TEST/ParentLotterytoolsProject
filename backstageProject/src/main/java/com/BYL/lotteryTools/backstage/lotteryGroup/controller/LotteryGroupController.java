@@ -327,6 +327,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				
 				entity.setGroupRobotID(robotUserId);
 				
+				
 				//TODO:放置群等级
 				String level1Id = "1";//等级1群的等级id
 				entity.setMemberCount(20);//以及群
@@ -379,6 +380,22 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
 				//保存关联
 				relaBindbuyerAndGroupService.save(rela);
+				
+				//创建机器人和群的关联关系
+				LotterybuyerOrExpert robot = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(robotUserId);
+				RelaBindOfLbuyerorexpertAndGroup relaRobot = new RelaBindOfLbuyerorexpertAndGroup();
+				relaRobot.setIsDeleted(Constants.IS_NOT_DELETED);
+				relaRobot.setIsReceive("1");
+				relaRobot.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				relaRobot.setIsGroupOwner("0");//群主
+				relaRobot.setLotterybuyerOrExpert(robot);
+				relaRobot.setLotteryGroup(entity);
+				relaRobot.setCreator(robotUserId);
+				relaRobot.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				relaRobot.setModify(robotUserId);
+				relaRobot.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				//保存关联
+				relaBindbuyerAndGroupService.save(relaRobot);
 				
 				//在融云创建群信息
 				String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中
@@ -434,6 +451,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 	public @ResponseBody Map<String,Object> getMembersOfNotJoinGroup(
 			@RequestParam(value="page",required=false)   Integer page,//当前页数
 			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
+			@RequestParam(value="isRobot",required=false)    String isRobot,
 			String groupId,
 			HttpServletRequest request,HttpSession httpSession)
 	{
@@ -467,7 +485,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 		}
 		
 		//不带分页的群成员查询
-		QueryResult<LotterybuyerOrExpert> lQueryResult = relaBindbuyerAndGroupService.getUsersOfNotJoinGroup(pageable, joinUser.toString());
+		QueryResult<LotterybuyerOrExpert> lQueryResult = relaBindbuyerAndGroupService.getUsersOfNotJoinGroup(pageable, joinUser.toString(),isRobot);
 		List<LotterybuyerOrExpert> relalist = lQueryResult.getResultList();
 		
 		List<LotterybuyerOrExpertDTO> userDtos = lotterybuyerOrExpertService.toDTOs(relalist);
