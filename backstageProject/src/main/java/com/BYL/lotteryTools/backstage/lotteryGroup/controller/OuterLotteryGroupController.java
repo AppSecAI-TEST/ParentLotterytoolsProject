@@ -742,11 +742,37 @@ public class OuterLotteryGroupController
 	 */
 	@RequestMapping(value="/getGroupByGroupnumber", method = RequestMethod.GET)
 	public @ResponseBody LotteryGroupDTO getGroupByGroupnumber(
-			@RequestParam(value="groupNumber",required=false)  String groupNumber)
+			@RequestParam(value="groupNumber",required=false)  String groupNumber,
+			@RequestParam(value="userId",required=false)  String userId)
 	{
 		LotteryGroup group = lotteryGroupService.getLotteryGroupByGroupNumber(groupNumber);
 		
 		LotteryGroupDTO dto = lotteryGroupService.toDTO(group);
+		
+		if(null != userId && null != group && !"".equals(userId))
+		{
+			//判断当前用户是否已加入或已申请群
+			RelaBindOfLbuyerorexpertAndGroup relaJoin = relaBindbuyerAndGroupService.
+					getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, group.getId());
+			if(null != relaJoin)
+			{
+				dto.setIsJoinOfUser("1");
+			}
+			else
+			{
+				dto.setIsJoinOfUser("0");
+				List<RelaApplyOfLbuyerorexpertAndGroup> relaApplys = relaApplybuyerAndGroupService.
+						getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, group.getId());
+				if(null != relaApplys && relaApplys.size()>0)
+				{
+					dto.setAlreadyApplyOfUser("1");
+				}
+				else
+				{
+					dto.setAlreadyApplyOfUser("0");
+				}
+			}
+		}
 		
 		return dto;
 	}
@@ -865,10 +891,17 @@ public class OuterLotteryGroupController
 		}
 		
 		//删除融云中群和用户的关系
-		CodeSuccessResult result = rongyunImService.quitUserFronGroup(quitUsers, groupId);
-		if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+		try
 		{
-			logger.error("融云执行用户退群时错误：", result.getErrorMessage());
+			CodeSuccessResult result = rongyunImService.quitUserFronGroup(quitUsers, groupId);
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				logger.error("融云执行用户退群时错误：", result.getErrorMessage());
+			}
+		}
+		catch(Exception e)
+		{
+			logger.error("error:", e);
 		}
 		
 		resultBean.setFlag(true);
