@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.controller.LotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
@@ -55,7 +56,9 @@ public class LotteryStationController
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
 	
-	public static final String CREATE_GROUP_CARD_ID="1";//建群卡id
+	public static final String CREATE_TICAI_GROUP_CARD_ID="1";//体彩建群卡id
+	
+	public static final String CREATE_FUCAI_GROUP_CARD_ID="2";//福彩建群卡id
 	
 	/**
 	 * 
@@ -291,7 +294,12 @@ public class LotteryStationController
 				{
 					LotterybuyerOrExpert owner = lotteryStation.getLotteryBuyerOrExpert();
 					//TODO:认证成功后，赠一张建群卡
-					lotterybuyerOrExpertService.updateCardsOfUser(owner, LotteryStationController.CREATE_GROUP_CARD_ID,1);
+					if("1".equals(lotteryStation.getLotteryType()))
+						lotterybuyerOrExpertService.updateCardsOfUser(owner, LotteryStationController.CREATE_TICAI_GROUP_CARD_ID,1);//彩种类型和建群卡id相同
+					else
+						if("2".equals(lotteryStation.getLotteryType()))
+							lotterybuyerOrExpertService.updateCardsOfUser(owner, LotteryStationController.CREATE_FUCAI_GROUP_CARD_ID,1);//彩种类型和建群卡id相同
+					
 				}
 			}
 			

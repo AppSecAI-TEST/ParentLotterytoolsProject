@@ -1212,7 +1212,7 @@ public class OuterLotteryGroupController
 	* @return Map<String,Object>    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value="/checkCreateGroupCardYueOfUser", method = RequestMethod.GET)
+	/*@RequestMapping(value="/checkCreateGroupCardYueOfUser", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> checkCreateGroupCardYueOfUser(
 			@RequestParam(value="userId",required=false) String userId)
 	{
@@ -1228,7 +1228,7 @@ public class OuterLotteryGroupController
 				
 		return map;
 	}
-	
+	*/
 	/**
 	 * 校验当前用户当前卡片的余额
 	* @Title: checkCardYueOfUser 
