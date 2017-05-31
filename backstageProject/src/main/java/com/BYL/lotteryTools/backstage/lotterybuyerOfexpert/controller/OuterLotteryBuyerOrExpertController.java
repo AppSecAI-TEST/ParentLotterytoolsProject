@@ -100,6 +100,45 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	}
 	
 	/**
+	 * 校验当前手机号是否已被注册
+	* @Title: checkTelephoneIsRegister 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotterybuyerOrExpertDTO
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年5月31日 下午5:27:58 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/checkTelephoneIsRegister", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> checkTelephoneIsRegister(
+			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> result = new HashMap<String, Object>();
+		
+		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+				getLotterybuyerOrExpertByTelephone(lotterybuyerOrExpertDTO.getTelephone());
+		
+		if(null != lotterybuyerOrExpert)
+		{//当前手机号已被注册
+			result.put("status", false);
+			result.put(Constants.FLAG_STR, false);
+			result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
+		}
+		else
+		{
+			result.put(Constants.FLAG_STR, true);
+			result.put(Constants.MESSAGE_STR, "当前手机号未被注册");
+		}
+		
+		
+		return result;
+	}
+	
+	/**
 	 * 保存或修改来自前端App的信息
 	* @Title: saveFromApp 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 

@@ -409,8 +409,8 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	* @Title: getFiveNumberMissAnalysisData 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
 	* @param @param lotteryPlayId
-	* @param @param type
-	* @param @param selectnum
+	* @param @param type:遗漏类型1：前三直选2：组选相关3：前二直选4：前二组5：任三相关6：任四相关7：其他任选
+	* @param @param selectnum：号码个数
 	* @param @param groupnumarr
 	* @param @param orderby
 	* @param @param ascOrDesc
