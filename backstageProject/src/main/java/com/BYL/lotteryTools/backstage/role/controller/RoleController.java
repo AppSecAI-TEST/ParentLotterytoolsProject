@@ -37,7 +37,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/role")
 public class RoleController {
 	
-	Logger logger = LoggerFactory.getLogger(RoleController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RoleController.class);
 	
 	 @Autowired
 	 private RoleService roleService;
@@ -125,7 +125,7 @@ public class RoleController {
 			   resultBean.setStatus("success");
 			   
 			   //日志输出
-			   logger.info("修改角色--角色id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			   LOG.info("修改角色--角色id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 			   
 		   }
@@ -149,7 +149,7 @@ public class RoleController {
 			   resultBean.setStatus("success");
 			   
 			   //日志输出
-			   logger.info("添加角色--角色code="+code+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			   LOG.info("添加角色--角色code="+code+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 		   }
 		   
@@ -185,7 +185,7 @@ public class RoleController {
 				roleService.update(role);//保存更改状态的角色实体
 				
 				//日志输出
-				logger.info("删除角色--角色id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+				LOG.info("删除角色--角色id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			}
 			

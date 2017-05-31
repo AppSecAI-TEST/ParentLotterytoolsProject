@@ -27,12 +27,13 @@ import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.backstage.user.service.RegionService;
+import com.BYL.lotteryTools.common.util.Constants;
 
 @Controller
 @RequestMapping("/outer")
 public class OuterInterfaceController 
 {
-	private Logger logger = LoggerFactory.getLogger(OuterInterfaceController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OuterInterfaceController.class);
 	
 	
 	@Autowired
@@ -254,8 +255,8 @@ public class OuterInterfaceController
 		List<LotteryPlayDTO> dtos = lotteryPlayService.toRDTOS(list);
 		
 		map.put("lotteryPlays", dtos);
-		map.put("flag", true);
-		map.put("message", "获取成功");
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
 		
 		return map;
 	}
@@ -307,8 +308,8 @@ public class OuterInterfaceController
 		dtos.add(d6);
 		
 		map.put("baseDtos", dtos);
-		map.put("flag", true);
-		map.put("message", "获取成功");
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
 		
 		return map;
 	}
@@ -339,8 +340,8 @@ public class OuterInterfaceController
 		List<?> preOfExperts = predictionTypeService.getPredictionPlanOfExperts(maxIssueId, isFree, count, baseTypeId,predictionTbname);
 		
 		map.put("preOfExperts", preOfExperts);
-		map.put("flag", true);
-		map.put("message", "获取成功");
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
 		
 		
 		return map;
@@ -389,8 +390,8 @@ public class OuterInterfaceController
 		List<?> preOfExperts = predictionTypeService.getHisPredictionOfExpert(count, baseTypeId,predictionTbname,expertId);
 				
 		map.put("preOfExperts", preOfExperts);
-		map.put("flag", true);
-		map.put("message", "获取成功");
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
 		
 		
 		return map;

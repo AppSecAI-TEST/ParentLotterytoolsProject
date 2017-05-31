@@ -40,7 +40,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/origin")
 public class OriginDataRuleController {
 
-	private Logger logger = LoggerFactory.getLogger(OriginDataRuleController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OriginDataRuleController.class);
 	
 	@Autowired
 	private OriginDataRuleService originDataRuleService;
@@ -170,7 +170,7 @@ public class OriginDataRuleController {
 				
 				originDataRuleService.update(originDataRule);
 				
-				logger.info("修改源码生成规则数据，id="+originDataRule.getId());
+				LOG.info("修改源码生成规则数据，id="+originDataRule.getId());
 				
 				resultBean.setMessage("修改成功");
 		 		
@@ -189,7 +189,7 @@ public class OriginDataRuleController {
 					
 					originDataRuleService.save(originDataRule);
 					
-					logger.info("添加源码生成规则数据，ruleName="+originDataRule.getRuleName());
+					LOG.info("添加源码生成规则数据，ruleName="+originDataRule.getRuleName());
 					
 					resultBean.setMessage("添加成功");
 				} 
@@ -238,7 +238,7 @@ public class OriginDataRuleController {
 			 		originDataRuleService.update(originDataRule);
 			 		
 			 		 //日志输出
-					 logger.info("删除源码规则数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+					 LOG.info("删除源码规则数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			 	}
 			}

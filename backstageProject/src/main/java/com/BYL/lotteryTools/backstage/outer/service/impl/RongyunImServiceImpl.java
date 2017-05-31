@@ -25,7 +25,7 @@ import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 @Transactional(propagation=Propagation.REQUIRED)
 public class RongyunImServiceImpl implements RongyunImService 
 {
-	private Logger logger = LoggerFactory.getLogger(RongyunImServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RongyunImServiceImpl.class);
 	String appKey = "82hegw5u83v8x";//appkey
 	String appSecret = "z2VxpghbOvscFu";//上面key的secret
 	
@@ -41,7 +41,7 @@ public class RongyunImServiceImpl implements RongyunImService
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
+			LOG.error("error:", e);
 		}
 		
 		return userBlockResult;
@@ -68,7 +68,7 @@ public class RongyunImServiceImpl implements RongyunImService
 		try
 		{
 			userGetTokenResult = rongCloud.user.getToken(userId, username, imguri);//"http://www.rongcloud.cn/images/logo.png"
-			System.out.println("getToken:  " + userGetTokenResult.toString());
+//			System.out.println("getToken:  " + userGetTokenResult.toString());
 			
 			/*// 检查用户在线状态 方法 
 			CheckOnlineResult userCheckOnlineResult = rongCloud.user.checkOnline("userId1");
@@ -197,13 +197,13 @@ public class RongyunImServiceImpl implements RongyunImService
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult groupCreateResult = null;
-		System.out.println("************************Group********************");
+//		System.out.println("************************Group********************");
 		// 创建群组方法（创建群组，并将用户加入该群组，用户将可以收到该群的消息，同一用户最多可加入 500 个群，每个群最大至 3000 人，App 内的群组数量没有限制.注：其实本方法是加入群组方法 /group/join 的别名。） 
 		try
 		{
 //			String[] groupCreateUserId = {"userId1","userid2","userId3"};
 			groupCreateResult = rongCloud.group.create(joinUserId, groupId, groupName);
-			System.out.println("create:  " + groupCreateResult.toString());
+//			System.out.println("create:  " + groupCreateResult.toString());
 			
 		}
 		catch(Exception e)
@@ -350,7 +350,7 @@ public class RongyunImServiceImpl implements RongyunImService
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult messagePublishGroupResult = null;
-		System.out.println("************************Group********************"+message);
+//		System.out.println("************************Group********************"+message);
 		// 创建群组方法（创建群组，并将用户加入该群组，用户将可以收到该群的消息，同一用户最多可加入 500 个群，每个群最大至 3000 人，App 内的群组数量没有限制.注：其实本方法是加入群组方法 /group/join 的别名。） 
 		try
 		{
@@ -371,7 +371,7 @@ public class RongyunImServiceImpl implements RongyunImService
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult messagePublishGroupResult = null;
-		System.out.println("************************Group********************"+message);
+//		System.out.println("************************Group********************"+message);
 		// 创建群组方法（创建群组，并将用户加入该群组，用户将可以收到该群的消息，同一用户最多可加入 500 个群，每个群最大至 3000 人，App 内的群组数量没有限制.注：其实本方法是加入群组方法 /group/join 的别名。） 
 		try
 		{

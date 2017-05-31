@@ -14,7 +14,6 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.dto.RelaApplyOfLbuyerorexpert
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.RelaApplyOfBuyyerorexpertAndGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
-import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.DateUtil;
@@ -26,7 +25,7 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
 	
-	private Logger logger = LoggerFactory.getLogger(RelaApplybuyerAndGroupService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RelaApplybuyerAndGroupService.class);
 
 	@Autowired
 	private RelaApplyOfBuyyerorexpertAndGroupRespository relaApplyOfBuyyerorexpertAndGroupRespository;
@@ -116,7 +115,7 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 				
 				
 			} catch (Exception e) {
-				logger.error("error", e);
+				LOG.error("error", e);
 			}
 		}
 		

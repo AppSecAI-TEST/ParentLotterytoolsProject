@@ -57,7 +57,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/lgroup")
 public class LotteryGroupController extends GlobalExceptionHandler
 {
-	private Logger logger = LoggerFactory.getLogger(LotteryGroupController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LotteryGroupController.class);
 	
 	@Autowired
 	private LotteryGroupService lotteryGroupService;
@@ -308,7 +308,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 							 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
 						
 					} catch (Exception e) {
-						logger.error("error:", e);
+						LOG.error("error:", e);
 					}
 					if(null != uploadfile)
 						entity.setTouXiang(uploadfile.getNewsUuid());
@@ -405,7 +405,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{//若创建失败
 					bean.setMessage( result.getErrorMessage());//创建失败返回融云端群创建失败信息
-					logger.error("createGroup error:", result.getErrorMessage());
+					LOG.error("createGroup error:", result.getErrorMessage());
 					bean.setFlag(false);
 				}
 				else
@@ -421,7 +421,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				
 			} catch (Exception e) 
 			{
-				logger.error("error:", e);
+				LOG.error("error:", e);
 				bean.setMessage("创建失败");
 				bean.setFlag(false);
 			}

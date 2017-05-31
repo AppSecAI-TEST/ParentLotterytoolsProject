@@ -27,7 +27,7 @@ import com.BYL.lotteryTools.common.util.LoginUtils;
 @Transactional(propagation = Propagation.REQUIRED)
 public class UploadfileServiceImpl implements UploadfileService {
 	
-	private Logger logger = LoggerFactory.getLogger(UploadfileServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UploadfileServiceImpl.class);
 	
 	@Autowired
 	private UploadfileRepository uploadfileRepository;
@@ -184,16 +184,16 @@ public class UploadfileServiceImpl implements UploadfileService {
 					 savePath = savePath +uploadfile.getUploadfilepath();
 					 	//2.删除附件
 				 		dirFile = new File(savePath+uploadfile.getUploadRealName());//uploadfile.getUploadRealName()
-				 		logger.info("待删除文件路径："+dirFile);
+				 		LOG.info("待删除文件路径："+dirFile);
 				        // 如果dir对应的文件不存在，或者不是一个目录，则退出
 			        	deleteFlag = dirFile.delete();
 			        	if(deleteFlag)
 			        	{//删除附件(清空附件关联newsUuid)
-			        		logger.info("deleteImg==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			        		LOG.info("deleteImg==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			        	}
 			        	else
 			        	{
-			        		logger.error("deleteImg ERROR==没有找到要删除的附件文件或删除失败，附件路径为="+savePath+";File.exists="+dirFile.exists());
+			        		LOG.error("deleteImg ERROR==没有找到要删除的附件文件或删除失败，附件路径为="+savePath+";File.exists="+dirFile.exists());
 			        	}
 					    //删除附件e
 				   		 uploadfile.setModify(uploadfile.getNewsUuid());//放置附件关联uuid

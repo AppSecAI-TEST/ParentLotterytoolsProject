@@ -39,7 +39,7 @@ import com.BYL.lotteryTools.common.util.Constants;
 @RequestMapping("/outerLotteryStation")
 public class OuterLotteryStationController
 {
-	private Logger logger = LoggerFactory.getLogger(OuterLotteryStationController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OuterLotteryStationController.class);
 	
 	@Autowired
 	private LotteryStationService lotteryStationService;
@@ -69,7 +69,7 @@ public class OuterLotteryStationController
 					 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request,newsUuid);
 				
 			} catch (Exception e) {
-				logger.error("error:", e);
+				LOG.error("error:", e);
 			}
 			
 			System.out.println("id="+lotteryStationDTO.getId());
@@ -139,7 +139,7 @@ public class OuterLotteryStationController
 								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getDaixiaoImgFile(),request,newsUuid);
 							
 						} catch (Exception e) {
-							logger.error("error:", e);
+							LOG.error("error:", e);
 						}
 						if(null != uploadfile)
 							lotteryStation.setDaixiaoImg(uploadfile.getNewsUuid());
@@ -158,7 +158,7 @@ public class OuterLotteryStationController
 								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberFrontImgFile(),request,newsUuid);
 							
 						} catch (Exception e) {
-							logger.error("error:", e);
+							LOG.error("error:", e);
 						}
 						if(null != uploadfile)
 							lotteryStation.setIdNumberFrontImg(uploadfile.getNewsUuid());
@@ -175,7 +175,7 @@ public class OuterLotteryStationController
 								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getIdNumberBackImgFile(),request,newsUuid);
 							
 						} catch (Exception e) {
-							logger.error("error:", e);
+							LOG.error("error:", e);
 						}
 						if(null != uploadfile)
 							lotteryStation.setIdNumberBackImg(uploadfile.getNewsUuid());
@@ -185,6 +185,7 @@ public class OuterLotteryStationController
 					lotteryStation.setLotteryBuyerOrExpert(lotterybuyerOrExpert);
 					//保存彩票站信息
 					lotteryStationService.save(lotteryStation);
+					resultBean.setFlag(true);
 					resultBean.setStatus("success");
 					resultBean.setMessage("提交成功");
 				/*}
@@ -198,6 +199,7 @@ public class OuterLotteryStationController
 			else
 			{
 				resultBean.setExist(true);
+				resultBean.setFlag(true);
 				resultBean.setStatus("error");
 				resultBean.setMessage("当前彩票站已认证");
 			}
@@ -205,7 +207,9 @@ public class OuterLotteryStationController
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
+			LOG.error("error:", e);
+			resultBean.setFlag(false);
+			resultBean.setMessage("服务器错误");
 		}
 		
 		

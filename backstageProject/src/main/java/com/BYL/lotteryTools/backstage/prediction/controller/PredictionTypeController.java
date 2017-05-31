@@ -47,7 +47,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/ptype")
 public class PredictionTypeController {
 
-	private Logger logger = LoggerFactory.getLogger(PredictionTypeController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PredictionTypeController.class);
 	
 	@Autowired
 	private BasePredictionTypeService basePredictionTypeService;
@@ -203,7 +203,7 @@ public class PredictionTypeController {
 				
 				resultBean.setMessage("修改成功");
 				
-				logger.info("修改基础预测类型数据，id="+basePredictionType.getId());
+				LOG.info("修改基础预测类型数据，id="+basePredictionType.getId());
 		 		
 		 	}
 		 	else
@@ -225,7 +225,7 @@ public class PredictionTypeController {
 					
 					basePredictionTypeService.save(basePredictionType);
 					
-					logger.info("添加基础数据类型数据，ruleName="+basePredictionType.getBasePredictionName());
+					LOG.info("添加基础数据类型数据，ruleName="+basePredictionType.getBasePredictionName());
 					
 					resultBean.setMessage("添加成功");
 				} 
@@ -274,7 +274,7 @@ public class PredictionTypeController {
 			 		basePredictionTypeService.update(basePredictionType);
 			 		
 			 		 //日志输出
-					 logger.info("删除基础预测类型数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+					 LOG.info("删除基础预测类型数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			 	}
 			}
@@ -447,7 +447,7 @@ public class PredictionTypeController {
 					
 					predictionTypeService.update(predictionType);
 					
-					logger.info("修改预测类型数据，id="+predictionType.getId());
+					LOG.info("修改预测类型数据，id="+predictionType.getId());
 					
 					resultBean.setMessage("修改成功");
 			 		
@@ -473,7 +473,7 @@ public class PredictionTypeController {
 				 		
 				 		predictionTypeService.save(predictionType);
 						
-						logger.info("添加数据类型数据，predictionName="+predictionType.getPredictionName());
+						LOG.info("添加数据类型数据，predictionName="+predictionType.getPredictionName());
 						
 						resultBean.setMessage("添加成功");
 					} 
@@ -523,7 +523,7 @@ public class PredictionTypeController {
 				 		predictionTypeService.update(predictionType);
 				 		
 				 		 //日志输出
-						 logger.info("删除预测类型数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+						 LOG.info("删除预测类型数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 					   
 				 	}
 				}

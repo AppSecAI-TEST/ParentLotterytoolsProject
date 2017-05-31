@@ -5,15 +5,11 @@ import io.netty.handler.codec.http.HttpMethod;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import net.sf.json.JSONArray;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.google.gson.JsonArray;
 
 import cn.jiguang.common.ClientConfig;
 import cn.jiguang.common.ServiceHelper;
@@ -36,15 +32,15 @@ import cn.jpush.api.push.model.audience.AudienceTarget;
 @RequestMapping("/push")
 public class PushController 
 {
-	private static Logger logger = LoggerFactory.getLogger(PushController.class);
+	private  static final Logger LOG = LoggerFactory.getLogger(PushController.class);
 	
 	 protected static final String APP_KEY ="1ac163a5a1cdd796a873513a";
 	 protected static final String MASTER_SECRET = "a73cf9a375c57af5f3f9538e";
 	 
-	 private static final String TITLE = "title";
-     private static final String MSG_CONTENT = "msg_content";
-     private static final String CONTENT_TYPE = "content_type";
-     private static final String EXTRAS = "extras";
+//	 private static final String TITLE = "title";
+//     private static final String MSG_CONTENT = "msg_content";
+//     private static final String CONTENT_TYPE = "content_type";
+//     private static final String EXTRAS = "extras";
      
      // 使用 NettyHttpClient 异步接口发送请求
      @RequestMapping("/sendPush")
@@ -64,7 +60,7 @@ public class PushController
              {
                  public void onSucceed(ResponseWrapper responseWrapper) 
                  {
-                	 logger.info("Got result: " + responseWrapper.responseContent);
+                	 LOG.info("Got result: " + responseWrapper.responseContent);
                  }
              });
          }

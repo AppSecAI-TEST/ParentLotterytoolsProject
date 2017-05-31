@@ -41,7 +41,7 @@ import com.alibaba.fastjson.JSONObject;
 @RequestMapping("/user")
 public class UserController 
 {
-	private Logger logger  = LoggerFactory.getLogger(UserController.class);
+	private static final Logger LOG  = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
 	private UserService userService;
@@ -149,7 +149,7 @@ public class UserController
 			userService.update(user);//保存更改状态的角色实体
 			
 			//日志输出
-			logger.info("删除user--userId="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			LOG.info("删除user--userId="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 		}
 		

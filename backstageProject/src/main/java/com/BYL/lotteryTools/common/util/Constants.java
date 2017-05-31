@@ -67,5 +67,11 @@ public class Constants {
 	//代理模块内容end
 	
 	
+	public static final String MESSAGE_STR="message";
+	
+	public static final String FLAG_STR="flag";
+	
+	public static final String ERROR_STR="error:";
+	
 
 }

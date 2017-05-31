@@ -12,7 +12,7 @@ import com.BYL.lotteryTools.backstage.serviceNumber.service.ServiceNumberService
 @RequestMapping("/snumber")
 public class ServiceNumberController 
 {
-	private Logger logger = LoggerFactory.getLogger(ServiceNumberController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ServiceNumberController.class);
 	
 	@Autowired
 	private ServiceNumberService serviceNumberService;

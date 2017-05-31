@@ -59,7 +59,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/menu")
 public class MenuController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MenuController.class);
 	
     @Autowired
 	private AuthService authService;
@@ -152,7 +152,7 @@ public class MenuController {
 		}
 		
 		 //日志输出
-		   logger.info("用户登录：登录信息用户名："+code+"密码："+password+"登录状态："+message);
+		   LOG.info("用户登录：登录信息用户名："+code+"密码："+password+"登录状态："+message);
 		   
 		
 		
@@ -576,7 +576,7 @@ public class MenuController {
 			returnMap.setStatus("success");
 			
 		  //日志输出
-		   logger.info("修改权限--权限id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+		   LOG.info("修改权限--权限id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 		}
 		else
@@ -601,7 +601,7 @@ public class MenuController {
 			returnMap.setStatus("success");
 			
 			 //日志输出
-			logger.info("保存权限--权限code="+code+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			LOG.info("保存权限--权限code="+code+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				 
 		}
 		
@@ -797,7 +797,7 @@ public class MenuController {
 			authService.save(authority);//保存更改状态的权限实体
 			
 			 //日志输出
-			logger.info("删除权限--权限id="+code+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			LOG.info("删除权限--权限id="+code+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				
 		}
 		

@@ -66,7 +66,8 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/outerLGroup")
 public class OuterLotteryGroupController
 {
-	private Logger logger = LoggerFactory.getLogger(OuterLotteryGroupController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OuterLotteryGroupController.class);
+	
 	
 	@Autowired
 	private RongyunImService rongyunImService;
@@ -131,7 +132,7 @@ public class OuterLotteryGroupController
 			CodeSuccessResult result = rongyunImService.groupDismiss(entity.getLotteryBuyerOrExpert().getId(), groupId);
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
-				logger.error("融云删除群报错", result.getErrorMessage());
+				LOG.error("融云删除群报错", result.getErrorMessage());
 			}
 			
 			//删除数据库中的群信息
@@ -153,7 +154,7 @@ public class OuterLotteryGroupController
 				}
 				catch(Exception e)
 				{
-					logger.error("delete,error:", e);
+					LOG.error("delete,error:", e);
 				}
 			}
 			//删除加群申请的关联关系
@@ -178,19 +179,23 @@ public class OuterLotteryGroupController
 			File dirFile = new File(savePath);
 			boolean deleteFlag = dirFile.delete();
 			if(deleteFlag)
-				logger.info("删除成功",deleteFlag);
+			{
+				LOG.info("删除成功",deleteFlag);
+			}
 			else
-				logger.error("error:","删除失败，文件："+entity.getGroupQRImg());//若删除失败记录未删除成功的文件,之后做手动删除
+			{
+				LOG.error(Constants.ERROR_STR,"删除失败，文件："+entity.getGroupQRImg());//若删除失败记录未删除成功的文件,之后做手动删除
+			}
 			
 			
 			lotteryGroupService.update(entity);
-			map.put("message", "删除成功");
-			map.put("flag", true);
+			map.put(Constants.MESSAGE_STR, "删除成功");
+			map.put(Constants.FLAG_STR, true);
 		}
 		else
 		{
-			map.put("message", "删除失败");
-			map.put("flag", false);
+			map.put(Constants.MESSAGE_STR, "删除失败");
+			map.put(Constants.FLAG_STR, false);
 		}
 		
 		return map;
@@ -245,17 +250,17 @@ public class OuterLotteryGroupController
 					
 			}
 			
-			 map.put("flag", true);
-			 map.put("message", "获取成功");
+			 map.put(Constants.FLAG_STR, true);
+			 map.put(Constants.MESSAGE_STR, "获取成功");
 			 map.put("memberDtos", userDtos);
 			 map.put("rows",userDtos);
 			 map.put("total", lQueryResult.getTotalCount());
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
-			 map.put("flag", false);
-			 map.put("message", "获取失败");
+			LOG.error(Constants.ERROR_STR, e);
+			 map.put(Constants.FLAG_STR, false);
+			 map.put(Constants.MESSAGE_STR, "获取失败");
 		}
 		
 		
@@ -409,8 +414,8 @@ public class OuterLotteryGroupController
 		}
 		
 		
-		map.put("flag", true);
-		map.put("message", "获取成功");
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
 		map.put("groupDtos", dtos);
 		
 		return map;
@@ -450,15 +455,15 @@ public class OuterLotteryGroupController
 				 groupDtos.add(dto);
 			 }
 			 
-			 map.put("flag", true);
-			 map.put("message", "获取成功");
+			 map.put(Constants.FLAG_STR, true);
+			 map.put(Constants.MESSAGE_STR, "获取成功");
 			 map.put("groupDtos", groupDtos);
 		 }
 		 catch(Exception e)
 		 {
-			 logger.error("error:", e);
-			 map.put("flag", false);
-			 map.put("message", "获取失败");
+			 LOG.error(Constants.ERROR_STR, e);
+			 map.put(Constants.FLAG_STR, false);
+			 map.put(Constants.MESSAGE_STR, "获取失败");
 		 }
 		 
 		 return map;
@@ -504,16 +509,16 @@ public class OuterLotteryGroupController
 					}
 				 }
 				 
-				 map.put("flag", true);
-				 map.put("message", "获取成功");
+				 map.put(Constants.FLAG_STR, true);
+				 map.put(Constants.MESSAGE_STR, "获取成功");
 				 map.put("groupDtos", groupDtos);
 			 }
 		 }
 		 catch(Exception e)
 		 {
-			 logger.error("error:", e);
-			 map.put("flag", false);
-			 map.put("message", "获取失败");
+			 LOG.error(Constants.ERROR_STR, e);
+			 map.put(Constants.FLAG_STR, false);
+			 map.put(Constants.MESSAGE_STR, "获取失败");
 		 }
 		
 		 
@@ -579,7 +584,7 @@ public class OuterLotteryGroupController
 			PushController.sendPushWithCallback(tagsand, null, "1", "group");//推送给群主展示的是“1”
 		}
 		
-		
+	
 		resultBean.setFlag(true);
 		resultBean.setMessage("申请成功");
 		
@@ -682,12 +687,14 @@ public class OuterLotteryGroupController
 			List<RelaApplyOfLbuyerorexpertAndGroupDTO> dtos = relaApplybuyerAndGroupService.toDTOS(entities);
 			
 			map.put("applyList", dtos);
-			map.put("flag", true);
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "获取成功");
 		}
 		catch(Exception e)
 		{
-			logger.error("error", e);
-			map.put("flag", false);
+			LOG.error(Constants.ERROR_STR, e);
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "服务器错误");
 		}
 		
 		return map;
@@ -718,12 +725,14 @@ public class OuterLotteryGroupController
 			List<RelaApplyOfLbuyerorexpertAndGroupDTO> dtos = relaApplybuyerAndGroupService.toDTOS(entities);
 			
 			map.put("approvalList", dtos);
-			map.put("flag", true);
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "获取成功");
 		}
 		catch(Exception e)
 		{
-			logger.error("error", e);
-			map.put("flag", false);
+			LOG.error("error", e);
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "服务器错误");
 		}
 		
 		return map;
@@ -831,7 +840,7 @@ public class OuterLotteryGroupController
 			CodeSuccessResult result= rongyunImService.joinUserInGroup(joinUsers, groupId, group.getName());
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
-				logger.error("融云群加入用户报错", result.getErrorMessage());
+				LOG.error("融云群加入用户报错", result.getErrorMessage());
 			}
 			
 			resultBean.setFlag(true);
@@ -896,12 +905,14 @@ public class OuterLotteryGroupController
 			CodeSuccessResult result = rongyunImService.quitUserFronGroup(quitUsers, groupId);
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
-				logger.error("融云执行用户退群时错误：", result.getErrorMessage());
+				LOG.error("融云执行用户退群时错误：", result.getErrorMessage());
 			}
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
+			LOG.error(Constants.ERROR_STR, e);
+			resultBean.setFlag(false);
+			resultBean.setMessage("服务器错误");
 		}
 		
 		resultBean.setFlag(true);
@@ -939,15 +950,15 @@ public class OuterLotteryGroupController
 				group.setName(dto.getName());
 				//更改群名称
 				lotteryGroupService.update(group);
-				map.put("flag", true);
-				map.put("message", "更新群信息成功");
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.MESSAGE_STR, "更新群信息成功");
 				map.put("group", BeanUtil.copyBeanProperties(dto, group));
 				
 				//刷新群的信息
 				CodeSuccessResult result = rongyunImService.refreshGroup(dto.getId(), dto.getName());
 				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
-					logger.error("融云刷新群信息时出错：", result.getErrorMessage());
+					LOG.error("融云刷新群信息时出错：", result.getErrorMessage());
 				}
 			}
 			
@@ -978,8 +989,8 @@ public class OuterLotteryGroupController
 				
 				//更改群人数
 				lotteryGroupService.update(group);
-				map.put("flag", true);
-				map.put("message", "升级群成功");
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.MESSAGE_STR, "升级群成功");
 				map.put("group", BeanUtil.copyBeanProperties(dto, group));
 			}
 			
@@ -988,9 +999,9 @@ public class OuterLotteryGroupController
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
-			map.put("flag", false);
-			map.put("message", "更新群信息失败");
+			LOG.error(Constants.ERROR_STR, e);
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "更新群信息失败");
 		}
 		
 		return map;
@@ -1039,7 +1050,7 @@ public class OuterLotteryGroupController
 							 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
 						
 					} catch (Exception e) {
-						logger.error("error:", e);
+						LOG.error(Constants.ERROR_STR, e);
 					}
 					if(null != uploadfile)
 						entity.setTouXiang(uploadfile.getNewsUuid());
@@ -1077,8 +1088,8 @@ public class OuterLotteryGroupController
 				
 				//放置群升级记录表数据
 				RelaGroupUpLevelRecord level = new RelaGroupUpLevelRecord();
-				LGroupLevel L1 = lGroupLevelService.getLGroupLevelByID(level1Id);//获取L1等级的实体数据
-				level.setAfterLevel(L1);//一级群
+				LGroupLevel l1 = lGroupLevelService.getLGroupLevelByID(level1Id);//获取L1等级的实体数据
+				level.setAfterLevel(l1);//一级群
 				level.setBeforeLevel(null);
 				level.setCreateTime(new Timestamp(System.currentTimeMillis()));
 				level.setCreator(entity.getId());
@@ -1126,15 +1137,15 @@ public class OuterLotteryGroupController
 				
 				if(!SUCCESS_CODE.equals(result.getCode().toString()))
 				{//若创建失败
-					map.put("messsage", result.getErrorMessage());//创建失败返回融云端群创建失败信息
-					logger.error("createGroup error:", result.getErrorMessage());
-					map.put("flag", false);
+					map.put(Constants.MESSAGE_STR, result.getErrorMessage());//创建失败返回融云端群创建失败信息
+					LOG.error("createGroup error:", result.getErrorMessage());
+					map.put(Constants.FLAG_STR, false);
 				}
 				else
 				{
 					map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
-					map.put("message", "创建成功");
-					map.put("flag", true);
+					map.put(Constants.MESSAGE_STR, "创建成功");
+					map.put(Constants.FLAG_STR, true);
 					
 					//TODO:1.创建成功后，将当前群主的建群卡个数减1
 					RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
@@ -1158,9 +1169,9 @@ public class OuterLotteryGroupController
 			
 		} catch (Exception e) 
 		{
-			logger.error("error:", e);
-			map.put("message", "创建失败");
-			map.put("flag", false);
+			LOG.error(Constants.ERROR_STR, e);
+			map.put(Constants.MESSAGE_STR, "创建失败");
+			map.put(Constants.FLAG_STR, false);
 		}
 		
 		
@@ -1169,30 +1180,6 @@ public class OuterLotteryGroupController
 		return map;
 	}
 	
-	/**
-	 * 查找群
-	* @Title: findGroup 
-	* @Description: TODO(这里用一句话描述这个方法的作用) 
-	* @param @param dto
-	* @param @param request
-	* @param @param httpSession
-	* @param @return    设定文件 
-	* @author banna
-	* @date 2017年4月25日 上午10:59:27 
-	* @return Map<String,Object>    返回类型 
-	* @throws
-	 */
-	@RequestMapping(value="/findGroup", method = RequestMethod.GET)
-	public @ResponseBody Map<String,Object> findGroup(
-			LotteryGroupDTO dto,
-			HttpServletRequest request,HttpSession httpSession)
-	{
-		Map<String,Object> map = new HashMap<String, Object>();
-		
-		
-		
-		return map;
-	}
 	
 	/**
 	 * 用户操作置顶/取消置顶群操作
@@ -1237,7 +1224,8 @@ public class OuterLotteryGroupController
 			}
 		 }
 		 
-		 map.put("flag", true);
+		 map.put(Constants.FLAG_STR, true);
+		 map.put(Constants.MESSAGE_STR, "更新成功");
 		 map.put("groupDtos", dtos);
 		
 		
@@ -1295,10 +1283,16 @@ public class OuterLotteryGroupController
 		RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
 				getRelaLBEUserAndLtcardByUserIdAndCardId(userId, cardId);
 		if(null != card)
+		{
 			map.put("couldUse", card.getNotUseCount());
+			
+		}
 		else
+		{
 			map.put("couldUse", 0);
-				
+		}
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put(Constants.FLAG_STR, true);	
 		return map;
 	}
 	
@@ -1323,6 +1317,8 @@ public class OuterLotteryGroupController
 		List<LotteryChatCardDTO> dtos = lotterybuyerOrExpertService.toLotteryChatCardDTOs(cards);
 		
 		map.put("cards", dtos);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put(Constants.FLAG_STR, true);	
 		
 		return map;
 	}
@@ -1351,13 +1347,18 @@ public class OuterLotteryGroupController
 			RelaLBEUserAndLtcard relaCard = lotterybuyerOrExpertService.
 					getRelaLBEUserAndLtcardByUserIdAndCardId(userId, lotteryChatCardDTO.getId());
 			if(null != relaCard)
+			{
 				lotteryChatCardDTO.setCount(relaCard.getNotUseCount());
+			}
 			else
+			{
 				lotteryChatCardDTO.setCount(0);
+			}
 		}
 		
 		map.put("cards", dtos);
-		
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put(Constants.FLAG_STR, true);	
 		return map;
 	}
 	
@@ -1386,8 +1387,8 @@ public class OuterLotteryGroupController
 		//更新用户的卡片数
 		lotterybuyerOrExpertService.updateCardsOfUser(owner, cardId, number);
 		
-		map.put("message", "更新成功");
-		
+		map.put(Constants.MESSAGE_STR, "更新成功");
+		map.put(Constants.FLAG_STR, true);	
 		return map;
 	}
 }

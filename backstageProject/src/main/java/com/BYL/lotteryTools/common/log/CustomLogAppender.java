@@ -15,7 +15,7 @@ import org.apache.log4j.spi.LoggingEvent;
 public class CustomLogAppender extends FileAppender {
 
     /** 不允许改写的datepattern */
-    private static final String datePattern = "'.'yyyy-MM-dd";
+    private static final String DATE_PATTERN = "'.'yyyy-MM-dd";
 
     /** 最多文件增长个数 */
     private int maxBackupIndex = 2;
@@ -37,7 +37,7 @@ public class CustomLogAppender extends FileAppender {
     public CustomLogAppender(Layout layout, String filename, int maxBackupIndex) throws IOException {
         super(layout, filename, true);
         this.maxBackupIndex = maxBackupIndex;
-        activateOptions();
+        this.activateOptions();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CustomLogAppender extends FileAppender {
         super.activateOptions();
         if (fileName != null) {
             now.setTime(System.currentTimeMillis());
-            sdf = new SimpleDateFormat(datePattern);
+            sdf = new SimpleDateFormat(DATE_PATTERN);
             File file = new File(fileName);
             // 获取最后更新时间拼成的文件名 
             scheduledFilename = fileName + sdf.format(new Date(file.lastModified()));
@@ -165,6 +165,6 @@ public class CustomLogAppender extends FileAppender {
     }
 
     public String getDatePattern() {
-        return datePattern;
+        return DATE_PATTERN;
     }
 }

@@ -45,7 +45,7 @@ import com.BYL.lotteryTools.common.util.MyMD5Util;
 @RequestMapping("/outerLbuyerOrexpert")
 public class OuterLotteryBuyerOrExpertController 
 {
-	private Logger logger = LoggerFactory.getLogger(OuterLotteryBuyerOrExpertController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OuterLotteryBuyerOrExpertController.class);
 	
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
@@ -123,8 +123,8 @@ public class OuterLotteryBuyerOrExpertController
 			if(null != lotterybuyerOrExpert)
 			{//当前手机号已被注册
 				result.put("status", false);
-				result.put("flag", false);
-				result.put("message", "当前手机号已被注册");
+				result.put(Constants.FLAG_STR, false);
+				result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
 			}
 			else
 			{//当前手机号未被注册
@@ -176,8 +176,8 @@ public class OuterLotteryBuyerOrExpertController
 					lotterybuyerOrExpertService.save(lotterybuyerOrExpert);
 					BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
 					result.put("status", true);
-					result.put("flag", true);
-					result.put("message", "注册成功");
+					result.put(Constants.FLAG_STR, true);
+					result.put(Constants.MESSAGE_STR, "注册成功");
 					result.put("user", lotterybuyerOrExpertDTO);
 				/*}
 				else
@@ -192,9 +192,10 @@ public class OuterLotteryBuyerOrExpertController
 		}
 		catch(Exception e)
 		{
-			logger.error("error:",e);
+			LOG.error(Constants.ERROR_STR,e);
 			result.put("status", false);
-			result.put("message", "注册失败");
+			result.put(Constants.FLAG_STR, false);
+			result.put(Constants.MESSAGE_STR, "注册失败");
 		}
 		finally
 		{
@@ -220,37 +221,49 @@ public class OuterLotteryBuyerOrExpertController
 	 */
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> login(
-			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
+			LotterybuyerOrExpertDTO dto,
 			HttpServletRequest request)
 	{
 	    Map<String,Object> map = new HashMap<String, Object>();
 		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-				getLotterybuyerOrExpertByTelephone(lotterybuyerOrExpertDTO.getTelephone());
-		String originPassword = lotterybuyerOrExpert.getPassword();//修改前密码
-		boolean flag=false;
-		try {
-			flag=MyMD5Util.validPassword(lotterybuyerOrExpertDTO.getPassword(), originPassword);
-		
-			if(flag)
-			{
-				map.put("flag", true);
-				map.put("messsage", "登录成功");
-				lotterybuyerOrExpertDTO = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
-				map.put("userDto", lotterybuyerOrExpertDTO);
+				getLotterybuyerOrExpertByTelephone(dto.getTelephone());
+		if(null != lotterybuyerOrExpert)
+		{
+			String originPassword = lotterybuyerOrExpert.getPassword();//修改前密码
+			boolean flag=false;
+			try {
+				flag=MyMD5Util.validPassword(dto.getPassword(), originPassword);
+			
+				if(flag)
+				{
+					map.put(Constants.FLAG_STR, true);
+					map.put(Constants.MESSAGE_STR, "登录成功");
+					dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+					map.put("userDto", dto);
+				}
+				else
+				{
+					map.put(Constants.FLAG_STR, false);
+					map.put(Constants.MESSAGE_STR, "密码错误!");
+					map.put("userDto", null);
+				}
+			} catch (NoSuchAlgorithmException e) {
+				LOG.error("error:", e);
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.MESSAGE_STR, "服务器错误!");
+			} catch (UnsupportedEncodingException e) {
+				LOG.error("error:", e);
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.MESSAGE_STR, "服务器错误!");
 			}
-			else
-			{
-				map.put("flag", false);
-				map.put("messsage", "登录失败");
-				map.put("userDto", null);
+			finally{
+				lotterybuyerOrExpert = null;
 			}
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		}
-		finally{
-			lotterybuyerOrExpert = null;
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "用户名不存在!");
 		}
 		
 		
@@ -289,7 +302,9 @@ public class OuterLotteryBuyerOrExpertController
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
+			LOG.error("error:", e);
+			resultBean.setFlag(false);
+			resultBean.setMessage("服务器错误!");
 		}
 		finally{
 			lotterybuyerOrExpertDTO = null;
@@ -330,17 +345,19 @@ public class OuterLotteryBuyerOrExpertController
 			resultBean.setFlag(flag);
 			if(flag)
 			{
+				resultBean.setFlag(true);
 				resultBean.setMessage("原密码输入正确");
 			}
 			else
 			{
+				resultBean.setFlag(false);
 				resultBean.setMessage("原密码输入错误");
 			}
 			
 		}
 		catch(Exception e)
 		{
-			logger.error("error:", e);
+			LOG.error("error:", e);
 			resultBean.setFlag(false);
 			resultBean.setMessage("请求错误");
 		}
@@ -380,10 +397,16 @@ public class OuterLotteryBuyerOrExpertController
 			}
 			
 		} catch (Exception e) {
-			logger.error("error:", e);
+			LOG.error("error:", e);
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "服务器错误");
 		}
 		if(null != uploadfile)
+		{
 			map.put("id", uploadfile.getNewsUuid());
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "获取成功");
+		}
 		return map;
 	}
 	
@@ -401,31 +424,31 @@ public class OuterLotteryBuyerOrExpertController
 	 */
 	@RequestMapping(value="/updateUser",method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> updateUser(
-			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
+			LotterybuyerOrExpertDTO dto,
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-				getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());
+				getLotterybuyerOrExpertById(dto.getId());
 		//上传头像（若头像上传了新的，则要进行用户信息刷新）
-		if(null != lotterybuyerOrExpertDTO.getTouXiang())//获取头像newsUuid是否为空
+		if(null != dto.getTouXiang())//获取头像newsUuid是否为空
 		{
-			lotterybuyerOrExpert.setTouXiang(lotterybuyerOrExpertDTO.getTouXiang());//关联新头像
-			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getTouXiang());
+			lotterybuyerOrExpert.setTouXiang(dto.getTouXiang());//关联新头像
+			Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(dto.getTouXiang());
 			//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
 			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
 					null, OuterLotteryBuyerOrExpertController.DOMAIN+request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
-				logger.error("融云同步头像失败", result.getErrorMessage());
+				LOG.error("融云同步头像失败", result.getErrorMessage());
 			}
 			
 			//删除旧头像(也可以定时批量删除)
-			if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpertDTO.getLastTouXiang())
-					&&null != lotterybuyerOrExpertDTO.getLastTouXiang()&&!"".equals(lotterybuyerOrExpertDTO.getLastTouXiang()))
+			if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(dto.getLastTouXiang())
+					&&null != dto.getLastTouXiang()&&!"".equals(dto.getLastTouXiang()))
 			{
-				logger.info("删除附件",lotterybuyerOrExpertDTO.getLastTouXiang());
-				Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpertDTO.getLastTouXiang());
+				LOG.info("删除附件",dto.getLastTouXiang());
+				Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(dto.getLastTouXiang());
 				if(null != lastTouxiang)
 				{//若存在旧头像，则要进行删除操作
 					uploadfileService.delete(lastTouxiang, httpSession);
@@ -434,14 +457,14 @@ public class OuterLotteryBuyerOrExpertController
 		}
 		
 		//修改昵称
-		if(null != lotterybuyerOrExpertDTO.getName() && !"".equals(lotterybuyerOrExpertDTO.getName()))
+		if(null != dto.getName() && !"".equals(dto.getName()))
 		{
-			lotterybuyerOrExpert.setName(lotterybuyerOrExpertDTO.getName());
+			lotterybuyerOrExpert.setName(dto.getName());
 			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
-					lotterybuyerOrExpertDTO.getName(), null);
+					dto.getName(), null);
 			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 			{
-				logger.error("融云同步用户名失败", result.getErrorMessage());
+				LOG.error("融云同步用户名失败", result.getErrorMessage());
 			}
 			
 		}
@@ -449,45 +472,45 @@ public class OuterLotteryBuyerOrExpertController
 		
 		
 		//添加城市，省份和市
-		if(null != lotterybuyerOrExpertDTO.getProvinceCode() && !"".equals(lotterybuyerOrExpertDTO.getProvinceCode()))
+		if(null != dto.getProvinceCode() && !"".equals(dto.getProvinceCode()))
 		{
-			lotterybuyerOrExpert.setProvinceCode(lotterybuyerOrExpertDTO.getProvinceCode());
+			lotterybuyerOrExpert.setProvinceCode(dto.getProvinceCode());
 		}
-		if(null != lotterybuyerOrExpertDTO.getCityCode()&& !"".equals(lotterybuyerOrExpertDTO.getCityCode()))
+		if(null != dto.getCityCode()&& !"".equals(dto.getCityCode()))
 		{
-			lotterybuyerOrExpert.setCityCode(lotterybuyerOrExpertDTO.getCityCode());
+			lotterybuyerOrExpert.setCityCode(dto.getCityCode());
 		}
 		
 		//性别，0：女 1：男
-		if(null != lotterybuyerOrExpertDTO.getSex() && !"".equals(lotterybuyerOrExpertDTO.getSex()))
+		if(null != dto.getSex() && !"".equals(dto.getSex()))
 		{
-			lotterybuyerOrExpert.setSex(lotterybuyerOrExpertDTO.getSex());
+			lotterybuyerOrExpert.setSex(dto.getSex());
 		}
 		
 		
 		//个人简介
-		if(null != lotterybuyerOrExpertDTO.getSignature() && !"".equals(lotterybuyerOrExpertDTO.getSignature()))
+		if(null != dto.getSignature() && !"".equals(dto.getSignature()))
 		{
-			lotterybuyerOrExpert.setSignature(lotterybuyerOrExpertDTO.getSignature());
+			lotterybuyerOrExpert.setSignature(dto.getSignature());
 		}
 		
 		//地址
-		if(null != lotterybuyerOrExpertDTO.getAddress())
+		if(null != dto.getAddress())
 		{
-			lotterybuyerOrExpert.setAddress(lotterybuyerOrExpertDTO.getAddress());
+			lotterybuyerOrExpert.setAddress(dto.getAddress());
 		}
 		
 		//坐标
-		if(null != lotterybuyerOrExpertDTO.getCoordinate())
+		if(null != dto.getCoordinate())
 		{
-			lotterybuyerOrExpert.setCoordinate(lotterybuyerOrExpertDTO.getCoordinate());
+			lotterybuyerOrExpert.setCoordinate(dto.getCoordinate());
 		}
 		
 		
 		//邮政编码
-		if(null != lotterybuyerOrExpertDTO.getPostCode())
+		if(null != dto.getPostCode())
 		{
-			lotterybuyerOrExpert.setPostCode(lotterybuyerOrExpertDTO.getPostCode());
+			lotterybuyerOrExpert.setPostCode(dto.getPostCode());
 		}
 		
 		//修改彩聊号
@@ -497,13 +520,13 @@ public class OuterLotteryBuyerOrExpertController
 			//判断彩聊号是否唯一
 			//根据彩聊号获取用户专家数据，若有返回数据，则彩聊号当前已存在，不可以被更新
 			List<LotterybuyerOrExpert> list = lotterybuyerOrExpertService.
-					getLotterybuyerOrExpertByCailiaoName(lotterybuyerOrExpertDTO.getCailiaoName());
-			if(null != list&& list.size()>0)
+					getLotterybuyerOrExpertByCailiaoName(dto.getCailiaoName());
+			if(null != list&& list.size() != 0)
 			{
 				caiFlag = false;
 			}
 			
-			lotterybuyerOrExpert.setCailiaoName(lotterybuyerOrExpertDTO.getCailiaoName());//添加彩聊号
+			lotterybuyerOrExpert.setCailiaoName(dto.getCailiaoName());//添加彩聊号
 		}
 		
 		if(caiFlag)
@@ -511,21 +534,21 @@ public class OuterLotteryBuyerOrExpertController
 			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			try 
 			{
-				lotterybuyerOrExpertDTO = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+				dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
 				
-				map.put("flag", true);
-				map.put("message", "修改成功");
-				map.put("userDto", lotterybuyerOrExpertDTO);
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.MESSAGE_STR, "修改成功");
+				map.put("userDto", dto);
 			} catch (Exception e) {
-				logger.error("error:", e);
-				map.put("flag", false);
-				map.put("message", "修改失败");
+				LOG.error(Constants.ERROR_STR, e);
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.MESSAGE_STR, "服务器错误");
 			}
 		}
 		else
 		{
-			map.put("flag", false);
-			map.put("message", "彩聊号不唯一");
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
 		}
 		
 		

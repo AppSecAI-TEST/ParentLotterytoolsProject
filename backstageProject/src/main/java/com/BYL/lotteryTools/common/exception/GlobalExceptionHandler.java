@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Controller
 public abstract class GlobalExceptionHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	public static final String DEFAULT_ERROR_VIEW = "error";
 
 	    @ExceptionHandler
@@ -68,8 +68,8 @@ public abstract class GlobalExceptionHandler {
 	        }
 	        
 	        //添加自己的异常处理逻辑，如日志记录　　　
-	        logger.error("全局异常捕捉 ，异常返回提示："+ returnMsg+"异常信息："+e.getMessage());
-	        logger.error("ERROR:", e);  
+	        LOG.error("全局异常捕捉 ，异常返回提示："+ returnMsg+"异常信息："+e.getMessage());
+	        LOG.error("ERROR:", e);  
 	        request.setAttribute("exceptionMessage", returnMsg);  
 	        
 	        return "error";

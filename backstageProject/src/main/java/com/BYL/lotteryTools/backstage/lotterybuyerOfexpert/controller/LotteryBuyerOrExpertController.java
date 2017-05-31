@@ -2,9 +2,7 @@ package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller;
 
 import java.io.File;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,8 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +49,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/lbuyerOrexpert")
 public class LotteryBuyerOrExpertController 
 {
-	private Logger logger = LoggerFactory.getLogger(LotteryBuyerOrExpertController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LotteryBuyerOrExpertController.class);
 	
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
@@ -190,14 +186,14 @@ public class LotteryBuyerOrExpertController
 					imguri.append(request.getSession().getServletContext().getRealPath(uploadfile.getUploadfilepath())).
 					append(File.separator).
 					append(uploadfile.getUploadRealName());
-					logger.info("touxiang",imguri.toString());//输出头像
+					LOG.info("touxiang",imguri.toString());//输出头像
 					
 					//刷新融云的用户头像
 					CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
 							lotterybuyerOrExpert.getName(), imguri.toString());
 					if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 					{
-						logger.error("refreshUser error:", result.getErrorMessage());
+						LOG.error("refreshUser error:", result.getErrorMessage());
 					}
 				}
 				
@@ -231,7 +227,7 @@ public class LotteryBuyerOrExpertController
 					imguri.append(request.getSession().getServletContext().getRealPath(uploadfile.getUploadfilepath())).
 					append(File.separator).
 					append(uploadfile.getUploadRealName());
-					logger.info("touxiang",imguri.toString());//输出头像
+					LOG.info("touxiang",imguri.toString());//输出头像
 				}
 				//创建融云用户id
 				String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
@@ -257,7 +253,7 @@ public class LotteryBuyerOrExpertController
 		}
 		catch(Exception e)
 		{
-			logger.error("error", e);
+			LOG.error("error", e);
 		}
 		
 		
@@ -318,7 +314,7 @@ public class LotteryBuyerOrExpertController
 			 		lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			 		
 			 		 //日志输出
-					 logger.info("删除彩民数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+					 LOG.info("删除彩民数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			 	}
 			}
@@ -371,16 +367,16 @@ public class LotteryBuyerOrExpertController
 				 boolean deleteFlag = false;//删除附件flag
 				//2.删除附件
 		 		dirFile = new File(savePath+uploadfile.getUploadRealName());
-		 		logger.info("待删除文件路径："+dirFile);
+		 		LOG.info("待删除文件路径："+dirFile);
 		        // 如果dir对应的文件不存在，或者不是一个目录，则退出
 		    	deleteFlag = dirFile.delete();
 		    	if(deleteFlag)
 		    	{//删除附件(清空附件关联newsUuid)
-		    		logger.info("saveFujian==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+		    		LOG.info("saveFujian==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 		    	}
 		    	else
 		    	{
-		    		logger.error("saveFujian ERROR==没有找到要删除的附件文件或删除失败，附件路径为="+savePath+";File.exists="+dirFile.exists());
+		    		LOG.error("saveFujian ERROR==没有找到要删除的附件文件或删除失败，附件路径为="+savePath+";File.exists="+dirFile.exists());
 		    	}
 			    //删除附件e
 				 

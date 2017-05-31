@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.BYL.lotteryTools.backstage.lotteryGroup.controller.LotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
@@ -45,7 +44,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/lotteryStation")
 public class LotteryStationController
 {
-	private Logger logger = LoggerFactory.getLogger(LotteryStationController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LotteryStationController.class);
 	
 	@Autowired
 	private LotteryStationService lotteryStationService;
@@ -223,7 +222,7 @@ public class LotteryStationController
 		   
 		   lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		   lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
-		   logger.info("修改彩票站--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+		   LOG.info("修改彩票站--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 		   
 		   resultBean.setMessage("添加彩票站数据成功!");
 		   resultBean.setStatus("success");
@@ -244,7 +243,7 @@ public class LotteryStationController
 		   lotteryStation.setCreator(LoginUtils.getAuthenticatedUserCode(httpSession));
 		   lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		   lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
-		   logger.info("添加彩票站--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+		   LOG.info("添加彩票站--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 		   
 		   resultBean.setMessage("添加彩票站数据成功!");
 		   resultBean.setStatus("success");
@@ -384,7 +383,7 @@ public class LotteryStationController
 			 		lotteryStationService.update(lotteryStation);
 			 		
 			 		 //日志输出
-					 logger.info("删除彩票站数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+					 LOG.info("删除彩票站数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			 	}
 			}

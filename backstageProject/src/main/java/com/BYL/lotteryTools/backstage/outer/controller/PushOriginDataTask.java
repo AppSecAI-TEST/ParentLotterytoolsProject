@@ -9,10 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +40,7 @@ import com.BYL.lotteryTools.common.exception.GlobalExceptionHandler;
 @Component
 public class PushOriginDataTask extends GlobalExceptionHandler
 {
-	private Logger logger = LoggerFactory.getLogger(PushOriginDataTask.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PushOriginDataTask.class);
 	
 	@Autowired
 	private LotteryPlayService lotteryPlayService;
@@ -206,14 +202,14 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 						//2.向群发送开奖消息
 						//获取当前省份的机器人数据
 						String flag = this.sendingToGroup(lotteryPlay, imgContent.toString(), issueNumContent.toString(),imgFile);
-						logger.info("机器人推送:"+flag);
+						LOG.info("机器人推送:"+flag);
 					}
 					
 				}
 				catch(Exception e)
 				{
-					logger.error("彩种报错："+lotteryPlay.getName());
-					logger.error("message:", e);
+					LOG.error("彩种报错："+lotteryPlay.getName());
+					LOG.error("message:", e);
 				}
 			}
         }
@@ -247,7 +243,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 			//获取当前机器人的群列表
 			List<LotteryGroup> groups = lotteryGroupService.getLotteryGroupByGroupRobotID(robot.getId());
 			message = this.sendingToGroupByRobot(robot.getId(), groups, imgContent, issueNumContent); 
-			logger.info(robot.getName()+"发送status:",message);
+			LOG.info(robot.getName()+"发送status:",message);
 		}
 		
 		return flag;
@@ -270,7 +266,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 				CodeSuccessResult result =  rongyunImService.sendMessgeToGroups(lotteryGroup.getGroupRobotID(), group, issueNumContent);
 				if(OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
-					logger.info("success");
+					LOG.info("success");
 					timerCount++;
 				}
 			}
@@ -300,7 +296,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 						group, encoder.encode(data).replace("\r\n", "").replace("\r", "").replace("\n", "") , imgContent);
 		        if(OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
-					logger.info("success");
+					LOG.info("success");
 					timerCount++;
 				}
 			}
@@ -308,7 +304,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 			if(20 == timerCount)
 			{
 				Thread.sleep(1000);//延时1s
-				logger.info("waiting......................");
+				LOG.info("waiting......................");
 				timerCount = 0;//延时后重置计时器
 			}
 		}

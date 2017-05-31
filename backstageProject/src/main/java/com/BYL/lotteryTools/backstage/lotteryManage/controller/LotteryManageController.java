@@ -42,7 +42,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @RequestMapping("/lotteryManage")
 public class LotteryManageController 
 {
-	private Logger logger = LoggerFactory.getLogger(LotteryManageController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LotteryManageController.class);
 			
 	
 	@Autowired
@@ -242,7 +242,7 @@ public class LotteryManageController
 			   resultBean.setMessage("修改补录信息数据成功!");
 			   resultBean.setStatus("success");
 			   //日志输出
-				 logger.info("修改补录信息数据id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+				 LOG.info("修改补录信息数据id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 		   }
 		   else
@@ -271,7 +271,7 @@ public class LotteryManageController
 			   lotteryPlayService.save(lotteryPlay);
 			   
 			   
-			   logger.info("添加补录信息数据--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			   LOG.info("添加补录信息数据--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 			   resultBean.setMessage("添加补录信息数据成功!");
 			   resultBean.setStatus("success");
@@ -314,7 +314,7 @@ public class LotteryManageController
 			 		lotteryPlayService.update(lotteryPlay);
 			 		
 			 		 //日志输出
-					 logger.info("删除补录信息数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+					 LOG.info("删除补录信息数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			 	}
 			}
@@ -466,7 +466,7 @@ public class LotteryManageController
 			   resultBean.setMessage("修改补录方案数据成功!");
 			   resultBean.setStatus("success");
 			   //日志输出
-				 logger.info("修改补录方案数据id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+				 LOG.info("修改补录方案数据id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 		   }
 		   else
@@ -492,7 +492,7 @@ public class LotteryManageController
 			   lotteryPlayBuLuPlanService.save(lotteryPlayBulufangan);
 			   
 			   
-			   logger.info("添加补录方案数据--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			   LOG.info("添加补录方案数据--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 			   
 			   resultBean.setMessage("添加补录方案数据成功!");
 			   resultBean.setStatus("success");
@@ -533,7 +533,7 @@ public class LotteryManageController
 			 		lotteryPlayBuLuPlanService.update(lotteryPlayBulufangan);
 			 		
 			 		 //日志输出
-					 logger.info("删除补录方案数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+					 LOG.info("删除补录方案数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
 				   
 			 	}
 			}
