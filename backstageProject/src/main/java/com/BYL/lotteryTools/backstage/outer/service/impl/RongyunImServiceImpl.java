@@ -31,7 +31,7 @@ public class RongyunImServiceImpl implements RongyunImService
 	
 	
 	//封禁用户
-	public String blockUser(String userId,Integer minute)
+	public CodeSuccessResult blockUser(String userId,Integer minute)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
 		CodeSuccessResult userBlockResult = null;
@@ -44,7 +44,7 @@ public class RongyunImServiceImpl implements RongyunImService
 			logger.error("error:", e);
 		}
 		
-		return userBlockResult.toString();
+		return userBlockResult;
 	}
 	
 	public CodeSuccessResult refreshUser(String userId,String username,String imguri)
@@ -103,7 +103,7 @@ public class RongyunImServiceImpl implements RongyunImService
 			e.printStackTrace();
 		}
 		
-		return userGetTokenResult.getToken();
+		return null!= userGetTokenResult.getToken()?userGetTokenResult.getToken():"";
 	}
 	
 	/**

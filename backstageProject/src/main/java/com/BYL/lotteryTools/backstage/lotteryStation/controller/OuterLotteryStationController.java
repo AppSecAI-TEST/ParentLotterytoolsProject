@@ -141,7 +141,8 @@ public class OuterLotteryStationController
 						} catch (Exception e) {
 							logger.error("error:", e);
 						}
-						lotteryStation.setDaixiaoImg(uploadfile.getNewsUuid());
+						if(null != uploadfile)
+							lotteryStation.setDaixiaoImg(uploadfile.getNewsUuid());
 					}
 					
 					//关联身份证图片调用方法
@@ -159,7 +160,8 @@ public class OuterLotteryStationController
 						} catch (Exception e) {
 							logger.error("error:", e);
 						}
-						lotteryStation.setIdNumberFrontImg(uploadfile.getNewsUuid());
+						if(null != uploadfile)
+							lotteryStation.setIdNumberFrontImg(uploadfile.getNewsUuid());
 					}
 					/*if(null != lotteryStationDTO.getIdNumberBackImg()&&!"".equals(lotteryStationDTO.getIdNumberBackImg()))
 					{
@@ -175,7 +177,8 @@ public class OuterLotteryStationController
 						} catch (Exception e) {
 							logger.error("error:", e);
 						}
-						lotteryStation.setIdNumberBackImg(uploadfile.getNewsUuid());
+						if(null != uploadfile)
+							lotteryStation.setIdNumberBackImg(uploadfile.getNewsUuid());
 					}
 					
 					//将站主和彩票站关联

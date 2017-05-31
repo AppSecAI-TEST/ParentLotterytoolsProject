@@ -123,6 +123,7 @@ public class OuterLotteryBuyerOrExpertController
 			if(null != lotterybuyerOrExpert)
 			{//当前手机号已被注册
 				result.put("status", false);
+				result.put("flag", false);
 				result.put("message", "当前手机号已被注册");
 			}
 			else
@@ -175,6 +176,7 @@ public class OuterLotteryBuyerOrExpertController
 					lotterybuyerOrExpertService.save(lotterybuyerOrExpert);
 					BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
 					result.put("status", true);
+					result.put("flag", true);
 					result.put("message", "注册成功");
 					result.put("user", lotterybuyerOrExpertDTO);
 				/*}
@@ -193,6 +195,11 @@ public class OuterLotteryBuyerOrExpertController
 			logger.error("error:",e);
 			result.put("status", false);
 			result.put("message", "注册失败");
+		}
+		finally
+		{
+			//置无用对象为null，告知GC可以进行回收
+			lotterybuyerOrExpert = null;
 		}
 		
 		
@@ -223,25 +230,28 @@ public class OuterLotteryBuyerOrExpertController
 		boolean flag=false;
 		try {
 			flag=MyMD5Util.validPassword(lotterybuyerOrExpertDTO.getPassword(), originPassword);
+		
+			if(flag)
+			{
+				map.put("flag", true);
+				map.put("messsage", "登录成功");
+				lotterybuyerOrExpertDTO = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+				map.put("userDto", lotterybuyerOrExpertDTO);
+			}
+			else
+			{
+				map.put("flag", false);
+				map.put("messsage", "登录失败");
+				map.put("userDto", null);
+			}
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		if(flag)
-		{
-			map.put("flag", true);
-			map.put("messsage", "登录成功");
-			lotterybuyerOrExpertDTO = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
-			map.put("userDto", lotterybuyerOrExpertDTO);
+		finally{
+			lotterybuyerOrExpert = null;
 		}
-		else
-		{
-			map.put("flag", false);
-			map.put("messsage", "登录失败");
-			map.put("userDto", null);
-		}
-		
 		
 		
 		return map;
@@ -268,19 +278,25 @@ public class OuterLotteryBuyerOrExpertController
 		
 		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
 				getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());
+		
 		try
 		{
 			lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
+			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+			
+			resultBean.setFlag(true);
+			resultBean.setMessage("修改密码成功");
 		}
 		catch(Exception e)
 		{
 			logger.error("error:", e);
 		}
+		finally{
+			lotterybuyerOrExpertDTO = null;
+			lotterybuyerOrExpert = null;
+		}
 		
-		lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 		
-		resultBean.setFlag(true);
-		resultBean.setMessage("修改密码成功");
 		
 		
 		return resultBean;
@@ -328,6 +344,10 @@ public class OuterLotteryBuyerOrExpertController
 			resultBean.setFlag(false);
 			resultBean.setMessage("请求错误");
 		}
+		finally{
+			lotterybuyerOrExpertDTO = null;
+			lotterybuyerOrExpert = null;
+		}
 		
 		
 		return resultBean;
@@ -362,7 +382,8 @@ public class OuterLotteryBuyerOrExpertController
 		} catch (Exception e) {
 			logger.error("error:", e);
 		}
-		map.put("id", uploadfile.getNewsUuid());
+		if(null != uploadfile)
+			map.put("id", uploadfile.getNewsUuid());
 		return map;
 	}
 	

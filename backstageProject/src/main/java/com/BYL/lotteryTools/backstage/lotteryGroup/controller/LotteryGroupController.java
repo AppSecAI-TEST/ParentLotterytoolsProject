@@ -310,7 +310,8 @@ public class LotteryGroupController extends GlobalExceptionHandler
 					} catch (Exception e) {
 						logger.error("error:", e);
 					}
-					entity.setTouXiang(uploadfile.getNewsUuid());
+					if(null != uploadfile)
+						entity.setTouXiang(uploadfile.getNewsUuid());
 				}
 				else
 				{

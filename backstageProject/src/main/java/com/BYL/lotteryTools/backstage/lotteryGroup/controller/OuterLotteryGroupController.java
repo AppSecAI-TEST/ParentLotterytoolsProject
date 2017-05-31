@@ -35,7 +35,6 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
-import com.BYL.lotteryTools.backstage.lotteryStation.controller.LotteryStationController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
@@ -565,16 +564,21 @@ public class OuterLotteryGroupController
 		entity.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		entity.setModify(userId);
 		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
-		entity.setApprovalUser(lotteryGroup.getLotteryBuyerOrExpert().getId());//添加群主id
+		if(null != lotteryGroup && null != lotteryGroup.getLotteryBuyerOrExpert())
+			entity.setApprovalUser(lotteryGroup.getLotteryBuyerOrExpert().getId());//添加群主id
 		
 		//保存用户的申请
 		if(null != userId && null != groupId)
 			relaApplybuyerAndGroupService.save(entity);
 		
 		//TODO:将申请信息推送给群主,推送给群主是approval
-		LotterybuyerOrExpert groupOwner = lotteryGroup.getLotteryBuyerOrExpert();
-		String[] tagsand = {groupOwner.getTelephone()};//推送给群主id，推送给群主审核
-		PushController.sendPushWithCallback(tagsand, null, "1", "group");//推送给群主展示的是“1”
+		if(null != lotteryGroup)
+		{
+			LotterybuyerOrExpert groupOwner = lotteryGroup.getLotteryBuyerOrExpert();
+			String[] tagsand = {groupOwner.getTelephone()};//推送给群主id，推送给群主审核
+			PushController.sendPushWithCallback(tagsand, null, "1", "group");//推送给群主展示的是“1”
+		}
+		
 		
 		resultBean.setFlag(true);
 		resultBean.setMessage("申请成功");
@@ -635,11 +639,17 @@ public class OuterLotteryGroupController
 			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			
 			relaApplybuyerAndGroupService.update(entity);
+			
+			//TODO:将群主审核的结果推送给申请加群的用户,群主审核的tag是apply
+			if(null != entity.getLotterybuyerOrExpert())
+			{
+				String[] tagsand = {entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
+				PushController.sendPushWithCallback(tagsand, null, "0", "group");//推送给用户展示的是“0”
+			}
 		}
 		
-		//TODO:将群主审核的结果推送给申请加群的用户,群主审核的tag是apply
-		String[] tagsand = {entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
-		PushController.sendPushWithCallback(tagsand, null, "0", "group");//推送给用户展示的是“0”
+		
+	
 		
 		resultBean.setFlag(true);
 		resultBean.setMessage("审核成功");
@@ -998,7 +1008,8 @@ public class OuterLotteryGroupController
 					} catch (Exception e) {
 						logger.error("error:", e);
 					}
-					entity.setTouXiang(uploadfile.getNewsUuid());
+					if(null != uploadfile)
+						entity.setTouXiang(uploadfile.getNewsUuid());
 				}
 				
 				//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人

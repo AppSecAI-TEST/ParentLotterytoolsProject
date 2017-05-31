@@ -75,7 +75,7 @@ public class LotteryPlay extends BaseEntity implements Serializable
 	
 	//一个彩种可以对应多个预测类型数据
 	@OneToMany(mappedBy = "lotteryPlay", fetch = FetchType.LAZY) 
-	private List<PredictionType> predictionTypes;
+	private List<PredictionType> predictionTypes ;
 	
 	//一个彩种可以被多个彩票站发售
 	@OneToMany(mappedBy = "lotteryPlay", fetch=FetchType.LAZY)

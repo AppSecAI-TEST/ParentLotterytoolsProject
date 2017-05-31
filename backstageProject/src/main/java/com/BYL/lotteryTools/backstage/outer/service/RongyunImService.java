@@ -25,7 +25,7 @@ public interface RongyunImService {
 	* @return String    返回类型 
 	* @throws
 	 */
-	public String blockUser(String userId,Integer minute);
+	public CodeSuccessResult blockUser(String userId,Integer minute);
 	
 	/**
 	 * 创建用户（获取用户token）
