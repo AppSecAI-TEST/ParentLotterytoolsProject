@@ -30,6 +30,7 @@ import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.mode
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.exception.GlobalOuterExceptionHandler;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
@@ -43,7 +44,7 @@ import com.BYL.lotteryTools.common.util.MyMD5Util;
  */
 @Controller
 @RequestMapping("/outerLbuyerOrexpert")
-public class OuterLotteryBuyerOrExpertController 
+public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(OuterLotteryBuyerOrExpertController.class);
 	

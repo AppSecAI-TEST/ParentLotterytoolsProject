@@ -27,11 +27,12 @@ import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.backstage.user.service.RegionService;
+import com.BYL.lotteryTools.common.exception.GlobalOuterExceptionHandler;
 import com.BYL.lotteryTools.common.util.Constants;
 
 @Controller
 @RequestMapping("/outer")
-public class OuterInterfaceController 
+public class OuterInterfaceController extends GlobalOuterExceptionHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(OuterInterfaceController.class);
 	
@@ -176,17 +177,23 @@ public class OuterInterfaceController
 		
 		LotteryPlay lotteryPlay = lotteryPlayService.getLotteryPlayById(lotteryTypeId);
 		
-		String tbName = lotteryPlay.getCorrespondingTable();
-		
-		if("5".equals(lotteryPlay.getLotteryNumber()))
-		{//获取5个开奖号码的开奖数据
-			list = outerInterfaceService.getLotteryList(tbName, maxIssueId, minIssueId);
-		}
-		else
-			if("3".equals(lotteryPlay.getLotteryNumber()))
-			{//获取3个开奖号码的开奖数据
-				list = outerInterfaceService.getLotteryListOfThree(tbName, maxIssueId, minIssueId);
+		if(null != lotteryPlay)
+		{
+			String tbName = lotteryPlay.getCorrespondingTable();
+			
+			if("5".equals(lotteryPlay.getLotteryNumber()))
+			{//获取5个开奖号码的开奖数据
+				list = outerInterfaceService.getLotteryList(tbName, maxIssueId, minIssueId);
 			}
+			else
+				if("3".equals(lotteryPlay.getLotteryNumber()))
+				{//获取3个开奖号码的开奖数据
+					list = outerInterfaceService.getLotteryListOfThree(tbName, maxIssueId, minIssueId);
+				}
+			
+		}
+		
+		
 		
 		
 		

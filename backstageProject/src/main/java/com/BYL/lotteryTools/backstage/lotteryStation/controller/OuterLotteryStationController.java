@@ -25,6 +25,7 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerO
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.exception.GlobalOuterExceptionHandler;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
@@ -37,7 +38,7 @@ import com.BYL.lotteryTools.common.util.Constants;
  */
 @Controller
 @RequestMapping("/outerLotteryStation")
-public class OuterLotteryStationController
+public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(OuterLotteryStationController.class);
 	

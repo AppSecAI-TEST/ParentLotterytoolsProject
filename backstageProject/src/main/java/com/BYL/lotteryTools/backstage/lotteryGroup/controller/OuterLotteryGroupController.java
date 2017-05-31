@@ -50,6 +50,7 @@ import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.exception.GlobalOuterExceptionHandler;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
@@ -64,7 +65,7 @@ import com.BYL.lotteryTools.common.util.QueryResult;
  */
 @Controller
 @RequestMapping("/outerLGroup")
-public class OuterLotteryGroupController
+public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(OuterLotteryGroupController.class);
 	
