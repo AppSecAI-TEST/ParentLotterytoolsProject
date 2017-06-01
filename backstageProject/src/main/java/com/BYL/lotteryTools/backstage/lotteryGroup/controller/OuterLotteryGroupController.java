@@ -24,13 +24,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupNoticeDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.RelaApplyOfLbuyerorexpertAndGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LGroupLevel;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroupNotice;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupNoticeService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
@@ -99,6 +102,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private CityService cityService;
+	
+	@Autowired
+	private LotteryGroupNoticeService lotteryGroupNoticeService;
 	
 	public static final String SUCCESS_CODE = "200";//成功返回码
 	
@@ -1392,4 +1398,75 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		map.put(Constants.FLAG_STR, true);	
 		return map;
 	}
+	
+	/**
+	 * 提交群公告，并且推送
+	* @Title: submitGroupNotice 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月1日 下午4:23:56 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/submitGroupNotice", method = RequestMethod.GET)
+	public @ResponseBody Map<String , Object> submitGroupNotice(
+			LotteryGroupNoticeDTO dto) throws Exception
+	{
+		Map<String , Object> result = new HashMap<String, Object>();
+		
+		LotteryGroupNotice entity = new LotteryGroupNotice();
+		
+		BeanUtil.copyBeanProperties(entity, dto);
+		
+		entity.setId(UUID.randomUUID().toString());
+		LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getGroupId());
+		entity.setStatus("1");
+		entity.setLotteryGroup(group);
+		entity.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		entity.setModify(dto.getCreator());
+		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		entity.setIsDeleted(Constants.IS_NOT_DELETED);
+		lotteryGroupNoticeService.save(entity);
+		
+		result.put(Constants.FLAG_STR, true);
+		result.put(Constants.MESSAGE_STR, "添加成功");
+		
+		//将群公告推送到群中
+		String[] tagsand = {group.getGroupNumber()};//推送给群主id，推送给群主审核
+		PushController.sendPushWithCallback(tagsand, null, dto.getNotice(), "groupNotice");//推送给群主展示的是“1”
+		
+		return result;
+	}
+	
+	/**
+	 * 获取当前群的群公告
+	* @Title: getGroupNoticeOfGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupId
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年6月1日 下午4:44:19 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getGroupNoticeOfGroup", method = RequestMethod.GET)
+	public @ResponseBody Map<String , Object> getGroupNoticeOfGroup(
+			@RequestParam(value="groupId",required=false) String groupId) throws Exception
+	{
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		List<LotteryGroupNotice> list = lotteryGroupNoticeService.getLotteryGroupNoticeByGroupId(groupId);
+		
+		List<LotteryGroupNoticeDTO> dtos = lotteryGroupNoticeService.toDTOs(list);
+		
+		map.put("dtos", dtos);
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		
+		return map;
+	}
+	
 }

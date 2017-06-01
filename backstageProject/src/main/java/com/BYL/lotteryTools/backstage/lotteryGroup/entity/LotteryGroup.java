@@ -95,8 +95,20 @@ public class LotteryGroup extends BaseEntity
 	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
 	private List<RelaGroupUpLevelRecord> relaGroupUpLevelRecords ;
 	
+	//一个群可以对应多个群公告
+	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
+	private List<LotteryGroupNotice> lotteryGroupNotices  ;
 	
 	
+	
+
+	public List<LotteryGroupNotice> getLotteryGroupNotices() {
+		return lotteryGroupNotices;
+	}
+
+	public void setLotteryGroupNotices(List<LotteryGroupNotice> lotteryGroupNotices) {
+		this.lotteryGroupNotices = lotteryGroupNotices;
+	}
 
 	public String getGroupQRImg() {
 		return groupQRImg;
