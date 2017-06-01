@@ -2,6 +2,7 @@ package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExp
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
@@ -63,6 +66,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	
 	public static String morenTouxiang = "0";//默认头像newsUuid
 	
+	
 	/**
 	 * 获取注册用户手机验证码
 	* @Title: getYanzhengma 
@@ -80,7 +84,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		//TODO:调用第三方api给用户发送信息
 		//判断当前手机号是否已经注册过
 		ResultBean resultBean = new ResultBean();
-		/*String templateId = "3dPWOS6S4Kx84BbwDRNwQ4";//设置模板id
+		String templateId = "3dPWOS6S4Kx84BbwDRNwQ4";//设置模板id
 		try {
 			SMSSendCodeResult result = rongyunImService.sendCode(telephone, templateId, "86", null, null);
 			sessionMap.put(telephone, result.getSessionId());
@@ -89,10 +93,10 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			resultBean.setFlag(true);
 			resultBean.setMessage("发送成功");
 		} catch (Exception e) {
-			logger.error("error:", e);
+			LOG.error("error:", e);
 			resultBean.setFlag(false);
 			resultBean.setMessage("发送失败,请稍候再试");
-		}*/
+		}
 		
 		
 		return resultBean;
@@ -133,6 +137,58 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			result.put(Constants.FLAG_STR, true);
 			result.put(Constants.MESSAGE_STR, "当前手机号未被注册");
 		}
+		
+		
+		return result;
+	}
+	
+	/**
+	 * 校验输入验证码是否正确
+	* @Title: checkYanzhengma 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param yanzhengma
+	* @param @param telephone
+	* @param @param request
+	* @param @param httpSession
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年6月1日 上午10:13:14 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/checkYanzhengma", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> checkYanzhengma(
+			@RequestParam(value = "yanzhengma",required = true) String yanzhengma,
+			@RequestParam(value = "telephone",required = true) String telephone,
+			HttpServletRequest request,HttpSession httpSession) throws Exception
+	{
+		Map<String,Object> result = new HashMap<String, Object>();
+		
+		String sessionId = sessionMap.get(telephone);
+		SMSVerifyCodeResult sessionYanzhengma = null;
+		if(null != sessionId)
+		{
+			sessionYanzhengma = rongyunImService.verifyCode(sessionId, yanzhengma);
+			
+			if(sessionYanzhengma.getSuccess())
+			{
+				result.put(Constants.FLAG_STR, true);
+				result.put(Constants.MESSAGE_STR, "验证码输入正确");
+			}
+			else
+			{
+				result.put(Constants.FLAG_STR, false);
+				result.put(Constants.MESSAGE_STR, "验证码输入错误");
+			}
+		}
+		else
+		{
+			result.put(Constants.FLAG_STR, false);
+			result.put(Constants.MESSAGE_STR, "请重新获取验证码");
+		}
+		
+		
 		
 		
 		return result;
