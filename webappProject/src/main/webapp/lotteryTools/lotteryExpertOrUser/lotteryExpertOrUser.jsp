@@ -282,7 +282,7 @@
 						<div class="ftitle">
 				            <label for="subject">手机号:</label>
 				           <input class="easyui-validatebox commonInput" type="text" id="telephoneU" name="telephone" style="width:200px"  
-				             data-options="validType:['mobile']"  ></input>
+				             readonly="readonly"   ></input>
 				        </div>
 				        
 					   <div class="ftitle">

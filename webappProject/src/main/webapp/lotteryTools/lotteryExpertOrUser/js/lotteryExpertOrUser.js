@@ -594,6 +594,33 @@ function initRegion(regionDivId,addOrUpdate,ccode,oldacode){
 	}); 
 }
 
+//校验当前手机号是否被注册
+function checkTelephone(telephone)
+{
+	var data1 = new Object();
+	data1.telephone = telephone;
+	var flag = false;
+	var url = contextPath+'/outerLbuyerOrexpert/checkTelephoneIsRegister.action';
+	$.ajax({
+		async: false, //设置为同步获取数据形式
+        type: "get",
+        url: url,
+        data:data1,
+        dataType: "json",
+        success: function (data) {
+        	flag = data.flag;
+        	if(!flag)
+        		{
+        			$.messager.alert('提示', data.message);
+        		}
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+	});
+	return flag;
+}
+
 
 function submitAddLotteryUser()
 {
@@ -603,7 +630,7 @@ function submitAddLotteryUser()
 			var flag = false;
 			if($('#ff').form('enableValidation').form('validate') )
 				{
-					flag = true;
+					flag = checkTelephone($("#telephoneA").val());
 				}
 			return flag;
 		},
