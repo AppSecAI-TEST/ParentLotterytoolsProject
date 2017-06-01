@@ -224,7 +224,7 @@
 		    	 		<input type="hidden" name="id" id="idn"/>
 		    	 		<input type="hidden" name="status" id="statusn"/>
 				      <textarea id="notAllowReasonA" name="notAllowReason" class="easyui-validatebox"
-							validType="length[0,100]" 
+							validType="length[0,20]" 
 							style="resize: none; width: 380px; height: 210px;top:0px;"></textarea>
 				      </form>
 	        </div>
