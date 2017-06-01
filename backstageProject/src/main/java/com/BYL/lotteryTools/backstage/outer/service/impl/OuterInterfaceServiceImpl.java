@@ -252,10 +252,8 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		
 //		Fast3Analysis fast3Analysis = null;
 		StringBuffer execSql = new StringBuffer();
-		int groupLength = 0;
 		if(null != groupnum && !"".equals(groupnum))
 		{
-			groupLength = groupnum.length();
 		}
 		
 		if("1".equals(type))

@@ -451,26 +451,30 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		tableName = tableNameStart[0] + "_" + tableNameStart[1] + "_" + tableNameStart[2] + "_" + yilouTableEnd; 
 		
 		String groupnum = "";
-		for (String number : groupnumarr) 
+		if(null != groupnumarr)
 		{
-			if(number.equals("10"))
+			for (String number : groupnumarr) 
 			{
-				groupnum = groupnum + "A";
-			}
-			else
-				if(number.equals("11"))
+				if(number.equals("10"))
 				{
-					groupnum = groupnum + "J";
+					groupnum = groupnum + "A";
 				}
 				else
-					if(number.equals("12"))
+					if(number.equals("11"))
 					{
-						groupnum = groupnum + "Q";
+						groupnum = groupnum + "J";
 					}
-					else{
-						groupnum = groupnum + number;
-					}
+					else
+						if(number.equals("12"))
+						{
+							groupnum = groupnum + "Q";
+						}
+						else{
+							groupnum = groupnum + number;
+						}
+			}
 		}
+		
 		
 		returnMap = outerInterfaceService.getMissAnalysisData(type, selectnum, groupnum, tableName,orderby,endNumber,ascOrDesc);
 		
