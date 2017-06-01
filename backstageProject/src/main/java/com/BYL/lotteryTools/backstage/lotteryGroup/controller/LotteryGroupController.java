@@ -222,13 +222,14 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				entity.setFabuKj(dto.getFabuKj());
 				entity.setFabuZs(dto.getFabuZs());
 				entity.setIntroduction(dto.getIntroduction());
-				entity.setJoinType(dto.getJoinType());
+//				entity.setJoinType(dto.getJoinType());//前端没有修改加入方式的字段
 				entity.setLotteryType(dto.getLotteryType());
 				entity.setProvince(dto.getProvince());
 				entity.setCity(dto.getCity());
 				entity.setSsKjChaxun(dto.getSsKjChaxun());
 				entity.setSsYlChaxun(dto.getSsYlChaxun());
 				entity.setSsZjChaxun(dto.getSsZjChaxun());
+				entity.setNoticeReview(dto.getNoticeReview());
 				if(!lastOwnerId.equals(dto.getOwnerId()))
 				{
 					LotterybuyerOrExpert owner = lotterybuyerOrExpertService.

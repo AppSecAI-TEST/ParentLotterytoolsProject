@@ -45,6 +45,8 @@ public class LotteryGroupDTO {
 	
 	private Integer ssKjChaxun;//是否实时开奖查询（1：是0：否）
 	
+	private Integer noticeReview;//群公告是否审核，0：不审核 1：审核
+	
 	private String createTimeStr;//创建时间字符串
 	
 	private String provinceName;
@@ -68,6 +70,14 @@ public class LotteryGroupDTO {
 	
 	
 	
+	public Integer getNoticeReview() {
+		return noticeReview;
+	}
+
+	public void setNoticeReview(Integer noticeReview) {
+		this.noticeReview = noticeReview;
+	}
+
 	public String getIsTop() {
 		return isTop;
 	}

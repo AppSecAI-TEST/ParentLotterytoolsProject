@@ -76,6 +76,9 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="SSKJCX")
 	private Integer ssKjChaxun;//是否实时开奖查询（1：是0：否）
 	
+	@Column(name="NOTICE_REVIEW")
+	private Integer noticeReview;//群公告是否审核，0：不审核 1：审核
+	
 	@Column(name="GROUP_QR_IMG")
 	private String groupQRImg;//群二维码图片
 	
@@ -101,6 +104,14 @@ public class LotteryGroup extends BaseEntity
 	
 	
 	
+
+	public Integer getNoticeReview() {
+		return noticeReview;
+	}
+
+	public void setNoticeReview(Integer noticeReview) {
+		this.noticeReview = noticeReview;
+	}
 
 	public List<LotteryGroupNotice> getLotteryGroupNotices() {
 		return lotteryGroupNotices;

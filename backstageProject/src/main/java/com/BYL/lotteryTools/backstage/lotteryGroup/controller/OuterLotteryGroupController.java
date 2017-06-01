@@ -1069,6 +1069,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				entity.setGroupRobotID(robotUserId);
 				
+				//设置群公告默认不被审核
+				entity.setNoticeReview(0);
 				
 				//TODO:放置群等级
 				String level1Id = "1";//等级1群的等级id
@@ -1419,23 +1421,34 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		LotteryGroupNotice entity = new LotteryGroupNotice();
 		
 		BeanUtil.copyBeanProperties(entity, dto);
-		
-		entity.setId(UUID.randomUUID().toString());
 		LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getGroupId());
-		entity.setStatus("1");
+		entity.setId(UUID.randomUUID().toString());
 		entity.setLotteryGroup(group);
 		entity.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		entity.setModify(dto.getCreator());
 		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		entity.setIsDeleted(Constants.IS_NOT_DELETED);
+		boolean tuisongFlag  = false;
+		if(1 == group.getNoticeReview())
+		{
+			entity.setStatus("0");
+		}
+		else
+		{
+			entity.setStatus("1");
+			tuisongFlag = true;
+		}
 		lotteryGroupNoticeService.save(entity);
 		
 		result.put(Constants.FLAG_STR, true);
 		result.put(Constants.MESSAGE_STR, "添加成功");
 		
-		//将群公告推送到群中
-		String[] tagsand = {group.getGroupNumber()};//推送给群主id，推送给群主审核
-		PushController.sendPushWithCallback(tagsand, null, dto.getNotice(), "groupNotice");//推送给群主展示的是“1”
+		if(tuisongFlag)
+		{
+			//将群公告推送到群中
+			String[] tagsand = {group.getGroupNumber()};//推送给群主id，推送给群主审核
+			PushController.sendPushWithCallback(tagsand, null, dto.getNotice(), "groupNotice");//推送给群主展示的是“1”
+		}
 		
 		return result;
 	}
@@ -1465,6 +1478,75 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		map.put("dtos", dtos);
 		map.put(Constants.FLAG_STR, true);
 		map.put(Constants.MESSAGE_STR, "获取成功");
+		
+		return map;
+	}
+	
+	/**
+	 * 更改群公告状态
+	* @Title: updateGroupNoticeOfGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param noticeId
+	* @param @param userId
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年6月1日 下午5:38:40 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/updateGroupNoticeOfGroup", method = RequestMethod.GET)
+	public @ResponseBody Map<String , Object> updateGroupNoticeOfGroup(
+			@RequestParam(value="noticeId",required=false) String noticeId,
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="status",required=false) String status) throws Exception
+	{
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		LotteryGroupNotice groupNotice = lotteryGroupNoticeService.getLotteryGroupNoticeByID(noticeId);
+		
+		groupNotice.setStatus(status);
+		groupNotice.setModify(userId);
+		groupNotice.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		
+		lotteryGroupNoticeService.update(groupNotice);
+		
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "更新成功");
+		
+		return map;
+	}
+	
+	/**
+	 * 删除群公告
+	* @Title: deleteGroupNotice 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param noticeId
+	* @param @param userId
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年6月1日 下午5:41:39 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/deleteGroupNotice", method = RequestMethod.GET)
+	public @ResponseBody Map<String , Object> deleteGroupNotice(
+			@RequestParam(value="noticeId",required=false) String noticeId,
+			@RequestParam(value="userId",required=false) String userId) throws Exception
+	{
+		Map<String , Object> map = new HashMap<String, Object>();
+		
+		LotteryGroupNotice groupNotice = lotteryGroupNoticeService.getLotteryGroupNoticeByID(noticeId);
+		
+		groupNotice.setIsDeleted(Constants.IS_DELETED);
+		groupNotice.setModify(userId);
+		groupNotice.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		
+		lotteryGroupNoticeService.update(groupNotice);
+		
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "删除成功");
 		
 		return map;
 	}
