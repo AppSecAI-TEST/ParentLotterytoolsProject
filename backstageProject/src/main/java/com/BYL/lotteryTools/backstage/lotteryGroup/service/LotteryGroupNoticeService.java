@@ -14,7 +14,7 @@ public interface LotteryGroupNoticeService {
 	
 	public LotteryGroupNotice getLotteryGroupNoticeByID(String id);
 	
-	public List<LotteryGroupNotice> getLotteryGroupNoticeByGroupId(String groupId);
+	public List<LotteryGroupNotice> getLotteryGroupNoticeByGroupId(String status,String groupId);
 	
 	public void save(LotteryGroupNotice entity);
 	

@@ -30,8 +30,8 @@ public class LotteryGroupNoticeServiceImpl implements LotteryGroupNoticeService 
 	}
 
 	public List<LotteryGroupNotice> getLotteryGroupNoticeByGroupId(
-			String groupId) {
-		return lotteryGroupNoticeRepository.getLotteryGroupNoticeByGroupId(groupId);
+			String status,String groupId) {
+		return lotteryGroupNoticeRepository.getLotteryGroupNoticeByStatusAndGroupId(status,groupId);
 	}
 
 	public void save(LotteryGroupNotice entity) {
@@ -55,11 +55,17 @@ public class LotteryGroupNoticeServiceImpl implements LotteryGroupNoticeService 
 				if(null != entity.getLotteryGroup())
 				{
 					dto.setGroupId(entity.getLotteryGroup().getId());
+					dto.setGroupName(entity.getLotteryGroup().getName());
 				}
 				
 				if(null != entity.getCreateTime())
 				{
 					dto.setCreateTime(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
+				}
+				
+				if(null == entity.getStatus())
+				{
+					dto.setStatus("999");
 				}
 				
 			} catch (Exception e) {

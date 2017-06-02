@@ -8,6 +8,7 @@ public class LotteryGroupNoticeDTO {
 	
 	private String groupId;
 	
+	private String groupName;//公告展示群
 	
 	private String notice;//申请消息（用户填写）
 	
@@ -21,6 +22,16 @@ public class LotteryGroupNoticeDTO {
 	private String createTime;
 	
 	
+	
+	
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
 	public String getCreateTime() {
 		return createTime;

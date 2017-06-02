@@ -9,7 +9,7 @@
     <script src="<%=request.getContextPath() %>/lotteryTools/lotteryGroup/js/groupNotice.js" type="text/javascript"></script>
     
     <script type="text/javascript">
-  	var toolbar = [{
+  	/* var toolbar = [{
   	    text:'添加群',
   	    iconCls:'icon-add',
   	    handler:function(){
@@ -17,7 +17,7 @@
   	    	addLotteryGroup();
   	    	
   	    }
-  	} ];
+  	} ]; */
   	  
   	
 		
@@ -25,7 +25,7 @@
 		<style type="text/css">
 			
 			 .ftitle{
-	  			width:50%;
+	  			width:100%;
 	  			float : left;
 	  			margin-bottom: 20px;
 	  			font-family:'微软雅黑',
@@ -80,21 +80,12 @@
 	<div   data-options="region:'north'" style="height:90px;border:1px solid #95b8e7; background-color:white;">
 	    	<table style="border: none;height: 80px;">
 		    	<tr>
-		    		<td width="7%" class="td_font">彩种名称：</td>
+		    		<td width="7%" class="td_font">审批状态：</td>
 		    		<td width="15%">
-		    			<input id="nameC" class="input_border"  type="text" name="nameC"  />  
-		    		</td>
-		    		<td width="7%" class="td_font">彩种分类：</td>
-		    		<td width="15%">
-		    			<select class="easyui-combobox" id="lotteryTypeC" name="lotteryTypeC" style="width:100px;">
+		    			<select class="easyui-combobox" id="statusC" name="statusC" style="width:100px;">
 								<option value="">全部</option>
-								<option value="1">体彩</option>
-								<option value="2">福彩</option>
-						</select>
-		    		</td>
-		    		<td width="7%" class="td_font">省：</td>
-		    		<td width="15%">
-		    			<select class="easyui-combobox" id="privinceC" name="privinceC" style="width:100px;">
+								<option value="0">审批未通过</option>
+								<option value="1">审批通过</option>
 						</select>
 		    		</td>
 		    		
@@ -107,154 +98,95 @@
 	</div>
 
     <div  data-options="region:'center'" data-options="border:false" >
-    	 <table id="datagrid" class="easyui-datagrid"  title="补录信息数据列表" >
+    	 <table id="datagrid" class="easyui-datagrid"  title="群公告数据列表" >
 			</table>
  	</div>  
   
-  
-    <!-- 添加补录信息弹框 -->
-  <div id="addLotteryPlay" class="easyui-dialog" fit="true" title="添加补录信息数据" style="width:800px;height:600px;padding:0px;border:0;top:1px;"
+    <!-- 查看详情 -->
+  <div id="detailLotteryGroupNotice" class="easyui-dialog"  title="查看群公告详情" style="width:700px;height:500px;padding:0px;border:0;top:1px;"
             data-options="
             modal:true,
                 iconCls: 'icon-save',
                 buttons: [{
-                    text:'提交',
+                    text:'通过',
                     iconCls:'icon-ok',
                     handler:function(){
-                        submitAddLotteryPlay();
+                        applyNotice('1');
+                    }
+                },{
+                    text:'不通过',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        applyNotice('0');
+                        
                     }
                 },{
                     text:'取消',
                     iconCls:'icon-cancel',
                     handler:function(){
-                        $('#addLotteryPlay').dialog('close');
-                        $('#ff').form('clear');//清空表单内容
+                        $('#detailLotteryGroupNotice').dialog('close');
                     }
                 }]
             ">
 		
 			<div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
-	    	 	<div region="north" style="height:45%;" title="补录信息基本内容" hide="false">
-	    	 		<form id="ff" method="get" novalidate style="margin-top:5px;">
+	    	 		<form id="ffDetail" method="get" novalidate style="margin-top:5px;">
 		    	 		<div class="ftitle">
-				            <label for="codeA">补录信息编码:</label>
+				            <label for="codeA">发布对象群:</label>
 				            <input type="hidden" name="id" id="idA"/>
-				            <input class="easyui-validatebox commonInput" type="text" id="codeA" name="code" style="width:200px"  
-				             data-options="required:true"   ></input>
+				             <input class="easyui-validatebox commonInput" type="text" id="groupNameA" name="groupName" style="width:200px"  
+				             readonly="readonly"  />
 				        </div>
 				        <div class="ftitle">
-				            <label for="priceA">彩种名称:</label>
-				            <input class="easyui-validatebox commonInput" type="text" id="nameA" name="name" style="width:200px"  
-				             data-options="required:true"   ></input>
+				            <label for="priceA">群公告内容:</label>
+				             <textarea id="noticeA" name="notice" class="easyui-validatebox"
+							readonly="readonly"" 
+							style="resize: none; width: 200px; height: 110px;top:0px;"></textarea>
 				        </div>
-				         <div class="ftitle">
-				            <label for="priceA">省:</label>
-				            <select class="easyui-combobox " id="privinceA" name="province"  
-				          	  data-options="editable:false" style="width:200px;" >
-							</select>
-				        </div>
-				         <div class="ftitle">
-				            <label for="priceA">补录对应表:</label>
-				            <input class="easyui-validatebox commonInput" type="text" id="correspondingTableA" name="correspondingTable" style="width:200px"  
-				             data-options="required:true"   ></input>
-				        </div>
-				        <div class="ftitle">
-				            <label for="priceA">开奖号码个数:</label>
-				            <input class="easyui-numberbox" precision="0" type="text" id="lotteryNumberA" name="lotteryNumber" style="width:200px"  
-				             data-options="required:true"   validType="number" missingMessage="请输入开奖号码个数" invalidMessage="请输入数字"></input>
-				        </div>
-				         <div class="ftitle">
-				            <label for="priceA">期号长度:</label>
-				            <input class="easyui-numberbox" precision="0" type="text" id="issueNumLenA" name="issueNumLen" style="width:200px"  
-				             data-options="required:true"   validType="number" missingMessage="请输入期号长度" invalidMessage="请输入数字"></input>
-				        </div>
-				        <div class="ftitle">
-				            <label for="priceA">彩种分类:</label>
-				            <select class="easyui-combobox" id="lotteryTypeA" name="lotteryType" style="width:200px;">
-								<option value="1">体彩</option>
-								<option value="2">福彩</option>
-						</select>
-				        </div>
+				        
+				        
 				       </form>
-	    	 	</div>
-	    	 	<div region="center" style="height:55%;padding:0;width:99%;" title="选择补录方案(必选)">
-	    	 		<table id="buluPlanA" class="easyui-datagrid" style="width:100%;height:95%;"   ></table>
-	    	 	</div>
     		</div>
 			
     		
 	     
     </div>
-     <!-- 修改应用弹框 -->
-     <div id="updateLotteryPlay" class="easyui-dialog"  fit="true" title="修改补录信息数据" style="width:800px;height:600px;padding:0px;border:0;top:1px;"
+    
+  <div id="viewLotteryGroupNotice" class="easyui-dialog"  title="查看群公告详情" style="width:700px;height:500px;padding:0px;border:0;top:1px;"
             data-options="
             modal:true,
                 iconCls: 'icon-save',
                 buttons: [{
-                    text:'提交',
-                    iconCls:'icon-ok',
-                    handler:function(){
-                        submitUpdateLotteryPlay();
-                    }
-                },{
                     text:'取消',
                     iconCls:'icon-cancel',
                     handler:function(){
-                        $('#updateLotteryPlay').dialog('close');
+                        $('#viewLotteryGroupNotice').dialog('close');
                     }
                 }]
             ">
-	      <div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
-	    	 <div region="north" style="height:45%;" title="补录信息基本内容" hide="false">
-	    	 		<form id="ffUpdate" method="get" novalidate style="margin-top:5px;">
+		
+			<div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
+	    	 		<form id="ffviewDetail" method="get" novalidate style="margin-top:5px;">
 		    	 		<div class="ftitle">
-				            <label for="codeU">补录信息编码:</label>
-				            <input type="hidden" name="id" id="idU"/>
-				            <input class="easyui-validatebox commonInput" type="text" id="codeU" name="code" style="width:200px"  
-				             data-options="required:true"   ></input>
+				            <label for="codeA">发布对象群:</label>
+				            <input type="hidden" name="id" id="idV"/>
+				             <input class="easyui-validatebox commonInput" type="text" id="groupNameV" name="groupName" style="width:200px"  
+				             readonly="readonly"  />
 				        </div>
 				        <div class="ftitle">
-				            <label for="nameU">彩种名称:</label>
-				            <input class="easyui-validatebox commonInput" type="text" id="nameU" name="name" style="width:200px"  
-				             data-options="required:true"   ></input>
+				            <label for="priceA">群公告内容:</label>
+				             <textarea id="noticeV" name="notice" class="easyui-validatebox"
+							readonly="readonly"" 
+							style="resize: none; width: 200px; height: 110px;top:0px;"></textarea>
 				        </div>
-				         <div class="ftitle">
-				            <label for="privinceU">省:</label>
-				            <select class="easyui-combobox " id="privinceU" name="province"  
-				          	  data-options="editable:false" style="width:200px;" >
-							</select>
-				        </div>
-				         <div class="ftitle">
-				            <label for="correspondingTableU">补录对应表:</label>
-				            <input class="easyui-validatebox commonInput" type="text" id="correspondingTableU" name="correspondingTable" style="width:200px"  
-				             data-options="required:true"   ></input>
-				        </div>
-				        <div class="ftitle">
-				            <label for="lotteryNumberU">开奖号码个数:</label>
-				            <input class="easyui-numberbox" precision="0" type="text" id="lotteryNumberU" name="lotteryNumber" style="width:200px"  
-				             data-options="required:true"   ></input>
-				        </div>
-				         <div class="ftitle">
-				            <label for="priceA">期号长度:</label>
-				            <input class="easyui-numberbox" precision="0" type="text" id="issueNumLenA" name="issueNumLen" style="width:200px"  
-				             data-options="required:true"   validType="number" missingMessage="请输入期号长度" invalidMessage="请输入数字"></input>
-				        </div>
-				        <div class="ftitle">
-				            <label for="lotteryTypeU">彩种分类:</label>
-				            <select class="easyui-combobox" id="lotteryTypeU" name="lotteryType" style="width:200px;">
-								<option value="1">体彩</option>
-								<option value="2">福彩</option>
-						</select>
-				        </div>
+				        
 				       </form>
-	    	 	</div>
-	    	 	<div region="center" style="height:55%;padding:0;width:99%;" title="选择补录方案(必选)">
-	    	 		<table id="buluPlanU" class="easyui-datagrid" style="width:100%;height:95%;"  ></table>
-	    	 	</div>
     		</div>
+			
+    		
+	     
     </div>
     
-   
 </body>
 	
 	

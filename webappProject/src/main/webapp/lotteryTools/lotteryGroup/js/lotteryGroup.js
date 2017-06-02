@@ -28,6 +28,7 @@ function initDatagrid()
 		fit:true,//datagrid自适应
 		fitColumns:true,
 		pagination:true,
+		pageList:[10,20,30,50],
 		toolbar:toolbar,
 		collapsible:false,
 		columns:[[
@@ -449,6 +450,7 @@ function addLotteryGroup()
 	$("#ssYlChaxunA").combobox('setValue',"0");
 	$("#ssKjChaxunA").combobox('setValue',"0");
 	$("#ssZjChaxunA").combobox('setValue',"0");
+	$("#noticeReview").combobox('setValue','0');
 	
 	initProvince('add','privinceA','');//默认选中全部，则全部下是没有市数据的
 	initOwnerListDatagrid('ownerListA');
@@ -569,7 +571,8 @@ function updateLGroup(id)
 					ssYlChaxun:data.ssYlChaxun,
 					ssKjChaxun:data.ssKjChaxun,
 					ssZjChaxun:data.ssZjChaxun,
-					touXiang:data.touXiang
+					touXiang:data.touXiang,
+					noticeReview:data.noticeReview
 					
 				});
 				

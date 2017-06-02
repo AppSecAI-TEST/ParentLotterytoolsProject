@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -1401,6 +1402,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		return map;
 	}
 	
+	/*****************群公告接口*****************/
+	
 	/**
 	 * 提交群公告，并且推送
 	* @Title: submitGroupNotice 
@@ -1429,11 +1432,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		entity.setIsDeleted(Constants.IS_NOT_DELETED);
 		boolean tuisongFlag  = false;
-		if(1 == group.getNoticeReview())
-		{
-			entity.setStatus("0");
-		}
-		else
+		if(0 == group.getNoticeReview())
 		{
 			entity.setStatus("1");
 			tuisongFlag = true;
@@ -1471,7 +1470,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
 		
-		List<LotteryGroupNotice> list = lotteryGroupNoticeService.getLotteryGroupNoticeByGroupId(groupId);
+		String status = "1";
+		List<LotteryGroupNotice> list = lotteryGroupNoticeService.getLotteryGroupNoticeByGroupId(status,groupId);
 		
 		List<LotteryGroupNoticeDTO> dtos = lotteryGroupNoticeService.toDTOs(list);
 		
@@ -1511,6 +1511,13 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		
 		lotteryGroupNoticeService.update(groupNotice);
 		
+		if("1" == status)
+		{//若审批通过则进行推送
+			//将群公告推送到群中
+			String[] tagsand = {groupNotice.getLotteryGroup().getGroupNumber()};//推送给群主id，推送给群主审核
+			PushController.sendPushWithCallback(tagsand, null, groupNotice.getNotice(), "groupNotice");//推送给群主展示的是“1”
+		}
+		
 		map.put(Constants.FLAG_STR, true);
 		map.put(Constants.MESSAGE_STR, "更新成功");
 		
@@ -1549,6 +1556,92 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		map.put(Constants.MESSAGE_STR, "删除成功");
 		
 		return map;
+	}
+	
+	/**
+	 * 获取群公告列表
+	* @Title: getGroupNoticeList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupId
+	* @param @param page
+	* @param @param row
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月2日 下午1:37:57 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getGroupNoticeList", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getGroupNoticeList(
+			@RequestParam(value="status",required=false)   String status,
+			@RequestParam(value="page",required=false)   Integer page,//当前页数
+			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//放置分页参数
+		Pageable pageable = new PageRequest(page-1,rows);
+		
+		//参数
+		StringBuffer buffer = new StringBuffer();
+		List<Object> params = new ArrayList<Object>();
+		
+		//只查询未删除数据
+		params.add("1");//只查询有效的数据
+		buffer.append(" isDeleted = ?").append(params.size());
+		
+		if(null != status && !"".equals(status))
+		{
+			params.add(status);
+			buffer.append(" and status = ?").append(params.size());
+		}
+		
+		//排序
+		List<LotteryGroupNoticeDTO> dtos =  null;
+		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
+		orderBy.put("createTime", "desc");
+		
+		QueryResult<LotteryGroupNotice> lQueryResult = lotteryGroupNoticeService
+				.getLotteryGroupNoticeList(LotteryGroupNotice.class,
+				buffer.toString(), params.toArray(),orderBy, pageable);
+				
+		List<LotteryGroupNotice> list = lQueryResult.getResultList();
+		
+		dtos = lotteryGroupNoticeService.toDTOs(list);
+
+		
+		map.put("rows",dtos);
+		map.put("total", lQueryResult.getTotalCount());
+		
+		return map;
+	}
+	
+	/**
+	 * 获取群公告的详情
+	* @Title: getDetailLotteryGroupNotice 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param id
+	* @param @param model
+	* @param @param httpSession
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年6月2日 下午1:42:32 
+	* @return LotteryGroupNoticeDTO    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/getDetailLotteryGroupNotice", method = RequestMethod.GET)
+	public @ResponseBody LotteryGroupNoticeDTO getDetailLotteryGroupNotice(@RequestParam(value="id",required=false) String id,
+			ModelMap model,HttpSession httpSession) throws Exception
+	{
+		LotteryGroupNotice entity = lotteryGroupNoticeService.getLotteryGroupNoticeByID(id);
+		
+		LotteryGroupNoticeDTO dto  = lotteryGroupNoticeService.toDTO(entity);
+		
+		return dto;
 	}
 	
 }

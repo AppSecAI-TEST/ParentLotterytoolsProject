@@ -23,6 +23,6 @@ public interface LotteryGroupNoticeRepository extends GenericRepository<LotteryG
 	* @return List<LotteryGroupNotice>    返回类型 
 	* @throws
 	 */
-	@Query("select u from LotteryGroupNotice u where u.isDeleted = 1 and  u.status = 1 and  u.lotteryGroup.id = ?1 order by createTime desc ")
-	public List<LotteryGroupNotice> getLotteryGroupNoticeByGroupId(String groupId);
+	@Query("select u from LotteryGroupNotice u where u.isDeleted = 1 and  u.status = ?1 and  u.lotteryGroup.id = ?2 order by createTime desc ")
+	public List<LotteryGroupNotice> getLotteryGroupNoticeByStatusAndGroupId(String status,String groupId);
 }

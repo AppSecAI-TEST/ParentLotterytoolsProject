@@ -360,6 +360,25 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 群公告管理
+	* @Title: groupNotice 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月2日 下午5:31:16 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/groupNotice.action", method = RequestMethod.GET)
+	public String groupNotice()
+	{
+		String indexPage = "lotteryTools/lotteryGroup/groupNotice";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页
