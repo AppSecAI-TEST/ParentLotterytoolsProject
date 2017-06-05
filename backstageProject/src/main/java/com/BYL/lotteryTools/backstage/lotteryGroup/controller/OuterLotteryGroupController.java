@@ -1614,7 +1614,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 
 		
 		map.put("rows",dtos);
-		map.put("total", lQueryResult.getTotalCount());
+		map.put("total", lQueryResult.getTotalRecord());
 		
 		return map;
 	}

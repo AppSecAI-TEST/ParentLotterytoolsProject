@@ -281,7 +281,9 @@ public class LotteryGroupController extends GlobalExceptionHandler
 			}
 			catch(Exception e)
 			{
-				
+				LOG.error("error:", e);
+				bean.setMessage("修改失败");
+				bean.setFlag(false);
 			}
 			
 		
