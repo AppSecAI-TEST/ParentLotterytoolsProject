@@ -1,11 +1,8 @@
 package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.data.domain.Pageable;
 
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
@@ -30,7 +27,8 @@ public interface LotterybuyerOrExpertService {
 			String name,
 			String provinceCode,
 			String isVirtual,
-			String isRobot);
+			String isRobot,
+			String telephone);
 	
 	public LotterybuyerOrExpert getLotterybuyerOrExpertById(String id);
 	

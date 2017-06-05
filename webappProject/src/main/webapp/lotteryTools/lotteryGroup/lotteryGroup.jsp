@@ -220,6 +220,14 @@
 							</select>
 				        </div>
 				        
+				         <div class="ftitle">
+				            <label for="priceA">群公告是否审核:</label>
+				            <select class="easyui-combobox" id="noticeReviewA" name="noticeReview" style="width:200px;">
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+				        </div>
+				        
 				        <div class="ftitle">
 				            <label for="subject">头像:</label>
 				            <input type="hidden" id="touXiangA" name="touXiang">
@@ -333,6 +341,15 @@
 				         <div class="ftitle">
 				            <label for="priceA">实时专家查询:</label>
 				            <select class="easyui-combobox" id="ssZjChaxunU" name="ssZjChaxun" style="width:200px;">
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+				        </div>
+				        
+				        
+				         <div class="ftitle">
+				            <label for="priceA">群公告是否审核:</label>
+				            <select class="easyui-combobox" id="noticeReviewU" name="noticeReview" style="width:200px;">
 								<option value="0">否</option>
 								<option value="1">是</option>
 							</select>

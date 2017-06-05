@@ -115,12 +115,13 @@ public class LotteryBuyerOrExpertController
 			@RequestParam(value="provinceCode",required=false) String provinceCode,
 			@RequestParam(value="isVirtual",required=false) String isVirtual,
 			@RequestParam(value="isRobot",required=false) String isRobot,
+			@RequestParam(value="telephone",required=false) String telephone,
 			ModelMap model,HttpSession httpSession) throws Exception
 	{
 	 	Map<String,Object> returnData = new HashMap<String, Object>();
 	 	
 		QueryResult<LotterybuyerOrExpert> lQueryResult = lotterybuyerOrExpertService
-				.getLotterybuyerOrExpertList(page, rows, name, provinceCode, isVirtual, isRobot);
+				.getLotterybuyerOrExpertList(page, rows, name, provinceCode, isVirtual, isRobot,telephone);
 				
 		List<LotterybuyerOrExpert> list = lQueryResult.getResultList();
 		Long totalrow = lQueryResult.getTotalRecord();

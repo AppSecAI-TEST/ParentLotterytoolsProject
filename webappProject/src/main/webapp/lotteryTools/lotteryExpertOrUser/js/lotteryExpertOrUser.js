@@ -25,6 +25,7 @@ function reset()
 	initQueryProvince();
 	$("#nameC").val("");
 	$("#isRobotC").combobox('setValue','0');
+	$("#telephoneC").val("");
 }
 
 
@@ -35,6 +36,7 @@ function initDatagrid()
 	params.province = $("#privinceC").combobox('getValue');
 	params.name = $("#nameC").val();
 	params.isRobot=$("#isRobotC").combobox('getValue');
+	params.telephone = $("#telephoneC").val();
 	$('#datagrid').datagrid({
 		rownumbers:false,
 		queryParams: params,

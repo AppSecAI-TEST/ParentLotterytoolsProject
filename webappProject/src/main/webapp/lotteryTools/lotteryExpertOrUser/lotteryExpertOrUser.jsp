@@ -97,27 +97,31 @@
 	<div   data-options="region:'north'" style="height:90px;border:1px solid #95b8e7; background-color:white;">
 	    	<table style="border: none;height: 80px;">
 		    	<tr>
-		    		<td width="7%" class="td_font">昵称：</td>
-		    		<td width="15%">
+		    		<td width="5%" class="td_font">昵称：</td>
+		    		<td width="10%">
 		    			<input id="nameC" class="input_border"  type="text" name="nameC"  />  
 		    		</td>
-		    		<td width="7%" class="td_font">彩种分类：</td>
-		    		<td width="15%">
+		    		<td width="5%" class="td_font">手机：</td>
+		    		<td width="10%">
+		    			<input id="telephoneC" class="input_border"  type="text" name="telephoneC"  />  
+		    		</td>
+		    		<td width="5%" class="td_font">彩种分类：</td>
+		    		<td width="10%">
 		    			<select class="easyui-combobox" id="lotteryTypeC" name="lotteryTypeC" style="width:100px;">
 								<option value="">全部</option>
 								<option value="1">体彩</option>
 								<option value="2">福彩</option>
 						</select>
 		    		</td>
-		    		<td width="7%" class="td_font">机器人：</td>
-		    		<td width="15%">
+		    		<td width="5%" class="td_font">机器人：</td>
+		    		<td width="10%">
 		    			<select class="easyui-combobox" id="isRobotC" name="isRobotC" style="width:100px;">
 								<option value="0" selected>非机器人</option>
 								<option value="1">机器人</option>
 						</select>
 		    		</td>
-		    		<td width="7%" class="td_font">省：</td>
-		    		<td width="15%">
+		    		<td width="5%" class="td_font">省：</td>
+		    		<td width="10%">
 		    			<select class="easyui-combobox" id="privinceC" name="privinceC" style="width:100px;">
 						</select>
 		    		</td>

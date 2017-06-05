@@ -171,7 +171,8 @@ public class LotterybuyerOrExpertServiceImpl implements
 			String name,
 			String provinceCode,
 			String isVirtual,
-			String isRobot) {
+			String isRobot,
+			String telephone) {
 		
 
 	 	//放置分页参数
@@ -210,6 +211,13 @@ public class LotterybuyerOrExpertServiceImpl implements
 		{
 			params.add(isRobot);
 			buffer.append(" and  isRobot = ?").append(params.size());
+		}
+		
+		//手机号
+		if(null != telephone && !"".equals(telephone))
+		{
+			params.add(telephone);
+			buffer.append(" and  telephone = ?").append(params.size());
 		}
 		
 		
@@ -254,7 +262,7 @@ public class LotterybuyerOrExpertServiceImpl implements
 	{
 		//查询当前省份彩种是否有机器人
 		QueryResult<LotterybuyerOrExpert> lQueryResult = this
-				.getLotterybuyerOrExpertList(1, Integer.MAX_VALUE, null, province, null, "1");
+				.getLotterybuyerOrExpertList(1, Integer.MAX_VALUE, null, province, null, "1",null);
 				
 		List<LotterybuyerOrExpert> robotlist = lQueryResult.getResultList();
 		
