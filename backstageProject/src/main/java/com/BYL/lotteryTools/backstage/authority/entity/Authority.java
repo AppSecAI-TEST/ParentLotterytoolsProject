@@ -28,7 +28,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @date 2017年2月27日 下午3:47:50
  */
 @Entity
-@Table(name="T_LOTTERYTOOLS_AUTHORITY")
+@Table(name="T_LT_AUTHORITY")
 public class Authority extends BaseEntity implements Serializable 
 {
 	

@@ -27,7 +27,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @date 2017年2月27日 下午3:47:58
  */
 @Entity
-@Table(name="T_LOTTERYTOOLS_USERS")
+@Table(name="T_LT_USERS")
 public class User extends BaseEntity implements Serializable 
 {
 	

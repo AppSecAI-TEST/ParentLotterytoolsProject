@@ -71,6 +71,15 @@
 	  			
 	  		}
 	  		
+	  		.textareaDiv{
+	  			margin-left:30px;
+	  			    float: left;
+	  		}
+	  		
+	  		.textareaDiv textarea{
+	  			border-radius:5px;
+	  		}
+	  		
 		</style>
 		
 	 
@@ -111,13 +120,13 @@
                     text:'通过',
                     iconCls:'icon-ok',
                     handler:function(){
-                        applyNotice('1');
+                        applyNotice('1','');
                     }
                 },{
                     text:'不通过',
                     iconCls:'icon-cancel',
                     handler:function(){
-                        applyNotice('0');
+                        fillInReason('0');
                         
                     }
                 },{
@@ -139,11 +148,12 @@
 				        </div>
 				        <div class="ftitle">
 				            <label for="priceA">群公告内容:</label>
+				            <div class="textareaDiv">
 				             <textarea id="noticeA" name="notice" class="easyui-validatebox"
-							readonly="readonly"" 
-							style="resize: none; width: 200px; height: 110px;top:0px;"></textarea>
+								readonly="readonly"" 
+								style="resize: none; width: 200px; height: 110px;top:0px;"></textarea>
+							</div>
 				        </div>
-				        
 				        
 				       </form>
     		</div>
@@ -151,6 +161,40 @@
     		
 	     
     </div>
+    
+    <div id="notAllow" class="easyui-dialog"  title="选择不通过原因" style="width:400px;height:300px;padding:0px;border:0;top:10px;"
+            data-options="
+            modal:true,
+                iconCls: 'icon-save',
+                buttons: [{
+                    text:'确定',
+                    iconCls:'icon-save',
+                    handler:function(){
+                       submitNotAllow();
+                    }
+                },{
+                    text:'关闭',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                       closeNotAllow();
+                    }
+                }]
+            ">
+		
+			<div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
+	    	 		<form id="noAllowForm" method="get" novalidate style="margin-top:5px;">
+		    	 		<input type="hidden" name="id" id="idn"/>
+		    	 		<input type="hidden" name="status" id="statusn"/>
+		    	 		  <div class="ftitle">
+		    	 		   <label for="priceA">不通过原因:</label>
+				      <select class="easyui-combobox" id="notPassReasonA" name="notPassReason" style="width:200px;">
+									<option value="群公告内容不符合">群公告内容不符合</option>
+									<option value="不可以发布群公告">不可以发布群公告</option>
+							</select>
+							</div>
+				      </form>
+	        </div>
+	        </div>
     
   <div id="viewLotteryGroupNotice" class="easyui-dialog"  title="查看群公告详情" style="width:700px;height:500px;padding:0px;border:0;top:1px;"
             data-options="
@@ -175,9 +219,11 @@
 				        </div>
 				        <div class="ftitle">
 				            <label for="priceA">群公告内容:</label>
-				             <textarea id="noticeV" name="notice" class="easyui-validatebox"
-							readonly="readonly"" 
-							style="resize: none; width: 200px; height: 110px;top:0px;"></textarea>
+				            <div class="textareaDiv">
+					             <textarea id="noticeV" name="notice" class="easyui-validatebox"
+								readonly="readonly"
+								style="resize: none; width: 200px; height: 110px;top:0px;"></textarea>
+							</div>
 				        </div>
 				        
 				       </form>

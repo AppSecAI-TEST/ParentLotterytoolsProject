@@ -19,7 +19,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @date 2017年2月28日 下午3:13:33
  */
 @Entity
-@Table(name="T_BL_SERVICENUMBER_NOTICE_OF_RECOMMEND")
+@Table(name="T_LT_SERVICENUMBER_NOTICE_OF_RECOMMEND")
 public class ServiceNumberNoticeOfComRecommend extends BaseEntity
 {
 	@Id

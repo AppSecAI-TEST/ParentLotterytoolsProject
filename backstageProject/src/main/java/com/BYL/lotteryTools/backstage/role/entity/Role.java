@@ -29,7 +29,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @date 2017年2月27日 下午3:47:42
  */
 @Entity
-@Table(name="T_LOTTERYTOOLS_ROLES")
+@Table(name="T_LT_ROLES")
 public class Role extends BaseEntity implements Serializable 
 {
 	

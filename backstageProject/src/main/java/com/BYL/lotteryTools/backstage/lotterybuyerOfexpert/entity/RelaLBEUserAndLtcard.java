@@ -20,7 +20,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @date 2017年5月25日 下午1:52:06
  */
 @Entity
-@Table(name="RELA_BIND_OF_LOTTERYBUYEROREXPERT_AND_LOTTERY_CARD")
+@Table(name="RELA_BIND_OF_BUYER_AND_LOTTERY_CARD")
 public class RelaLBEUserAndLtcard extends BaseEntity
 {
 	@Id

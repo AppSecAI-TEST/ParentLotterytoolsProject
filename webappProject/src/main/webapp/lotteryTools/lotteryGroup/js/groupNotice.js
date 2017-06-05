@@ -13,6 +13,7 @@ function closeDialog()
 {
 	$("#detailLotteryGroupNotice").dialog('close');
 	$("#viewLotteryGroupNotice").dialog('close');
+	$("#notAllow").dialog('close');
 }
 
 function initDatagrid()
@@ -45,7 +46,7 @@ function initDatagrid()
 		            	switch(value)
 		            	{
 		            		case '1':name='通过';break;
-		            		case '2':name='未通过';break;
+		            		case '0':name='未通过';break;
 		            		default:name='未审核';break;
 		            	}
 		            	return name;  
@@ -58,7 +59,7 @@ function initDatagrid()
 			            		{//审批中
 			            		   btn = '<a class="editcls" onclick="detailLotteryGroupNotice(&quot;'+row.id+'&quot;)" href="javascript:void(0)">查看详情</a>'
 			                		+'<a class="pass" onclick="applyNoticeInRow(&quot;'+row.id+'&quot;,1)" href="javascript:void(0)">通过</a>'
-					                	+'<a class="nopass" onclick="applyNoticeInRow(&quot;'+row.id+'&quot;,0)" href="javascript:void(0)">不通过</a>'
+					                	+'<a class="nopass" onclick="fillInReasonInRow(&quot;'+row.id+'&quot;,0)" href="javascript:void(0)">不通过</a>'
 					                	+'<a class="delete" onclick="deleteLotteryGroupNotice(&quot;'+row.id+'&quot;)" href="javascript:void(0)">删除</a>';
 					                
 			            		}
@@ -191,17 +192,60 @@ function applyNoticeInRow(id,status)
 	});
 }
 
+function closeNotAllow()
+{
+	 $('#notAllow').dialog('close');
+	 var content = $("#notPassReasonA").combobox('getValue');
+	 if('' == content)
+		 {
+		 	$.messager.alert('提示', "请选择不通过原因！");
+		 }
+}
+
+function fillInReason(status)
+{
+	$("#notAllow").dialog('open');
+	
+	var id = $("#idA").val();
+	
+	$("#idn").val(id);
+	$("#statusn").val(status);
+	$("#detailLotteryGroupNotice").dialog('close');
+}
+
+function fillInReasonInRow(id,status)
+{
+	$("#notAllow").dialog('open');
+	
+	$("#idn").val(id);
+	$("#statusn").val(status);
+}
+
+//提交不通过的审核
+function submitNotAllow()
+{
+	applyNotice($("#statusn").val(), $("#notPassReasonA").combobox('getValue'));
+}
+
 /**
  * 审核彩票站
  * @param status：审核状态
  */
-function applyNotice(status)
+function applyNotice(status,notPassMessage)
 {
 	var url = contextPath + '/outerLGroup/updateGroupNoticeOfGroup.action';
 	var data1 = new Object();
 	data1.userId="1";
 	data1.status = status;//彩票站id
-	data1.noticeId = $("#idA").val();//彩票站id
+	if('0' == status)
+		{
+			data1.notPassMessage = notPassMessage;
+			data1.noticeId = $("#idn").val();//彩票站id(获取不通过原因的公告id)
+		}
+	else
+		{
+			data1.noticeId = $("#idA").val();//彩票站id
+		}
 	
 	$.ajax({
 		async: false,   //设置为同步获取数据形式

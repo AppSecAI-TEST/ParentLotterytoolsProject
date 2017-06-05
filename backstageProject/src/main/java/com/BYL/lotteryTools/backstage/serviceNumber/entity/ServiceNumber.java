@@ -21,7 +21,7 @@ import com.BYL.lotteryTools.common.entity.BaseEntity;
 * @date 2017年2月27日 下午3:48:30
  */
 @Entity
-@Table(name="T_LOTTERYTOOLS_SERVICENUMBER")
+@Table(name="T_LT_SERVICENUMBER")
 public class ServiceNumber extends BaseEntity
 {
 	@Id
