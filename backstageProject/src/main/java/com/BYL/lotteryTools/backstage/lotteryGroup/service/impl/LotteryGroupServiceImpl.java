@@ -173,7 +173,7 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		{
 			str.insert(0, "0");
 		}
-		return str.toString();
+		return "1"+str.toString();
 	}
 
 	public List<LotteryGroup> getLotteryGroupByProvinceAndLotteryType(

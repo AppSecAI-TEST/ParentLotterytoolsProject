@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.SysMessage;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.SysMessageService;
 import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
@@ -54,6 +56,9 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private PredictionTypeService predictionTypeService;
+	
+	@Autowired
+	private SysMessageService sysMessageService;
 	
 	
 	private static final String NO5 = "5";
@@ -482,6 +487,31 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		return returnMap;
 	}
 	
+	/**
+	 * 根据推送目标获取系统消息
+	* @Title: getSysMessageForTarget 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param telephone
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月5日 上午11:15:32 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/getSysMessageForTarget", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getSysMessageForTarget(
+			@RequestParam(value="telephone",required=false)String telephone)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		List<SysMessage> list = sysMessageService.getSysMessageByTarget(telephone);
+		
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put("sysMessage", list);
+		
+		return map;
+	}
 	
 	
 	/**

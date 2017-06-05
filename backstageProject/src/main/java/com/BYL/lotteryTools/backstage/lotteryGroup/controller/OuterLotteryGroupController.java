@@ -33,12 +33,14 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroupNotice;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.SysMessage;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupNoticeService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.SysMessageService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
@@ -106,6 +108,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private LotteryGroupNoticeService lotteryGroupNoticeService;
+	
+	@Autowired
+	private SysMessageService sysMessageService;
 	
 	public static final String SUCCESS_CODE = "200";//成功返回码
 	
@@ -1436,6 +1441,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		{
 			entity.setStatus("1");
 			tuisongFlag = true;
+			/*不需要审核直接通过的群公告，要将之前群的公告数据删除*/
+			this.deletePreGroupNotice(group.getId());
 		}
 		lotteryGroupNoticeService.save(entity);
 		
@@ -1452,6 +1459,30 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		return result;
 	}
 	
+	/**
+	 * 删除当前群之前的群公告
+	* @Title: deletePreGroupNotice 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param groupId    设定文件 
+	* @author banna
+	* @date 2017年6月5日 上午10:49:59 
+	* @return void    返回类型 
+	* @throws
+	 */
+	private void deletePreGroupNotice(String groupId)
+	{
+		String status = "1";
+		List<LotteryGroupNotice> list = lotteryGroupNoticeService.getLotteryGroupNoticeByGroupId(status,groupId);
+		
+		for (LotteryGroupNotice groupNotice : list) {
+			groupNotice.setIsDeleted(Constants.IS_DELETED);
+			groupNotice.setModify("system");
+			groupNotice.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			
+			lotteryGroupNoticeService.update(groupNotice);
+			LOG.info("删除成功:groupNoticeId:"+groupNotice.getId());
+		}
+	}
 	/**
 	 * 获取当前群的群公告
 	* @Title: getGroupNoticeOfGroup 
@@ -1499,7 +1530,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody Map<String , Object> updateGroupNoticeOfGroup(
 			@RequestParam(value="noticeId",required=false) String noticeId,
 			@RequestParam(value="userId",required=false) String userId,
-			@RequestParam(value="status",required=false) String status) throws Exception
+			@RequestParam(value="status",required=false) String status,
+			@RequestParam(value="notPassMessage",required=false) String notPassMessage) throws Exception
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
 		
@@ -1509,15 +1541,38 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		groupNotice.setModify(userId);
 		groupNotice.setModifyTime(new Timestamp(System.currentTimeMillis()));
 		
-		lotteryGroupNoticeService.update(groupNotice);
 		
-		if("1" == status)
+		
+		if("1".equals(status))
 		{//若审批通过则进行推送
 			//将群公告推送到群中
 			String[] tagsand = {groupNotice.getLotteryGroup().getGroupNumber()};//推送给群主id，推送给群主审核
 			PushController.sendPushWithCallback(tagsand, null, groupNotice.getNotice(), "groupNotice");//推送给群主展示的是“1”
+			/*审核通过，则将之前的公告删除*/
+			this.deletePreGroupNotice(groupNotice.getLotteryGroup().getId());
 		}
-		
+		else
+			if("0".equals(status))
+			{
+				LotteryGroup ownerGroup = groupNotice.getLotteryGroup();
+				groupNotice.setNotPassMessage(notPassMessage);
+				String[] tagsand = {ownerGroup.getLotteryBuyerOrExpert().getTelephone()};//推送给群主
+				String message = "群名称为:"+ownerGroup.getName()+" 申请发布的群公告审核未通过,未通过原因:"+notPassMessage;
+				PushController.sendPushWithCallback
+					(tagsand, null,message , "sysMessage");//推送给群主展示的是“1”
+				
+				/*记录系统消息推送到系统消息表*/
+				SysMessage sysMessage = new SysMessage();
+				sysMessage.setTarget(ownerGroup.getLotteryBuyerOrExpert().getTelephone());
+				sysMessage.setMessage(message);
+				sysMessage.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				sysMessage.setCreator("system");
+				sysMessage.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				sysMessage.setModify("system");
+				sysMessage.setIsDeleted(Constants.IS_NOT_DELETED);
+				sysMessageService.save(sysMessage);
+			}
+		lotteryGroupNoticeService.update(groupNotice);
 		map.put(Constants.FLAG_STR, true);
 		map.put(Constants.MESSAGE_STR, "更新成功");
 		
