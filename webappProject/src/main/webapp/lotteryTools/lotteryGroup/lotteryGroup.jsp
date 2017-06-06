@@ -165,6 +165,16 @@
 										<option value="5">公司群</option>
 									</select>
 				        </div>
+				        
+				        <div class="ftitle" id="zxqTypeDivA">
+				            <label for="lotteryTypeA" >选择中心群类型:</label>
+					    			<select class="easyui-combobox" id="detailLotteryTypeA" name="detailLotteryType" style="width:200px;">
+										<option value="1" >体彩</option>
+										<option value="2">福彩</option>
+										
+									</select>
+				        </div>
+				        
 						<div class="ftitle">
 				            <label for="subject">用户地域:</label>
 				            <div style="">
@@ -292,6 +302,14 @@
 										<option value="5">公司群</option>
 									</select>
 				        </div>
+				        <div class="ftitle" id="zxqTypeDivU">
+				            <label for="lotteryTypeA" >选择中心群类型:</label>
+					    			<select class="easyui-combobox" id="detailLotteryTypeU" name="detailLotteryType" style="width:200px;">
+										<option value="1" >体彩</option>
+										<option value="2">福彩</option>
+										
+									</select>
+				        </div>
 						<div class="ftitle">
 				            <label for="subject">用户地域:</label>
 				            <div style="">
@@ -342,7 +360,7 @@
 				            <label for="priceA">实时专家查询:</label>
 				            <select class="easyui-combobox" id="ssZjChaxunU" name="ssZjChaxun" style="width:200px;">
 								<option value="0">否</option>
-								<option value="1">是</option>
+								<option value="1">是</option>      
 							</select>
 				        </div>
 				        

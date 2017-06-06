@@ -224,6 +224,10 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				entity.setIntroduction(dto.getIntroduction());
 //				entity.setJoinType(dto.getJoinType());//前端没有修改加入方式的字段
 				entity.setLotteryType(dto.getLotteryType());
+				if(!"4".equals(dto.getLotteryType()))
+				{
+					entity.setDetailLotteryType(dto.getLotteryType());
+				}
 				entity.setProvince(dto.getProvince());
 				entity.setCity(dto.getCity());
 				entity.setSsKjChaxun(dto.getSsKjChaxun());
@@ -296,6 +300,11 @@ public class LotteryGroupController extends GlobalExceptionHandler
 				entity = new LotteryGroup();
 				BeanUtil.copyBeanProperties(entity, dto);
 				entity.setId(UUID.randomUUID().toString());//生成id
+				
+				if(!"4".equals(dto.getLotteryType()))
+				{
+					entity.setDetailLotteryType(dto.getLotteryType());
+				}
 				
 				entity.setGroupNumber(lotteryGroupService.generateGroupNumber());//放置群号
 				LotterybuyerOrExpert owner = lotterybuyerOrExpertService.

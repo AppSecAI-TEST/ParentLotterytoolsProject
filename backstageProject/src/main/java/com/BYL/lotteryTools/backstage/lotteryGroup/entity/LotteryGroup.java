@@ -37,6 +37,12 @@ public class LotteryGroup extends BaseEntity
 	@Column(name="LOTTERY_TYPE", length=45)
 	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩,4:中心群,5：公司群
 	
+	/**
+	 * Add in 2017/6/6 by banna 
+	 */
+	@Column(name="DETAIL_LOTTERY_TYPE", length=45)
+	private String detailLotteryType;//详细群彩种分类，1：体彩，2：福彩 
+	
 	@Column(name="GROUP_LEVEL", length=45)
 	private String groupLevel;//群等级，与群等级表关联
 	
@@ -104,6 +110,14 @@ public class LotteryGroup extends BaseEntity
 	
 	
 	
+
+	public String getDetailLotteryType() {
+		return detailLotteryType;
+	}
+
+	public void setDetailLotteryType(String detailLotteryType) {
+		this.detailLotteryType = detailLotteryType;
+	}
 
 	public Integer getNoticeReview() {
 		return noticeReview;

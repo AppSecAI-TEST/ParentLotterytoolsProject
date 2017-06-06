@@ -297,8 +297,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody Map<String,Object> getGroupList(
 			LotteryGroupDTO dto,
 			@RequestParam(value="userId",required=false)   String userId,//当前发出获取群列表的的用户id
-			@RequestParam(value="page",required=false)   Integer page,//当前页数
-			@RequestParam(value="row",required=false)    Integer row,//当前获取数据量
+//			@RequestParam(value="page",required=false)   Integer page,//当前页数
+//			@RequestParam(value="row",required=false)    Integer row,//当前获取数据量
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -1053,6 +1053,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
 						getLotterybuyerOrExpertById(dto.getOwnerId());
 				entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
+				//Add by banna in 2017/6/6
+				entity.setDetailLotteryType(dto.getLotteryType());//放置详细彩种字段
 				
 				//处理群头像
 				Uploadfile uploadfile =null;

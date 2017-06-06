@@ -27,6 +27,8 @@ public class LotteryGroupDTO {
 	
 	private String lotteryType;//群分类，1：体彩，2：福彩 3：竞彩 4.中心群 5：公司群
 	
+	private String detailLotteryType;//详细群彩种分类，1：体彩，2：福彩 
+	
 	private String province;//省
 	
 	private String city;//市
@@ -70,6 +72,14 @@ public class LotteryGroupDTO {
 	
 	
 	
+	public String getDetailLotteryType() {
+		return detailLotteryType;
+	}
+
+	public void setDetailLotteryType(String detailLotteryType) {
+		this.detailLotteryType = detailLotteryType;
+	}
+
 	public Integer getNoticeReview() {
 		return noticeReview;
 	}

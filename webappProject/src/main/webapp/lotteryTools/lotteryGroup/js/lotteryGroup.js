@@ -456,6 +456,8 @@ function addLotteryGroup()
 	initOwnerListDatagrid('ownerListA');
 	
 	$("#addLotteryGroup").dialog('open');
+	
+	$("#zxqTypeDivA").hide();
 }
 
 //关闭添加彩聊群弹框
@@ -572,7 +574,9 @@ function updateLGroup(id)
 					ssKjChaxun:data.ssKjChaxun,
 					ssZjChaxun:data.ssZjChaxun,
 					touXiang:data.touXiang,
-					noticeReview:data.noticeReview
+					noticeReview:data.noticeReview,
+					lotteryType:data.lotteryType,
+					detailLotteryType:data.detailLotteryType
 					
 				});
 				
@@ -585,6 +589,11 @@ function updateLGroup(id)
 				initOwnerListDatagrid('ownerListU');
 				
 				$("#touxiangImgU").attr("src",contextPath+data.touXiangImgUrl);
+				
+				if(4 == data.lotteryType)
+					{
+						$("#zxqTypeDivU").show();
+					}
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             window.parent.location.href = contextPath + "/menu/error.action";
@@ -783,7 +792,36 @@ function bindComboboxChange()
 
 		}); 
 	
+	$("#lotteryTypeA").combobox({
+
+		onSelect: function (rec) {
+			
+			if(4 == rec.value)
+				{
+					$("#zxqTypeDivA").show();
+				}
+			else
+				{
+					$("#zxqTypeDivA").hide();
+				}
+		}
+
+		}); 
 	
+	$("#lotteryTypeU").combobox({
+
+		onSelect: function (rec) {
+			if(4 == rec.value)
+			{
+				$("#zxqTypeDivU").show();
+			}
+			else
+			{
+				$("#zxqTypeDivU").hide();
+			}
+		}
+
+		}); 
 }
 
 /**
