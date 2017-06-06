@@ -315,6 +315,16 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		params.add("1");//只查询有效的数据
 		buffer.append(" isDeleted = ?").append(params.size());
 		
+		//搜索群时，只能搜索出体彩和福彩群
+		/*List<String> paraArr = new ArrayList<String> ();
+		paraArr.add("1");//体彩
+		paraArr.add("2");//福彩
+		paraArr.add("3");//竞彩
+		params.add(paraArr);
+		buffer.append(" and lotteryType in ?").append(params.size());*/
+		params.add("4");//中心群
+		buffer.append(" and lotteryType != ?").append(params.size());
+		
 		//传汉字
 		List<Province> prolist = provinceService.getProvinceByPname("%"+dto.getProvince()+"%");
 		if(null != prolist && prolist.size()>0)
