@@ -434,19 +434,18 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="orderby",required=false)String orderby,
 			@RequestParam(value="ascOrDesc",required=false)String ascOrDesc)
 	{
-//		List<Fast3Analysis> list = new ArrayList();
 		Map<String,Object> returnMap = new HashMap<String, Object>();
 		
 		LotteryPlay lotteryPlay = lotteryPlayService.getLotteryPlayById(lotteryPlayId);//获取补录信息数据，使用这个数据中的表名和开奖数字个数的信息
 		
 		String tableName = lotteryPlay.getCorrespondingTable();//获取关联表
 		
-//		String kjNum = lotteryPlay.getLotteryNumber();//获取开奖字数个数
-//		
-//		String lotteryType = lotteryPlay.getLotteryType();//获取彩种（体彩/福彩）
-//		
-//		String province = lotteryPlay.getProvince();//获取省份
+		/*String kjNum = lotteryPlay.getLotteryNumber();//获取开奖字数个数
 		
+		String lotteryType = lotteryPlay.getLotteryType();//获取彩种（体彩/福彩）
+		
+		String province = lotteryPlay.getProvince();//获取省份
+*/		
 		String[] tableNameStart = tableName.split("_");
 		
 		String endNumber = lotteryPlay.getLotteryPlayBulufangan().getEndNumber();
@@ -455,33 +454,44 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		//0：T 1：省份 2：玩法名称
 		tableName = tableNameStart[0] + "_" + tableNameStart[1] + "_" + tableNameStart[2] + "_" + yilouTableEnd; 
 		
-		String groupnum = "";
-		if(null != groupnumarr)
-		{
-			for (String number : groupnumarr) 
+		if("5".equals(lotteryPlay.getLotteryNumber()))
+		{//11选5和12选5的遗漏查询
+			String groupnum = "";
+			if(null != groupnumarr)
 			{
-				if(number.equals("10"))
+				for (String number : groupnumarr) 
 				{
-					groupnum = groupnum + "A";
-				}
-				else
-					if(number.equals("11"))
+					if(number.equals("10"))
 					{
-						groupnum = groupnum + "J";
+						groupnum = groupnum + "A";
 					}
 					else
-						if(number.equals("12"))
+						if(number.equals("11"))
 						{
-							groupnum = groupnum + "Q";
+							groupnum = groupnum + "J";
 						}
-						else{
-							groupnum = groupnum + number;
-						}
+						else
+							if(number.equals("12"))
+							{
+								groupnum = groupnum + "Q";
+							}
+							else{
+								groupnum = groupnum + number;
+							}
+				}
 			}
+			
+			
+			returnMap = outerInterfaceService.getMissAnalysisData(type, selectnum, groupnum, tableName,orderby,endNumber,ascOrDesc);
+			
+			
 		}
-		
-		
-		returnMap = outerInterfaceService.getMissAnalysisData(type, selectnum, groupnum, tableName,orderby,endNumber,ascOrDesc);
+		else
+			if("3".equals(lotteryPlay.getLotteryNumber()))
+			{//TODO:快三遗漏查询
+				
+				
+			}
 		
 		
 		return returnMap;
