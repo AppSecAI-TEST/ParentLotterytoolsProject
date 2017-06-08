@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
@@ -51,6 +53,9 @@ public class LotteryStationController
 	
 	@Autowired
 	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private LotteryGroupService lotteryGroupService;
 	
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
@@ -300,6 +305,12 @@ public class LotteryStationController
 							lotterybuyerOrExpertService.updateCardsOfUser(owner, LotteryStationController.CREATE_FUCAI_GROUP_CARD_ID,1);//彩种类型和建群卡id相同
 					
 				}
+				
+				//TODO:审批成功后，将站主用户加入到中心群中
+				boolean flag  = lotteryGroupService.joinInCityCenterGroup
+						(lotteryStation.getProvince(), "4", lotteryStation.getCity(), lotteryStation.getLotteryType(),lotteryStation.getLotteryBuyerOrExpert().getId());
+				LOG.info("加入中心群:"+flag);
+				
 			}
 			
 			

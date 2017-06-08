@@ -73,5 +73,7 @@ public class Constants {
 	
 	public static final String ERROR_STR="error:";
 	
+	public static final String CENTER_CITY_GROUP_ID="4";//中心群id
+	public static final String COMPANY_GROUP_ID="5";//公司群id
 
 }

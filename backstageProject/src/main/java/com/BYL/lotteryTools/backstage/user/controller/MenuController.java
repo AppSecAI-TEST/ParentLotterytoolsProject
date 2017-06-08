@@ -379,6 +379,43 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 群消息推送，可以根据条件筛选群，然后发布文字或图片到群内
+	* @Title: pushGroupMsg 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月7日 下午2:40:49 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/pushGroupMsg.action", method = RequestMethod.GET)
+	public String pushGroupMsg()
+	{
+		String indexPage = "lotteryTools/lotteryGroup/pushGroupMsg";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * 群申诉管理模块
+	* @Title: groupAppealManage 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月7日 下午3:42:00 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/groupAppealManage.action", method = RequestMethod.GET)
+	public String groupAppealManage()
+	{
+		String indexPage = "lotteryTools/lotteryGroup/groupAppealManage";
+		
+		
+		return indexPage;
+	}
 	
 	/**
 	 * 跳转到错误页

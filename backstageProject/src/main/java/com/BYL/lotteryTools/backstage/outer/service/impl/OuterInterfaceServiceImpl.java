@@ -200,6 +200,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 			lotteryPlayOfProvince.setProvinceCode(lotteryPlay.getProvince());
 			lotteryPlayOfProvince.setLotteryTypeName(lotteryPlay.getLotteryType().equals("1")?"体彩":"福彩");
 			lotteryPlayOfProvince.setLineCount(lotteryPlay.getLineCount());
+			lotteryPlayOfProvince.setLotteryNumber(lotteryPlay.getLotteryNumber());
 			
 			list.add(lotteryPlayOfProvince);
 		}

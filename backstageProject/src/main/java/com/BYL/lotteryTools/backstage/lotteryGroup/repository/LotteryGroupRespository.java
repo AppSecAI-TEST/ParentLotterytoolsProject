@@ -20,4 +20,11 @@ public interface LotteryGroupRespository extends GenericRepository<LotteryGroup,
 	
 	@Query("select u from LotteryGroup u where u.isDeleted = 1 and u.groupNumber = ?1 ")
 	public LotteryGroup getLotteryGroupByGroupNumber(String groupNumber);
+	
+	@Query("select u from LotteryGroup u where u.isDeleted = 1 and u.province = ?1 and u.lotteryType = ?2 and u.city = ?3 and u.detailLotteryType = ?4 order by u.createTime desc")
+	public List<LotteryGroup> getLotteryGroupByProvinceAndLotteryTypeAndCityAndDetailLotteryType
+						(String province,String lotteryType,String city,String detailLotteryType);
+	
+	@Query("select u from LotteryGroup u where u.isDeleted = 1  and u.lotteryType = ?1")
+	public List<LotteryGroup> getLotteryGroupByLotteryType(String lotteryType);
 }

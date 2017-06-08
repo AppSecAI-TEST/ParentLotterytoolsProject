@@ -16,8 +16,20 @@ public class LotteryPlayOfProvince
 	
 	private String lineCount;//每天开出的最大期数
 	
+	private String lotteryNumber;//开奖号码个数
+	
+	
+	
 	
 
+
+	public String getLotteryNumber() {
+		return lotteryNumber;
+	}
+
+	public void setLotteryNumber(String lotteryNumber) {
+		this.lotteryNumber = lotteryNumber;
+	}
 
 	public String getLineCount() {
 		return lineCount;

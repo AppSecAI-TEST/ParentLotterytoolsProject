@@ -159,34 +159,48 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
 			QueryResult<RelaBindOfLbuyerorexpertAndGroup> relas = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, groupId);
 			List<RelaBindOfLbuyerorexpertAndGroup> list = relas.getResultList();
-			for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : list) 
+			if(null != list)
 			{
-				try
+				for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : list) 
 				{
-					relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
-				}
-				catch(Exception e)
-				{
-					LOG.error("delete,error:", e);
+					try
+					{
+						relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
+					}
+					catch(Exception e)
+					{
+						LOG.error("delete,error:", e);
+					}
 				}
 			}
+			
 			//删除加群申请的关联关系
 			List<RelaApplyOfLbuyerorexpertAndGroup> applys = relaApplybuyerAndGroupService.
 					getRelaApplyOfLbuyerorexpertAndGroupByGroupId(groupId);
-			for (RelaApplyOfLbuyerorexpertAndGroup delApply : applys) 
+			if(null != applys)
 			{
-				relaApplybuyerAndGroupService.delete(delApply);
+				for (RelaApplyOfLbuyerorexpertAndGroup delApply : applys) 
+				{
+					relaApplybuyerAndGroupService.delete(delApply);
+				}
 			}
+			
 			
 			//删除群等级关联关系
 			List<RelaGroupUpLevelRecord> records = relaGroupUpLevelService.getRelaGroupUpLevelRecordByGroupId(groupId);
-			for (RelaGroupUpLevelRecord relaGroupUpLevelRecord : records) {
-				relaGroupUpLevelService.delete(relaGroupUpLevelRecord);
+			if(null != records)
+			{
+				for (RelaGroupUpLevelRecord relaGroupUpLevelRecord : records) {
+					relaGroupUpLevelService.delete(relaGroupUpLevelRecord);
+				}
 			}
+			
 			
 			//删除群头像和群二维码
 			List<Uploadfile> touxiang = uploadfileService.getUploadfilesByNewsUuid(entity.getTouXiang());
-			uploadfileService.deleteUploadFile(touxiang, httpSession);//调用删除附件数据和附件文件方法
+			if(null != touxiang &&touxiang.size()!=0)
+				uploadfileService.deleteUploadFile(touxiang, httpSession);//调用删除附件数据和附件文件方法
+			
 			//删除二维码图片
 			String savePath = httpSession.getServletContext().getRealPath(entity.getGroupQRImg());//获取二维码绝对路径
 			File dirFile = new File(savePath);
@@ -281,6 +295,37 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	}
 	
 	/**
+	 * 根据群类型获取群列表
+	* @Title: getGroupsOfLotteryType 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param page
+	* @param @param rows
+	* @param @param groupId
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月7日 下午2:46:16 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getGroupsOfLotteryType", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getGroupsOfLotteryType(
+			@RequestParam(value="lotteryType",required=true)   String lotteryType,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		List<LotteryGroup> list = lotteryGroupService.getLotteryGroupByLotteryType(lotteryType);
+		
+		map.put("groupList", lotteryGroupService.toDTOs(list));
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put(Constants.FLAG_STR, true);
+		
+		return map;
+	}
+	
+	/**
 	 * 获取群列表
 	* @Title: getGroupList 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
@@ -322,7 +367,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		paraArr.add("3");//竞彩
 		params.add(paraArr);
 		buffer.append(" and lotteryType in ?").append(params.size());*/
-		params.add("4");//中心群
+		params.add(Constants.CENTER_CITY_GROUP_ID);//中心群
 		buffer.append(" and lotteryType != ?").append(params.size());
 		
 		//传汉字

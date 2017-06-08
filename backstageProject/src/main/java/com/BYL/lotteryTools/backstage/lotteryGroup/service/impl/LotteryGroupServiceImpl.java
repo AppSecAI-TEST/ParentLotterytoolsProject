@@ -1,19 +1,31 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
+import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.backstage.user.entity.City;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
@@ -29,6 +41,8 @@ import com.BYL.lotteryTools.common.util.QueryResult;
 @Transactional(propagation=Propagation.REQUIRED)
 public class LotteryGroupServiceImpl implements LotteryGroupService 
 {
+	private Logger LOG = LoggerFactory.getLogger(LotteryGroupServiceImpl.class);
+	
 	@Autowired
 	private LotteryGroupRespository lotteryGroupRespository;
 	
@@ -40,6 +54,15 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	
 	@Autowired 
 	private CityService cityService;
+	
+	@Autowired
+	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
+	
+	@Autowired
+	private RelaBindbuyerAndGroupService relaBindbuyerAndGroupService;
+	
+	@Autowired
+	private RongyunImService rongyunImService;
 	
 	public List<LotteryGroup> findAll()
 	{
@@ -179,6 +202,136 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	public List<LotteryGroup> getLotteryGroupByProvinceAndLotteryType(
 			String province, String lotteryType) {
 		return lotteryGroupRespository.getLotteryGroupByProvinceAndLotteryType(province, lotteryType);
+	}
+
+	public List<LotteryGroup> getLotteryGroupByProvinceAndLotteryTypeAndCityAndDetailLotteryType(
+			String province, String lotteryType, String city,
+			String detailLotteryType) {
+		return lotteryGroupRespository.getLotteryGroupByProvinceAndLotteryTypeAndCityAndDetailLotteryType
+				(province, lotteryType, city, detailLotteryType);
+	}
+
+	/**
+	 * 
+	* @Title: joinInCityCenterGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param province
+	* @param @param city
+	* @param @param lotteryType
+	* @param @param detailLotteryType
+	* @param @param userId:要加入中心群的用户id
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月6日 下午5:22:33 
+	* @throws
+	 */
+	public boolean joinInCityCenterGroup(String province, String city,
+			String lotteryType, String detailLotteryType,String userId) {
+		
+		boolean flag = true;
+		LotteryGroup group = new LotteryGroup();
+		List<LotteryGroup> lotteryGroups = lotteryGroupRespository.getLotteryGroupByProvinceAndLotteryTypeAndCityAndDetailLotteryType
+					(province, lotteryType, city, detailLotteryType);
+		LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
+		if(null != user && null != lotteryGroups && lotteryGroups.size() != 0)
+		{
+			//每个群最多能加3000人，
+			group = lotteryGroups.get(0);//获取最近创建的群
+			//判断当前群已加入多少人
+			Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+			QueryResult<RelaBindOfLbuyerorexpertAndGroup> lQueryResult = relaBindbuyerAndGroupService.
+					getMemberOfJoinGroup(pageable, group.getId());
+			List<RelaBindOfLbuyerorexpertAndGroup> relalist = lQueryResult.getResultList();
+			if(null != relalist)
+			{
+				if(relalist.size()>3000)
+				{
+					//群人数多于3000人，需要创建新群
+					group = this.createCenterCityGroup(province, city, lotteryType);
+				}
+				/*else
+				{
+					addUserToLotteryGroup(user,group);//添加用户到群
+				}*/
+				
+				
+			}
+			else
+			{//当前符合条件群不存在，新建
+				group = this.createCenterCityGroup(province, city, lotteryType);
+			}
+			addUserToLotteryGroup(user,group);//添加用户到群
+		}
+		
+		
+		return flag;
+	}
+	
+	//创建中心群
+	private LotteryGroup createCenterCityGroup(String province,String city,String lotteryType)
+	{
+		LotteryGroup group = new LotteryGroup();
+		StringBuffer groupName = new StringBuffer();
+		Province pro = provinceService.getProvinceByPcode(province);
+		City cityname = cityService.getCityByCcode(city);
+		groupName.append(pro.getPname()).
+			append(cityname.getCname()).
+			append("1".equals(lotteryType)?"体彩中心群":"福彩中心群");
+		
+		group.setId(UUID.randomUUID().toString());
+		group.setName(groupName.toString());
+		group.setProvince(province);
+		group.setCity(city);
+		group.setLotteryType(Constants.CENTER_CITY_GROUP_ID);
+		group.setDetailLotteryType(lotteryType);
+		group.setFabuKj(0);
+		group.setFabuZs(0);
+		group.setSsKjChaxun(0);
+		group.setSsYlChaxun(0);
+		group.setSsZjChaxun(0);
+		group.setNoticeReview(0);
+		group.setJoinType(0);//0为自由加入
+		group.setLotteryBuyerOrExpert(null);//群主
+		
+		group.setIsDeleted(Constants.IS_NOT_DELETED);
+		group.setCreator("system");
+		group.setCreateTime(new Timestamp((System.currentTimeMillis())));
+		group.setModify("system");
+		group.setModifyTime(new Timestamp((System.currentTimeMillis())));
+		this.save(group);
+		
+		return group;
+	}
+	
+	//添加用户到群
+	public String addUserToLotteryGroup(LotterybuyerOrExpert user,LotteryGroup group)
+	{
+		RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+		rela.setIsDeleted(Constants.IS_NOT_DELETED);
+		rela.setIsReceive("1");
+		rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+		rela.setIsGroupOwner("0");//群成员
+		rela.setLotterybuyerOrExpert(user);
+		rela.setLotteryGroup(group);
+		rela.setCreator(group.getId());
+		rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		rela.setModify(group.getId());
+		rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		//保存关联
+		relaBindbuyerAndGroupService.save(rela);
+		
+		//建立融云中群和用户的关系
+		String[] joinUsers = {user.getId()};
+		CodeSuccessResult result= rongyunImService.joinUserInGroup(joinUsers, group.getId(), group.getName());
+		if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+		{
+			LOG.error("融云群加入用户报错", result.getErrorMessage());
+		}
+		return result.getCode().toString();
+	}
+
+	public List<LotteryGroup> getLotteryGroupByLotteryType(String lotteryType) {
+		return lotteryGroupRespository.getLotteryGroupByLotteryType(lotteryType);
 	}
 	
 	

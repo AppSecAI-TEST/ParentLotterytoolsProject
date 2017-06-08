@@ -2,11 +2,13 @@ package com.BYL.lotteryTools.backstage.lotteryGroup.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -108,8 +110,20 @@ public class LotteryGroup extends BaseEntity
 	@OneToMany(mappedBy = "lotteryGroup", fetch = FetchType.LAZY)
 	private List<LotteryGroupNotice> lotteryGroupNotices  ;
 	
+	//一个信息可以推送给多个群，一个群也可以收到多个信息
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	private List<GroupMsgOfPush> groupMsgOfPushs;
 	
 	
+	
+
+	public List<GroupMsgOfPush> getGroupMsgOfPushs() {
+		return groupMsgOfPushs;
+	}
+
+	public void setGroupMsgOfPushs(List<GroupMsgOfPush> groupMsgOfPushs) {
+		this.groupMsgOfPushs = groupMsgOfPushs;
+	}
 
 	public String getDetailLotteryType() {
 		return detailLotteryType;
