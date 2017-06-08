@@ -170,16 +170,16 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 							{
 								extra = "5in11";
 								//TODO:拼接图片大小
-								imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
-//								imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
+//								imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
+								imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
 								imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/5in11Img.png");//拼接走势图图片
 							}
 							else
 								if("12".equals(endNumber))
 								{
 									extra = "5in12";
-									imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
-//									imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
+//									imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
+									imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
 									imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/5in11Img.png");//拼接走势图图片
 								}
 						}
