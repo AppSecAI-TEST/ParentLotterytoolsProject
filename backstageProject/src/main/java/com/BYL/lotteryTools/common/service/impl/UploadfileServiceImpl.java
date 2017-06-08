@@ -189,7 +189,7 @@ public class UploadfileServiceImpl implements UploadfileService {
 			        	deleteFlag = dirFile.delete();
 			        	if(deleteFlag)
 			        	{//删除附件(清空附件关联newsUuid)
-			        		LOG.info("deleteImg==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));
+			        		LOG.info("deleteImg==删除原附件文件数据--附件id="+uploadfile.getId()+"--操作人=");
 			        	}
 			        	else
 			        	{
