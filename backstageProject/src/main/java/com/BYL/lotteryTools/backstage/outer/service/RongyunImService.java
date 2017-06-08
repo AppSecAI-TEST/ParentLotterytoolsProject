@@ -191,6 +191,6 @@ public interface RongyunImService {
 	* @return CodeSuccessResult    返回类型 
 	* @throws
 	 */
-	public CodeSuccessResult sendImgMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String message,String imageUri);
+	public CodeSuccessResult sendImgMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String message,String imageUri,String type);
 	
 }

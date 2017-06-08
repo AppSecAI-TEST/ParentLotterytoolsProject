@@ -367,7 +367,8 @@ public class RongyunImServiceImpl implements RongyunImService
 		return messagePublishGroupResult;
 	}
 	
-	public CodeSuccessResult sendImgMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String message,String imageUri)
+	public CodeSuccessResult sendImgMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String message,
+			String imageUri,String type)
 	{
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
 		CodeSuccessResult messagePublishGroupResult = null;
@@ -375,7 +376,7 @@ public class RongyunImServiceImpl implements RongyunImService
 		// 创建群组方法（创建群组，并将用户加入该群组，用户将可以收到该群的消息，同一用户最多可加入 500 个群，每个群最大至 3000 人，App 内的群组数量没有限制.注：其实本方法是加入群组方法 /group/join 的别名。） 
 		try
 		{
-			ImgMessage messagePublishGroupTxtMessage = new ImgMessage(message, "group", imageUri);
+			ImgMessage messagePublishGroupTxtMessage = new ImgMessage(message, type, imageUri);
 			messagePublishGroupResult = rongCloud.message.
 					publishGroup(fromUseId, messagePublishGroupToGroupId, messagePublishGroupTxtMessage
 							, "thisisapush", "{\"pushData\":\"hello\"}", 1, 1, 0);

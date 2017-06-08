@@ -23,6 +23,7 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller.OuterLotteryBuyerOrExpertController;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
@@ -30,6 +31,7 @@ import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.mode
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.common.exception.GlobalExceptionHandler;
+import com.BYL.lotteryTools.common.util.QueryResult;
 
 /**
  * 推送数据源（定时任务判断是否有新的数据开出，将新数据按照tag_and推送到app）
@@ -142,7 +144,8 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 					{
 						//1.推送开奖号
 						String extra = "推送内容类型";
-						String[] tagsand = {lotteryPlay.getProvince(),lotteryPlay.getLotteryType()};
+						//Add by banna in 2017/6/6 推送tag多加一个开奖号码个数tag，用来区分同一彩种类型的不同彩种，例如辽宁12选5和辽宁快三
+						String[] tagsand = {lotteryPlay.getProvince(),lotteryPlay.getLotteryType(),lotteryPlay.getLotteryNumber()};
 						StringBuffer msgContent = new StringBuffer();
 						StringBuffer imgContent = new StringBuffer();//图片内容content
 						String imgFile = "";//走势图缩略图
@@ -167,16 +170,16 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 							{
 								extra = "5in11";
 								//TODO:拼接图片大小
-//								imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
-								imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
+								imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
+//								imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
 								imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/5in11Img.png");//拼接走势图图片
 							}
 							else
 								if("12".equals(endNumber))
 								{
 									extra = "5in12";
-//									imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
-									imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
+									imgFile = "d://5in11ImgBase.jpg";//走势图缩略图
+//									imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
 									imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/5in11Img.png");//拼接走势图图片
 								}
 						}
@@ -236,7 +239,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 	{
 		boolean flag = true;
 		QueryResult<LotterybuyerOrExpert> robotResult = lotterybuyerOrExpertService.
-				getLotterybuyerOrExpertList(1, Integer.MAX_VALUE, null, lotteryPlay.getProvince(), null, "1");
+				getLotterybuyerOrExpertList(1, Integer.MAX_VALUE, null, lotteryPlay.getProvince(), null, "1",null);
 		List<LotterybuyerOrExpert> robotList = robotResult.getResultList();
 		String message = "";
 		for (LotterybuyerOrExpert robot : robotList) {
@@ -263,7 +266,8 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 			String[] group = {lotteryGroup.getId()};
 			if(1 == lotteryGroup.getFabuKj())
 			{
-				CodeSuccessResult result =  rongyunImService.sendMessgeToGroups(lotteryGroup.getGroupRobotID(), group, issueNumContent);
+				CodeSuccessResult result =  rongyunImService.sendMessgeToGroups
+						(lotteryGroup.getGroupRobotID(), group, issueNumContent);
 				if(OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
 					LOG.info("success");
@@ -292,8 +296,14 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 		        //对字节数组Base64编码  
 		        BASE64Encoder encoder = new BASE64Encoder();  
 		        //返回Base64编码过的字节数组字符串  
+		        StringBuffer type = new StringBuffer("zoushi");
+		        type.append(",").append(lotteryPlay.getId()).
+		        	 append(",").append(lotteryPlay.getLotteryType()).
+		        	 append(",").append(lotteryPlay.getProvince()).
+		        	 append(",").append(lotteryPlay.getLotteryNumber());
 		        CodeSuccessResult result =  rongyunImService.sendImgMessgeToGroups(lotteryGroup.getGroupRobotID(), 
-						group, encoder.encode(data).replace("\r\n", "").replace("\r", "").replace("\n", "") , imgContent);
+						group, encoder.encode(data).replace("\r\n", "").replace("\r", "").replace("\n", "") ,
+						imgContent,type.toString());//图片内容的extra的值为"zoushi"
 		        if(OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
 					LOG.info("success");

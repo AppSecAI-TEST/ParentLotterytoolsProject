@@ -72,7 +72,7 @@ public class LotteryGroupOthersController extends GlobalExceptionHandler
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		List<LotteryGroup> groups = new ArrayList<LotteryGroup>();
-		
+		//TODO:使用机器人推送图片信息时，要区分类型，因为“zoushi”extra值会跳转到走势图，所以需要给其他类型
 		
 		
 		return map;
