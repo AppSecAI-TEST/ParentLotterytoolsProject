@@ -259,7 +259,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 		List<LotteryGroup> groups = lotteryGroupService.
 				getLotteryGroupByProvinceAndLotteryType(lotteryPlay.getProvince(), lotteryPlay.getLotteryType());
 		String message = "";
-		int timerCount = 0;//20条消息计时器
+//		int timerCount = 0;//20条消息计时器
 		for (LotteryGroup lotteryGroup : groups) {
 			message = "pushToGroup";
 			//发布开奖
@@ -271,7 +271,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 				if(OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
 					LOG.info("success");
-					timerCount++;
+//					timerCount++;
 				}
 			}
 			//发布走势
@@ -296,7 +296,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 		        //对字节数组Base64编码  
 		        BASE64Encoder encoder = new BASE64Encoder();  
 		        //返回Base64编码过的字节数组字符串  
-		        StringBuffer type = new StringBuffer("zoushi");
+		        StringBuffer type = new StringBuffer("zoushi");//type:App端用来判断当前机器人发送的是什么图片，如果是走势图则跳转到走势图页面
 		        type.append(",").append(lotteryPlay.getId()).
 		        	 append(",").append(lotteryPlay.getLotteryType()).
 		        	 append(",").append(lotteryPlay.getProvince()).
@@ -307,16 +307,16 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 		        if(OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
 					LOG.info("success");
-					timerCount++;
+//					timerCount++;
 				}
 			}
 			
-			if(20 == timerCount)
+			/*if(20 == timerCount)
 			{
-				Thread.sleep(1000);//延时1s
+//				Thread.sleep(1000);//延时1s
 				LOG.info("waiting......................");
 				timerCount = 0;//延时后重置计时器
-			}
+			}*/
 		}
 		
 		return message;

@@ -278,8 +278,8 @@ public class LotterybuyerOrExpertServiceImpl implements
 		
 		
 		
-		//若超过200个群（有效群，若群删除时则要移除群机器人，要去融云解除用户和群的关系绑定），则需要新建新的机器人
-		if("".equals(robotUserId)|| null == list || list.size()>=200)
+		//若超过20个群（有效群，若群删除时则要移除群机器人，要去融云解除用户和群的关系绑定），则需要新建新的机器人,一个机器人可以加入20个群，因为一个机器人1s可以给20个群发送消息
+		if("".equals(robotUserId)|| null == list || list.size()>=20)
 		{//若机器人的加群数大于500，则要创建新的
 //			Province pro = provinc?eService.getProvinceByPcode(province);//获取省份信息
 			//创建机器人用户

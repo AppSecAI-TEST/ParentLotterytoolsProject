@@ -569,7 +569,6 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					if(null != relaGroup.getLotteryGroup())
 					{
 						LotteryGroupDTO dto = new LotteryGroupDTO();
-//						BeanUtil.copyBeanProperties(dto, relaGroup.getLotteryGroup());
 						dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
 						dto.setIsOwner(relaGroup.getIsGroupOwner());
 						dto.setIsTop(relaGroup.getIsTop());
@@ -1020,14 +1019,27 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				lotteryGroupService.update(group);
 				map.put(Constants.FLAG_STR, true);
 				map.put(Constants.MESSAGE_STR, "更新群信息成功");
-				map.put("group", BeanUtil.copyBeanProperties(dto, group));
+				map.put("group", lotteryGroupService.toDTO(group));
 				
 				//刷新群的信息
-				CodeSuccessResult result = rongyunImService.refreshGroup(dto.getId(), dto.getName());
+				CodeSuccessResult result = rongyunImService.refreshGroup
+						(dto.getId(), dto.getName());
 				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
 				{
 					LOG.error("融云刷新群信息时出错：", result.getErrorMessage());
 				}
+			}
+			//修改群简介
+			if(null != dto.getIntroduction() && !"".equals(dto.getIntroduction()))
+			{
+				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
+				group.setIntroduction(dto.getIntroduction());
+				
+				//更改群名称
+				lotteryGroupService.update(group);
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.MESSAGE_STR, "更新群信息成功");
+				map.put("group", lotteryGroupService.toDTO(group));
 			}
 			
 			//TODO:群升级，群升级时才传递这个参数(升到几级，升2级传值2)
@@ -1059,7 +1071,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				lotteryGroupService.update(group);
 				map.put(Constants.FLAG_STR, true);
 				map.put(Constants.MESSAGE_STR, "升级群成功");
-				map.put("group", BeanUtil.copyBeanProperties(dto, group));
+				map.put("group", lotteryGroupService.toDTO(group));
 			}
 			
 		
