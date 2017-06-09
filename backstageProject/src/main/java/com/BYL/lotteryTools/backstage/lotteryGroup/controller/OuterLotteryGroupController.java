@@ -1219,6 +1219,15 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					map.put(Constants.MESSAGE_STR, "创建成功");
 					map.put(Constants.FLAG_STR, true);
 					
+					/*建群成功后，使用机器人向群内发送消息*/
+					String[] group = {entity.getId()};
+					CodeSuccessResult sendResult =  rongyunImService.sendMessgeToGroups
+							(robotUserId, group, "建群成功！");
+					if(!SUCCESS_CODE.equals(sendResult.getCode().toString()))
+					{
+						LOG.error("send create group msg error:", result.getErrorMessage());
+					}
+					
 					//TODO:1.创建成功后，将当前群主的建群卡个数减1
 					RelaLBEUserAndLtcard card = lotterybuyerOrExpertService.
 							getRelaLBEUserAndLtcardByUserIdAndCardId(dto.getOwnerId(), dto.getLotteryType());
