@@ -276,9 +276,10 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				userDtos.add(dto);
 					
 			}
-			
+			 LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
 			 map.put(Constants.FLAG_STR, true);
 			 map.put(Constants.MESSAGE_STR, "获取成功");
+			 map.put("groupNumber", group.getGroupNumber());//放置群号返回参数
 			 map.put("memberDtos", userDtos);
 			 map.put("rows",userDtos);
 			 map.put("total", lQueryResult.getTotalCount());
