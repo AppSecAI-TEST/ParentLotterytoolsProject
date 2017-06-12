@@ -14,6 +14,9 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupNoticeDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroupNotice;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupNoticeRepository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupNoticeService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
+import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
@@ -24,6 +27,12 @@ public class LotteryGroupNoticeServiceImpl implements LotteryGroupNoticeService 
 
 	@Autowired
 	private LotteryGroupNoticeRepository lotteryGroupNoticeRepository;
+	
+	@Autowired
+	private LotteryGroupService lotteryGroupService;
+	
+	@Autowired
+	private UploadfileService uploadfileService;
 
 	public LotteryGroupNotice getLotteryGroupNoticeByID(String id) {
 		return lotteryGroupNoticeRepository.getLotteryGroupNoticeByID(id);
@@ -67,6 +76,20 @@ public class LotteryGroupNoticeServiceImpl implements LotteryGroupNoticeService 
 				{
 					dto.setStatus("999");
 				}
+				
+				if(null != entity.getLotteryGroup())
+				{
+					Uploadfile touxiangImg = uploadfileService.getUploadfileByNewsUuid(entity.getLotteryGroup().getTouXiang());
+					if(null != touxiangImg)
+					{
+						dto.setGroupImgUrl(touxiangImg.getUploadfilepath()+touxiangImg.getUploadRealName());
+					}
+					
+					dto.setGroupOwner(entity.getLotteryGroup().getLotteryBuyerOrExpert().getName());
+					
+				}
+				
+				
 				
 			} catch (Exception e) {
 				e.printStackTrace();

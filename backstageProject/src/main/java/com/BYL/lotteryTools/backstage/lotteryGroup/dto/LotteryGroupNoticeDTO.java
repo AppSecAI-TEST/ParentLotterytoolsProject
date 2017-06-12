@@ -21,9 +21,29 @@ public class LotteryGroupNoticeDTO {
 	
 	private String createTime;
 	
+	private String groupOwner;//群主
+	
+	private String groupImgUrl;//群头像
 	
 	
 	
+	
+
+	public String getGroupOwner() {
+		return groupOwner;
+	}
+
+	public void setGroupOwner(String groupOwner) {
+		this.groupOwner = groupOwner;
+	}
+
+	public String getGroupImgUrl() {
+		return groupImgUrl;
+	}
+
+	public void setGroupImgUrl(String groupImgUrl) {
+		this.groupImgUrl = groupImgUrl;
+	}
 
 	public String getGroupName() {
 		return groupName;
