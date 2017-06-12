@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.BYL.lotteryTools.backstage.outer.repository.TxtMessage;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.ImgMessage;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.ImgTextMessage;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.RongCloud;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
@@ -377,6 +378,26 @@ public class RongyunImServiceImpl implements RongyunImService
 		try
 		{
 			ImgMessage messagePublishGroupTxtMessage = new ImgMessage(message, type, imageUri);
+			messagePublishGroupResult = rongCloud.message.
+					publishGroup(fromUseId, messagePublishGroupToGroupId, messagePublishGroupTxtMessage
+							, "thisisapush", "{\"pushData\":\"hello\"}", 1, 1, 0);
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return messagePublishGroupResult;
+	}
+	
+	public CodeSuccessResult sendImgTextMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String content,
+			String imageUri,String type,String title,String url)
+	{
+		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);//这个时候可以初始化各个对象的appkey和appSecreat
+		CodeSuccessResult messagePublishGroupResult = null;
+		try
+		{
+			ImgTextMessage messagePublishGroupTxtMessage = new ImgTextMessage(content, type, title, imageUri, url);//url:跳转地址
 			messagePublishGroupResult = rongCloud.message.
 					publishGroup(fromUseId, messagePublishGroupToGroupId, messagePublishGroupTxtMessage
 							, "thisisapush", "{\"pushData\":\"hello\"}", 1, 1, 0);
