@@ -1008,13 +1008,37 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
-		
+		LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
 		try
 		{
+			
+			if(null != dto.getFabuKj() && !"".equals(dto.getFabuKj()))
+			{
+				group.setFabuKj(dto.getFabuKj());
+				if(null != dto.getFabuZs() && !"".equals(dto.getFabuZs()))
+				{
+					group.setFabuZs(dto.getFabuZs());
+				}
+				if(null != dto.getSsKjChaxun() && !"".equals(dto.getSsKjChaxun()))
+				{
+					group.setSsKjChaxun(dto.getSsKjChaxun());
+				}
+				if(null != dto.getSsYlChaxun() && !"".equals(dto.getSsYlChaxun()))
+				{
+					group.setSsYlChaxun(dto.getSsYlChaxun());
+				}
+				if(null != dto.getSsZjChaxun() && !"".equals(dto.getSsZjChaxun()))
+				{
+					group.setSsZjChaxun(dto.getSsZjChaxun());
+				}
+				lotteryGroupService.update(group);
+			}
+			
+			
+			
 			//修改群新新信息（修改群名称）
 			if(null != dto.getName() && !"".equals(dto.getName()))
 			{
-				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
 				group.setName(dto.getName());
 				//更改群名称
 				lotteryGroupService.update(group);
@@ -1030,10 +1054,12 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					LOG.error("融云刷新群信息时出错：", result.getErrorMessage());
 				}
 			}
+			
+			
 			//修改群简介
 			if(null != dto.getIntroduction() && !"".equals(dto.getIntroduction()))
 			{
-				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
+//				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
 				group.setIntroduction(dto.getIntroduction());
 				
 				//更改群名称
@@ -1046,7 +1072,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			//TODO:群升级，群升级时才传递这个参数(升到几级，升2级传值2)
 			if(null != dto.getUpLevel() && !"".equals(dto.getUpLevel()))
 			{
-				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
+//				LotteryGroup group = lotteryGroupService.getLotteryGroupById(dto.getId());
 				
 				//获取上次群升级的记录，获取上次的等级
 				LGroupLevel beforeLevel = lGroupLevelService.getLGroupLevelByID(group.getGroupLevel());//获取上一次等级的数据
