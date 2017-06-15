@@ -18,7 +18,7 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String touXiangUrl;//头像图片
 	
-//	private MultipartFile touXiangImg;//头像图片
+	private MultipartFile touXiangImg;//头像图片
 	
 	private String password;//密码
 	
@@ -81,6 +81,14 @@ public class LotterybuyerOrExpertDTO {
 	private String isGroupOwner;
 	
 	
+
+	public MultipartFile getTouXiangImg() {
+		return touXiangImg;
+	}
+
+	public void setTouXiangImg(MultipartFile touXiangImg) {
+		this.touXiangImg = touXiangImg;
+	}
 
 	public String getIsGroupOwner() {
 		return isGroupOwner;

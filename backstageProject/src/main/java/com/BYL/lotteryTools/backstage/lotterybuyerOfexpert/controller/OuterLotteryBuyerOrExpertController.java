@@ -518,7 +518,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	* @return ResultBean    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value="/updateUser",method = RequestMethod.GET)
+	@RequestMapping(value="/updateUser")
 	public @ResponseBody Map<String,Object> updateUser(
 			LotterybuyerOrExpertDTO dto,
 			HttpServletRequest request,HttpSession httpSession)
@@ -526,7 +526,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		Map<String,Object> map = new HashMap<String, Object>();
 		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
 				getLotterybuyerOrExpertById(dto.getId());
-		//上传头像（若头像上传了新的，则要进行用户信息刷新）
+		/*//上传头像（若头像上传了新的，则要进行用户信息刷新）
 		if(null != dto.getTouXiang())//获取头像newsUuid是否为空
 		{
 			lotterybuyerOrExpert.setTouXiang(dto.getTouXiang());//关联新头像
@@ -550,6 +550,44 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 					uploadfileService.delete(lastTouxiang, httpSession);
 				}
 			}
+		}*/
+		
+		if(null != dto.getTouXiangImg())
+		{
+			Uploadfile uploadfile =null;
+			String newsUuid = UUID.randomUUID().toString();
+			try 
+			{
+				 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
+				//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
+//					CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
+//							null, OuterLotteryBuyerOrExpertController.DOMAIN+request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+//					if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+//					{
+//						LOG.error("融云同步头像失败", result.getErrorMessage());
+//					}
+			} 
+			catch (Exception e) 
+			{
+				LOG.error(Constants.ERROR_STR, e);
+			}
+			
+			//删除旧头像(也可以定时批量删除,若为基础头像，则不可以进行删除)
+			if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpert.getTouXiang()))
+			{
+				LOG.info("删除附件",dto.getLastTouXiang());
+				Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpert.getTouXiang());
+				if(null != lastTouxiang)
+				{//若存在旧头像，则要进行删除操作
+					uploadfileService.delete(lastTouxiang, httpSession);
+				}
+			}
+			//绑定新头像
+			if(null != uploadfile)
+			{
+				lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());//关联新头像
+			}
+			
 		}
 		
 		//修改昵称
@@ -627,6 +665,8 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		
 		if(caiFlag)
 		{//若彩聊号唯一，则可以进行修改操作
+			lotterybuyerOrExpert.setModify("app");
+			lotterybuyerOrExpert.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			try 
 			{
