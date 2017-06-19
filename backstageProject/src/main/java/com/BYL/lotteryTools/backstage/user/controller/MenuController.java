@@ -418,6 +418,33 @@ public class MenuController {
 	}
 	
 	/**
+	 * 应用管理菜单
+	 * @return
+	 */
+	@RequestMapping(value = "/appManage.action", method = RequestMethod.GET)
+	public String appManage()
+	{
+		String indexPage = "lotteryTools/app/appManage";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * 应用版本管理菜单
+	 * @return
+	 */
+	@RequestMapping(value = "/appVersionManage.action", method = RequestMethod.GET)
+	public String appVersionManage()
+	{
+		String indexPage = "lotteryTools/appversion/appVersionManage";
+		
+		
+		return indexPage;
+	}
+	
+	
+	/**
 	 * 跳转到错误页
 	 * @return
 	 */
@@ -453,6 +480,28 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 上传apk文件
+	* @Title: uploadApkFile 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param uploadId
+	* @param @param session
+	* @param @param model
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月19日 下午3:54:22 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/uploadApkFile.action", method = RequestMethod.GET)
+	public String uploadApkFile(@RequestParam(value="uploadId",required=false) String uploadId,HttpSession session,ModelMap model)
+	{
+		String indexPage = "lotteryTools/uploadApkFile";
+		
+		
+		model.addAttribute("uploadId", uploadId);
+		return indexPage;
+	}
 	
     
 	/**

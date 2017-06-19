@@ -75,5 +75,7 @@ public class Constants {
 	
 	public static final String CENTER_CITY_GROUP_ID="4";//中心群id
 	public static final String COMPANY_GROUP_ID="5";//公司群id
+	
+	public static final int SERIAL_NUM_LEN = 6;//流水号中自动生成的数字位数
 
 }
