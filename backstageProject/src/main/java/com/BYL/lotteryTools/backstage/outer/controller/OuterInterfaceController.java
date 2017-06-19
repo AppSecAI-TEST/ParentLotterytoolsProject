@@ -556,7 +556,6 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="appName",required=false)String appName)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
-		String version = "";
 		AppversionDTO dto = new AppversionDTO();
 		if(null != appName && !"".equals(appName))
 		{
