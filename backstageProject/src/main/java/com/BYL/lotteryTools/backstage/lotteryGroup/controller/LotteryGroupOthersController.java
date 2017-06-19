@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -18,10 +19,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.dto.GroupMsgOfPushDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.GroupMsgOfPush;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.GroupMsgOfPushService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
+import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.exception.GlobalExceptionHandler;
+import com.BYL.lotteryTools.common.util.Constants;
+import com.BYL.lotteryTools.common.util.QueryResult;
 
 /**
  * 彩聊群周边业务处理controller
@@ -40,6 +48,9 @@ public class LotteryGroupOthersController extends GlobalExceptionHandler
 	
 	@Autowired
 	private RongyunImService rongyunImService;
+	
+	@Autowired
+	private GroupMsgOfPushService groupMsgOfPushService;
 	
 	/**1.群通知发送方法**/
 	
@@ -76,6 +87,52 @@ public class LotteryGroupOthersController extends GlobalExceptionHandler
 		
 		
 		return map;
+	}
+	
+	/**
+	 * 获取群推送信息列表
+	 */
+	@RequestMapping(value="/getPushGroupMsgList", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getGroupList(
+			GroupMsgOfPushDTO dto,
+			@RequestParam(value="page",required=false) int page,
+			@RequestParam(value="rows",required=false) int rows,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		QueryResult<GroupMsgOfPush> queryResult = groupMsgOfPushService.getGroupMsgOfPushList(dto, page, rows);
+		List<GroupMsgOfPushDTO> dtos = groupMsgOfPushService.toDTO(queryResult.getResultList());
+		
+		map.put("rows",dtos);
+		map.put("total", queryResult.getTotalRecord());
+		
+		return map;
+	}
+	
+	/**
+	 * 保存或修改群推送通知数据
+	* @Title: saveOrUpdatePushGroupMsg 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月12日 下午12:05:45 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/saveOrUpdatePushGroupMsg", method = RequestMethod.GET)
+	public @ResponseBody ResultBean saveOrUpdatePushGroupMsg(
+			GroupMsgOfPushDTO dto,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		ResultBean bean = new ResultBean();
+		
+		
+		
+		return bean;
 	}
 	
 	/**2.群申诉模块方法**/
@@ -131,6 +188,7 @@ public class LotteryGroupOthersController extends GlobalExceptionHandler
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		//TODO:
+		
 		
 		return map;
 	}
