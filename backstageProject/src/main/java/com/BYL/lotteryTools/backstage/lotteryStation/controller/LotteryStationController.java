@@ -23,12 +23,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.SysMessage;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.SysMessageService;
 import com.BYL.lotteryTools.backstage.lotteryStation.dto.LotteryStationDTO;
 import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
 import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.controller.PushController;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
@@ -56,6 +59,9 @@ public class LotteryStationController
 	
 	@Autowired
 	private LotteryGroupService lotteryGroupService;
+	
+	@Autowired
+	private SysMessageService sysMessageService;
 	
 	@Autowired
 	private LotterybuyerOrExpertService lotterybuyerOrExpertService;
@@ -318,6 +324,30 @@ public class LotteryStationController
 			LotterybuyerOrExpert lotterybuyerOrExpert = lotteryStation.getLotteryBuyerOrExpert();
 			lotterybuyerOrExpert.setIsStationOwner("1");//有认证通过的彩票站，则认证其拥有着为站主
 			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+			
+			String[] tagsand = {lotterybuyerOrExpert.getTelephone()};//推送给申请认证的用户
+			StringBuffer message = new StringBuffer("您申请的站点号为:"+lotteryStation.getStationNumber()+"的彩站认证状态为:"
+					+("1".equals(lotteryStationDTO.getStatus())?"通过":"未通过"));
+			
+			//若审核通过，则信息中连接邀请码
+			if("1".equals(lotteryStationDTO.getStatus()))
+			{
+				message.append(",您的邀请码为:"+lotteryStation.getInviteCode());
+			}
+			
+			PushController.sendPushWithCallback
+				(tagsand, null,message.toString() , "sysMessage");//推送给群主展示的是“1”
+			
+			/*记录系统消息推送到系统消息表*/
+			SysMessage sysMessage = new SysMessage();
+			sysMessage.setTarget(lotterybuyerOrExpert.getTelephone());
+			sysMessage.setMessage(message.toString());
+			sysMessage.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			sysMessage.setCreator("system");
+			sysMessage.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			sysMessage.setModify("system");
+			sysMessage.setIsDeleted(Constants.IS_NOT_DELETED);
+			sysMessageService.save(sysMessage);
 			
 			//更新彩票站的认证状态信息
 			lotteryStationService.update(lotteryStation);
