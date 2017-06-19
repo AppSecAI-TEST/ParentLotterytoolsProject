@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.app.controller.AppController;
+import com.BYL.lotteryTools.backstage.app.dto.AppversionDTO;
+import com.BYL.lotteryTools.backstage.app.entity.App;
+import com.BYL.lotteryTools.backstage.app.entity.Appversion;
+import com.BYL.lotteryTools.backstage.app.service.AppService;
+import com.BYL.lotteryTools.backstage.app.service.AppversionService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.SysMessage;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.SysMessageService;
 import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
@@ -29,7 +35,9 @@ import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
 import com.BYL.lotteryTools.backstage.user.service.RegionService;
+import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.exception.GlobalOuterExceptionHandler;
+import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.Constants;
 
 @Controller
@@ -59,6 +67,15 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private SysMessageService sysMessageService;
+	
+	@Autowired
+	private AppversionService appversionService;
+	
+	@Autowired
+	private UploadfileService uploadfileService;
+	
+	@Autowired
+	private AppService appService;
 	
 	
 	private static final String NO5 = "5";
@@ -536,16 +553,57 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value = "/getAppVersionOfApp", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getAppVersionOfApp(
-			@RequestParam(value="appId",required=false)String appId)
+			@RequestParam(value="appName",required=false)String appName)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		String version = "";
+		AppversionDTO dto = new AppversionDTO();
+		if(null != appName && !"".equals(appName))
+		{
+			App app = appService.getAppByAppName(appName);
+			if(null != app)
+			{
+				//获取当前appId下的且已上架的应用版本的最新版本数据
+				Integer maxVersionFlowId =
+						appversionService.
+						findMaxVersionFlowId(app.getId(), AppController.APP_V_STATUS_SJ);//获取当前应用下的应用版本数据是上架状态的最大版本流水号
+				
+				if(null!=maxVersionFlowId)
+				{
+					Appversion appversion = appversionService.
+							getAppversionByAppIdAndVersionFlowId(app.getId(), maxVersionFlowId);//根据appId和版本流水号获取应用版本数据
+					
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(appversion.getAppVersionUrl());
+					
+					String apkUrl = "";
+					if(null!=uploadfile)
+					{
+						apkUrl = uploadfile.getUploadfilepath()+uploadfile.getUploadRealName();//抓取附件的真实存储路径
+						appversion.setAppVersionUrl(apkUrl);
+					}
+					dto = appversionService.toDTO(appversion);
+					
+					map.put("appversion", dto);
+					map.put(Constants.FLAG_STR, true);
+					map.put(Constants.MESSAGE_STR, "获取成功");
+				}
+				else
+				{
+					map.put(Constants.FLAG_STR, false);
+					map.put(Constants.MESSAGE_STR, "获取失败,当前应用没有最新版本");
+				}
+			
+			}
+			else
+			{
+				LOG.error("getAppversionsOfStationCouldUse：当前应用的已发布的应用版本的版本好是null;应用name="+appName);
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.MESSAGE_STR, "获取失败,应用名为所传参数的应用不存在");
+			}
+			
+		}
 		
 		
-		
-		map.put("version", version);
-		map.put(Constants.FLAG_STR, true);
-		map.put(Constants.MESSAGE_STR, "获取成功");
 		
 		return map;
 	}
