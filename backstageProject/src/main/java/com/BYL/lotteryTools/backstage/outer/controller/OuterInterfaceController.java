@@ -523,6 +523,33 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		return map;
 	}
 	
+	/**
+	 * 获取当前应用的最新版本
+	* @Title: getAppVersionOfApp 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param appId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月19日 下午2:51:03 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/getAppVersionOfApp", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getAppVersionOfApp(
+			@RequestParam(value="appId",required=false)String appId)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		String version = "";
+		
+		
+		
+		map.put("version", version);
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		
+		return map;
+	}
+	
 	
 	/**
 	 * 根据省份表生成安卓需要的地区结构文件
