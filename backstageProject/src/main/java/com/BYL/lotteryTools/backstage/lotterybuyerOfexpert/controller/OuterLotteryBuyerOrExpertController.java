@@ -552,140 +552,149 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			}
 		}*/
 		
-		if(null != dto.getTouXiangImg())
+		if(null != lotterybuyerOrExpert)
 		{
-			Uploadfile uploadfile =null;
-			String newsUuid = UUID.randomUUID().toString();
-			try 
+			if(null != dto.getTouXiangImg())
 			{
-				 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
-				//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
-//					CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
-//							null, OuterLotteryBuyerOrExpertController.DOMAIN+request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
-//					if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
-//					{
-//						LOG.error("融云同步头像失败", result.getErrorMessage());
-//					}
-			} 
-			catch (Exception e) 
-			{
-				LOG.error(Constants.ERROR_STR, e);
+				Uploadfile uploadfile =null;
+				String newsUuid = UUID.randomUUID().toString();
+				try 
+				{
+					 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
+					//刷新融云用户信息,将图片信息同步(TODO:同步头像必须带ip，放在外网才可以)
+//						CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
+//								null, OuterLotteryBuyerOrExpertController.DOMAIN+request.getContextPath()+uploadfile.getUploadfilepath()+uploadfile.getUploadRealName());
+//						if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+//						{
+//							LOG.error("融云同步头像失败", result.getErrorMessage());
+//						}
+				} 
+				catch (Exception e) 
+				{
+					LOG.error(Constants.ERROR_STR, e);
+				}
+				
+				//删除旧头像(也可以定时批量删除,若为基础头像，则不可以进行删除)
+				if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpert.getTouXiang()))
+				{
+					LOG.info("删除附件",dto.getLastTouXiang());
+					Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpert.getTouXiang());
+					if(null != lastTouxiang)
+					{//若存在旧头像，则要进行删除操作
+						uploadfileService.delete(lastTouxiang, httpSession);
+					}
+				}
+				//绑定新头像
+				if(null != uploadfile)
+				{
+					lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());//关联新头像
+				}
+				
 			}
 			
-			//删除旧头像(也可以定时批量删除,若为基础头像，则不可以进行删除)
-			if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpert.getTouXiang()))
+			//修改昵称
+			if(null != dto.getName() && !"".equals(dto.getName()))
 			{
-				LOG.info("删除附件",dto.getLastTouXiang());
-				Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpert.getTouXiang());
-				if(null != lastTouxiang)
-				{//若存在旧头像，则要进行删除操作
-					uploadfileService.delete(lastTouxiang, httpSession);
+				lotterybuyerOrExpert.setName(dto.getName());
+				CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
+						dto.getName(), null);
+				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+				{
+					LOG.error("融云同步用户名失败", result.getErrorMessage());
+				}
+				
+			}
+			
+			
+			
+			//添加城市，省份和市
+			if(null != dto.getProvinceCode() && !"".equals(dto.getProvinceCode()))
+			{
+				lotterybuyerOrExpert.setProvinceCode(dto.getProvinceCode());
+			}
+			if(null != dto.getCityCode()&& !"".equals(dto.getCityCode()))
+			{
+				lotterybuyerOrExpert.setCityCode(dto.getCityCode());
+			}
+			
+			//性别，0：女 1：男
+			if(null != dto.getSex() && !"".equals(dto.getSex()))
+			{
+				lotterybuyerOrExpert.setSex(dto.getSex());
+			}
+			
+			
+			//个人简介
+			if(null != dto.getSignature() && !"".equals(dto.getSignature()))
+			{
+				lotterybuyerOrExpert.setSignature(dto.getSignature());
+			}
+			
+			//地址
+			if(null != dto.getAddress())
+			{
+				lotterybuyerOrExpert.setAddress(dto.getAddress());
+			}
+			
+			//坐标
+			if(null != dto.getCoordinate())
+			{
+				lotterybuyerOrExpert.setCoordinate(dto.getCoordinate());
+			}
+			
+			
+			//邮政编码
+			if(null != dto.getPostCode())
+			{
+				lotterybuyerOrExpert.setPostCode(dto.getPostCode());
+			}
+			
+			//修改彩聊号
+			boolean caiFlag = true;
+			if("".equals(lotterybuyerOrExpert.getCailiaoName())|| null == lotterybuyerOrExpert.getCailiaoName())
+			{//之前的彩聊号没填写过才可以进行填写
+				//判断彩聊号是否唯一
+				//根据彩聊号获取用户专家数据，若有返回数据，则彩聊号当前已存在，不可以被更新
+				List<LotterybuyerOrExpert> list = lotterybuyerOrExpertService.
+						getLotterybuyerOrExpertByCailiaoName(dto.getCailiaoName());
+				if(null != list&& list.size() != 0)
+				{
+					caiFlag = false;
+				}
+				
+				lotterybuyerOrExpert.setCailiaoName(dto.getCailiaoName());//添加彩聊号
+			}
+			
+			if(caiFlag)
+			{//若彩聊号唯一，则可以进行修改操作
+				lotterybuyerOrExpert.setModify("app");
+				lotterybuyerOrExpert.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+				try 
+				{
+					dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+					
+					map.put(Constants.FLAG_STR, true);
+					map.put(Constants.MESSAGE_STR, "修改成功");
+					map.put("userDto", dto);
+				} catch (Exception e) {
+					LOG.error(Constants.ERROR_STR, e);
+					map.put(Constants.FLAG_STR, false);
+					map.put(Constants.MESSAGE_STR, "服务器错误");
 				}
 			}
-			//绑定新头像
-			if(null != uploadfile)
+			else
 			{
-				lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());//关联新头像
-			}
-			
-		}
-		
-		//修改昵称
-		if(null != dto.getName() && !"".equals(dto.getName()))
-		{
-			lotterybuyerOrExpert.setName(dto.getName());
-			CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
-					dto.getName(), null);
-			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
-			{
-				LOG.error("融云同步用户名失败", result.getErrorMessage());
-			}
-			
-		}
-		
-		
-		
-		//添加城市，省份和市
-		if(null != dto.getProvinceCode() && !"".equals(dto.getProvinceCode()))
-		{
-			lotterybuyerOrExpert.setProvinceCode(dto.getProvinceCode());
-		}
-		if(null != dto.getCityCode()&& !"".equals(dto.getCityCode()))
-		{
-			lotterybuyerOrExpert.setCityCode(dto.getCityCode());
-		}
-		
-		//性别，0：女 1：男
-		if(null != dto.getSex() && !"".equals(dto.getSex()))
-		{
-			lotterybuyerOrExpert.setSex(dto.getSex());
-		}
-		
-		
-		//个人简介
-		if(null != dto.getSignature() && !"".equals(dto.getSignature()))
-		{
-			lotterybuyerOrExpert.setSignature(dto.getSignature());
-		}
-		
-		//地址
-		if(null != dto.getAddress())
-		{
-			lotterybuyerOrExpert.setAddress(dto.getAddress());
-		}
-		
-		//坐标
-		if(null != dto.getCoordinate())
-		{
-			lotterybuyerOrExpert.setCoordinate(dto.getCoordinate());
-		}
-		
-		
-		//邮政编码
-		if(null != dto.getPostCode())
-		{
-			lotterybuyerOrExpert.setPostCode(dto.getPostCode());
-		}
-		
-		//修改彩聊号
-		boolean caiFlag = true;
-		if("".equals(lotterybuyerOrExpert.getCailiaoName())|| null == lotterybuyerOrExpert.getCailiaoName())
-		{//之前的彩聊号没填写过才可以进行填写
-			//判断彩聊号是否唯一
-			//根据彩聊号获取用户专家数据，若有返回数据，则彩聊号当前已存在，不可以被更新
-			List<LotterybuyerOrExpert> list = lotterybuyerOrExpertService.
-					getLotterybuyerOrExpertByCailiaoName(dto.getCailiaoName());
-			if(null != list&& list.size() != 0)
-			{
-				caiFlag = false;
-			}
-			
-			lotterybuyerOrExpert.setCailiaoName(dto.getCailiaoName());//添加彩聊号
-		}
-		
-		if(caiFlag)
-		{//若彩聊号唯一，则可以进行修改操作
-			lotterybuyerOrExpert.setModify("app");
-			lotterybuyerOrExpert.setModifyTime(new Timestamp(System.currentTimeMillis()));
-			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
-			try 
-			{
-				dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
-				
-				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.MESSAGE_STR, "修改成功");
-				map.put("userDto", dto);
-			} catch (Exception e) {
-				LOG.error(Constants.ERROR_STR, e);
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.MESSAGE_STR, "服务器错误");
+				map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
+			map.put(Constants.MESSAGE_STR, "缺少参数:id,无法获取需要修改的用户信息");
 		}
+		
 		
 		
 		
