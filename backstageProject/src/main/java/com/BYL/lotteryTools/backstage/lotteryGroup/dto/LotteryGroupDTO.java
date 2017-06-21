@@ -69,9 +69,17 @@ public class LotteryGroupDTO {
 	
 	private String isTop;//是否置顶（0：未置顶 1：置顶）
 	
+	private String userToken;//用户token
 	
 	
-	
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
+
 	public String getDetailLotteryType() {
 		return detailLotteryType;
 	}

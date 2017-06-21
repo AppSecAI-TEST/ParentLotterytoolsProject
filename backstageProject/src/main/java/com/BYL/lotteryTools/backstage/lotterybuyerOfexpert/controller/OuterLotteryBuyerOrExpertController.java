@@ -66,6 +66,8 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	
 	public static String morenTouxiang = "0";//默认头像newsUuid
 	
+	//token map
+	public static Map<String,String> tokenMap = new HashMap<String, String>();
 	
 	/**
 	 * 获取注册用户手机验证码
@@ -335,6 +337,8 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 					map.put(Constants.FLAG_STR, true);
 					map.put(Constants.MESSAGE_STR, "登录成功");
 					dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+					//放置usertoken
+					dto.setUserToken(OuterLotteryBuyerOrExpertController.generateToken(dto.getTelephone(), originPassword));
 					map.put("userDto", dto);
 				}
 				else
@@ -364,6 +368,98 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		
 		
 		return map;
+	}
+	
+	/**
+	 * 根据token获取用户信息
+	* @Title: getUserByToken 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param request
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月21日 下午3:03:22 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getUserByToken", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getUserByToken(
+			LotterybuyerOrExpertDTO dto,
+			HttpServletRequest request)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertByTelephone(dto.getTelephone());
+		
+		String token = OuterLotteryBuyerOrExpertController.getToken(dto.getTelephone());
+		
+		if(null != token && null != dto.getUserToken() &&token.equals(dto.getUserToken()))
+		{//token验证成功
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "获取成功");
+			map.put("userDto", lotterybuyerOrExpertService.toDTO(user));
+		}
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "token已过期,请重新登录");
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * 生成token
+	* @Title: generateToken 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param username
+	* @param @param pwd
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月21日 下午12:07:16 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public static String generateToken(String username,String pwd)
+	{
+		String str = UUID.randomUUID().toString();//生成uuid作为token
+		tokenMap.put(username, str);//放置token
+		return str;
+	}
+	
+	/**
+	 * 获取token
+	* @Title: getToken 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param username
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月21日 下午3:08:01 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public static String getToken(String username)
+	{
+		return tokenMap.get(username);
+	}
+	
+	/**
+	 *校验token
+	* @Title: checkToken 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param target
+	* @param @param token
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月21日 下午12:04:49 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public static boolean  checkToken(String target,String token)
+	{
+		String lastToken  = tokenMap.get(target);//获取已经缓存的token
+		
+		return lastToken.equals(token);
 	}
 	
 	/**
@@ -598,10 +694,11 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				lotterybuyerOrExpert.setName(dto.getName());
 				CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
 						dto.getName(), null);
-				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
-				{
-					LOG.error("融云同步用户名失败", result.getErrorMessage());
-				}
+					if(null != result&&!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+					{
+						LOG.error("融云同步用户名失败", result.getErrorMessage());
+					}
+				
 				
 			}
 			

@@ -80,7 +80,17 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String isGroupOwner;
 	
+	private String userToken;//用户token
 	
+	
+
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
 
 	public MultipartFile getTouXiangImg() {
 		return touXiangImg;

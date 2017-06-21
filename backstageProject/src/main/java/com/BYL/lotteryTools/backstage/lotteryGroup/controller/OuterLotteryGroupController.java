@@ -245,6 +245,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody Map<String,Object> getMembersOfGroup(
 			@RequestParam(value="page",required=false)   Integer page,//当前页数
 			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			String groupId,
 			HttpServletRequest request,HttpSession httpSession)
 	{
@@ -313,6 +314,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	@RequestMapping(value="/getGroupsOfLotteryType", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupsOfLotteryType(
 			@RequestParam(value="lotteryType",required=true)   String lotteryType,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -506,6 +508,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	@RequestMapping(value="/getGroupsOfOwner", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupsOfOwner(
 			String userId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		 Map<String,Object> map = new HashMap<String, Object>();
@@ -554,6 +557,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	@RequestMapping(value="/getGroupsOfUserjoins", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupsOfUserjoins(
 			String userId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			HttpServletRequest request,HttpSession httpSession)
 	{
 		 Map<String,Object> map = new HashMap<String, Object>();
@@ -611,6 +615,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody ResultBean applyJoinGroup(
 			@RequestParam(value="userId",required=false) String userId,
 			@RequestParam(value="groupId",required=false) String groupId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="applyMessage",required=false) String applyMessage)
 	{
 		ResultBean resultBean = new ResultBean();
@@ -679,6 +684,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			@RequestParam(value="groupId",required=false) String groupId,
 			@RequestParam(value="groupOwnerId",required=false) String groupOwnerId,//群主id
 			@RequestParam(value="isPass",required=false) String isPass,//1：通过0：不通过
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="notPassMessage",required=false) String notPassMessage)
 	{
 		ResultBean resultBean = new ResultBean();
@@ -698,7 +704,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if("1".equals(isPass))
 			{//审核通过，执行加群操作
 				String[] joinUsers = {userId};//组合加群用户数组
-				this.joinUserInGroup(joinUsers, groupId);
+				this.joinUserInGroup(userToken,joinUsers, groupId);
 			}
 			else
 				if("0".equals(isPass))
@@ -743,6 +749,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getApplyGroupList", method = RequestMethod.GET)
 	public @ResponseBody Map<String , Object> getApplyGroupList(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="userId",required=false) String userId)
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
@@ -781,6 +788,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getApprovalList", method = RequestMethod.GET)
 	public @ResponseBody Map<String , Object> getApprovalList(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="ownerId",required=false) String ownerId)
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
@@ -819,6 +827,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getGroupByGroupnumber", method = RequestMethod.GET)
 	public @ResponseBody LotteryGroupDTO getGroupByGroupnumber(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="groupNumber",required=false)  String groupNumber,
 			@RequestParam(value="userId",required=false)  String userId)
 	{
@@ -870,6 +879,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/joinUserInGroup", method = RequestMethod.GET)
 	public @ResponseBody ResultBean joinUserInGroup(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="joinUsers",required=false)  String[] joinUsers,
 			@RequestParam(value="groupId",required=false) String groupId)
 	{
@@ -942,6 +952,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/quitUserFronGroup", method = RequestMethod.GET)
 	public @ResponseBody ResultBean quitUserFronGroup(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="quitUsers",required=false)   String[] quitUsers,
 			@RequestParam(value="groupId",required=false)   String groupId,
 			HttpServletRequest request,HttpSession httpSession)
@@ -1317,6 +1328,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody Map<String,Object> updateGroupIsTop(
 			@RequestParam(value="isTop",required=false)  String isTop,
 			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="groupId",required=false) String groupId)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -1395,6 +1407,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/checkCardYueOfUser", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> checkCardYueOfUser(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="userId",required=false) String userId,
 			@RequestParam(value="cardId",required=false) String cardId)
 	{
@@ -1428,7 +1441,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/getAllLotteryChatCards", method = RequestMethod.GET)
-	public @ResponseBody Map<String,Object> getAllLotteryChatCards()
+	public @ResponseBody Map<String,Object> getAllLotteryChatCards(
+			@RequestParam(value="userToken",required=false) String userToken//用户token
+			)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
@@ -1455,7 +1470,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/getAllLotteryChatCardsOfUser", method = RequestMethod.GET)
-	public @ResponseBody Map<String,Object> getAllLotteryChatCardsOfUser(@RequestParam(value="userId",required=false) String userId)
+	public @ResponseBody Map<String,Object> getAllLotteryChatCardsOfUser(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
+			@RequestParam(value="userId",required=false) String userId)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
@@ -1499,6 +1516,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody Map<String,Object> updateNumberOfCardForUser(
 			@RequestParam(value="userId",required=false) String userId,
 			@RequestParam(value="cardId",required=false) String cardId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="number",required=false) Integer number)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();	
@@ -1602,6 +1620,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getGroupNoticeOfGroup", method = RequestMethod.GET)
 	public @ResponseBody Map<String , Object> getGroupNoticeOfGroup(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="groupId",required=false) String groupId) throws Exception
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
@@ -1636,6 +1655,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			@RequestParam(value="noticeId",required=false) String noticeId,
 			@RequestParam(value="userId",required=false) String userId,
 			@RequestParam(value="status",required=false) String status,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="notPassMessage",required=false) String notPassMessage) throws Exception
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
@@ -1700,6 +1720,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	@RequestMapping(value="/deleteGroupNotice", method = RequestMethod.GET)
 	public @ResponseBody Map<String , Object> deleteGroupNotice(
 			@RequestParam(value="noticeId",required=false) String noticeId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="userId",required=false) String userId) throws Exception
 	{
 		Map<String , Object> map = new HashMap<String, Object>();
@@ -1737,6 +1758,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	public @ResponseBody Map<String,Object> getGroupNoticeList(
 			@RequestParam(value="status",required=false)   String status,
 			@RequestParam(value="page",required=false)   Integer page,//当前页数
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
 			HttpServletRequest request,HttpSession httpSession)
 	{
@@ -1794,7 +1816,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value = "/getDetailLotteryGroupNotice", method = RequestMethod.GET)
-	public @ResponseBody LotteryGroupNoticeDTO getDetailLotteryGroupNotice(@RequestParam(value="id",required=false) String id,
+	public @ResponseBody LotteryGroupNoticeDTO getDetailLotteryGroupNotice(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
+			@RequestParam(value="id",required=false) String id,
 			ModelMap model,HttpSession httpSession) throws Exception
 	{
 		LotteryGroupNotice entity = lotteryGroupNoticeService.getLotteryGroupNoticeByID(id);

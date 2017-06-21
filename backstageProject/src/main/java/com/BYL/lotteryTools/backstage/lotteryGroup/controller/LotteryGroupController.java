@@ -96,6 +96,7 @@ public class LotteryGroupController extends GlobalExceptionHandler
 	 */
 	@RequestMapping(value = "/getDetailLotteryGroup", method = RequestMethod.GET)
 		public @ResponseBody LotteryGroupDTO getDetailLotteryGroup(@RequestParam(value="id",required=false) String id,
+				@RequestParam(value="userToken",required=false) String userToken,
 				ModelMap model,HttpSession httpSession) throws Exception
 		{
 			LotteryGroup entity = lotteryGroupService.getLotteryGroupById(id);

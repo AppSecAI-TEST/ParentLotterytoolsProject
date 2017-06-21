@@ -88,9 +88,19 @@ public class LotteryStationDTO
 	
 	private String daixiaoImgUrl;
 	
+	private String userToken;//用户token
 	
 	
 	
+	
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
+
 	public String getYanzhengma() {
 		return yanzhengma;
 	}

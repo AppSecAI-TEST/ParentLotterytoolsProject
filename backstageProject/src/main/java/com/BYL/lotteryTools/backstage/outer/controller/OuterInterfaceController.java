@@ -187,6 +187,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getLotteryList",method=RequestMethod.GET)
 	public @ResponseBody List<?> getLotteryList(@RequestParam(value="id",required=true) String lotteryTypeId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="provinceCode",required=false) String provinceCode,
 			@RequestParam(value="maxIssueId",required=false) String maxIssueId,
 			@RequestParam(value="minIssueId",required=false) String minIssueId)
@@ -237,6 +238,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	@RequestMapping(value="/getLotteryPlayListOfProvince",method=RequestMethod.GET)
 	public @ResponseBody List<LotteryPlayOfProvince> getLotteryPlayListOfProvince(
 			@RequestParam(value="id",required=false) String lotteryTypeId,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="provinceCode",required=false) String provinceCode)
 	{
 		List<LotteryPlayOfProvince> list = new ArrayList<LotteryPlayOfProvince>();
@@ -261,6 +263,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getProvinceOfZST",method=RequestMethod.GET)
 	public @ResponseBody List<Province> getProvinceOfZST(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="id",required=false) String id)
 	{
 		List<Province> list = new ArrayList<Province>();
@@ -275,6 +278,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	//专家预测接口1：根据省份获取区域彩种列表
 	@RequestMapping(value="/getPredictiontypeOfProvince",method=RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getPredictiontypeOfProvince(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="provinceCode",required=false) String provinceCode)
 	{
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -293,7 +297,9 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	
 	//专家预测接口2：返回基本预测类型表（初始化1~6的基本预测类型）
 	@RequestMapping(value="/getBaseInitPredictionType",method=RequestMethod.GET)
-	public @ResponseBody Map<String,Object> getBaseInitPredictionType()
+	public @ResponseBody Map<String,Object> getBaseInitPredictionType(
+			@RequestParam(value="userToken",required=false) String userToken//用户token
+			)
 	{
 		Map<String,Object> map = new HashMap<String,Object>();
 		
@@ -351,6 +357,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
 			@RequestParam(value="isFree",required=false) String isFree,//0:免费 1：付费
 			@RequestParam(value="page",required=false) String page,//当前是第几次获取
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="count",required=false) String count)//需要的专家数量
 	{
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -384,6 +391,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
 			@RequestParam(value="provinceCode",required=false) String provinceCode,//6种预测类型的id
 			@RequestParam(value="page",required=false) String page,//当前是第几次获取
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="count",required=false) String count)//需要的专家数量
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -403,6 +411,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="lotteryPlayId",required=false) String lotteryPlayId,
 			@RequestParam(value="baseTypeId",required=false) String baseTypeId,//6种预测类型的id
 			@RequestParam(value="page",required=false) String page,//当前是第几次获取
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="count",required=false) String count)//需要的专家数量
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -449,6 +458,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="selectnum",required=false)String selectnum,
 			@RequestParam(value="groupnum",required=false)String[] groupnumarr,
 			@RequestParam(value="orderby",required=false)String orderby,
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="ascOrDesc",required=false)String ascOrDesc)
 	{
 		Map<String,Object> returnMap = new HashMap<String, Object>();
@@ -527,6 +537,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value = "/getSysMessageForTarget", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getSysMessageForTarget(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="telephone",required=false)String telephone)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -553,6 +564,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value = "/getAppVersionOfApp", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getAppVersionOfApp(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="appName",required=false)String appName)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
