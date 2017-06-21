@@ -26,8 +26,18 @@ public class LotteryGroupNoticeDTO {
 	private String groupImgUrl;//群头像
 	
 	
+	private String userToken;//用户token
 	
 	
+	
+
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
 
 	public String getGroupOwner() {
 		return groupOwner;

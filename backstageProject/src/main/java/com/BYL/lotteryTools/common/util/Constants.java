@@ -71,6 +71,8 @@ public class Constants {
 	
 	public static final String FLAG_STR="flag";
 	
+	public static final String TOKEN_FLAG_STR="tokenFlag";
+	
 	public static final String ERROR_STR="error:";
 	
 	public static final String CENTER_CITY_GROUP_ID="4";//中心群id

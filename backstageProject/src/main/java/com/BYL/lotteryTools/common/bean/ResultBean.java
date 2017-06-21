@@ -10,6 +10,8 @@ public class ResultBean
 	
 	private boolean flag; 
 	
+	private boolean tokenFlag;
+	
 	private boolean isProxy;//鏄惁鎷ユ湁浠ｇ悊瑙掕壊
 	
 	private boolean isFinancialManager;//鏄惁鎷ユ湁璐㈡斂绠＄悊鍛樿鑹�
@@ -36,6 +38,14 @@ public class ResultBean
 	
 	
 	
+
+	public boolean isTokenFlag() {
+		return tokenFlag;
+	}
+
+	public void setTokenFlag(boolean tokenFlag) {
+		this.tokenFlag = tokenFlag;
+	}
 
 	public boolean isFlag() {
 		return flag;
