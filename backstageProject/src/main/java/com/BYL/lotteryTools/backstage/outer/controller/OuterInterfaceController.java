@@ -578,7 +578,6 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				Integer maxVersionFlowId =
 						appversionService.
 						findMaxVersionFlowId(app.getId(), AppController.APP_V_STATUS_SJ);//获取当前应用下的应用版本数据是上架状态的最大版本流水号
-				
 				if(null!=maxVersionFlowId)
 				{
 					Appversion appversion = appversionService.
