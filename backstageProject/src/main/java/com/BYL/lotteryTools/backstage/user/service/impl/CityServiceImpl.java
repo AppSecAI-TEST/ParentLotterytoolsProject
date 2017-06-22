@@ -71,6 +71,18 @@ public class CityServiceImpl implements CityService {
 		return cityRepository.getCityByCname(cname);
 	}
 
+	public void save(City entity) {
+		cityRepository.save(entity);
+	}
+
+	public City getCityByCcodeAndProvinceCode(String ccode, String provinceCode) {
+		return cityRepository.getCityByCcodeAndProvinceCode(ccode, provinceCode);
+	}
+
+	public List<City> findAllCity() {
+		return cityRepository.findAll();
+	}
+
 	
 	
 }

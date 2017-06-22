@@ -22,4 +22,10 @@ public interface RegionService {
 	  * @return 
 	  */
 	public Region getRegionByAcode(String code);
+	
+	public Region getRegionByAcodeAndCityCode(String acode,String cityCode);
+	
+	public void save(Region entity);
+	
+	public List<Region> findAllRegion();
 }

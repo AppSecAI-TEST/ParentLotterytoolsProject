@@ -2,25 +2,25 @@ package com.BYL.lotteryTools.common.bean;
 
 public class ResultBean
 {
-	private String message;//杩斿洖鎻愮ず淇℃伅
+	private String message;
 	
-	private String status;//杩斿洖鐘舵�锛坰uccess of fail锛�
+	private String status;
 	
-	private boolean isExist;//褰撳墠鍊兼槸鍚﹀瓨鍦�
+	private boolean isExist;
 	
 	private boolean flag; 
 	
-	private boolean tokenFlag;
+//	private boolean tokenFlag;
 	
-	private boolean isProxy;//鏄惁鎷ユ湁浠ｇ悊瑙掕壊
+	private boolean isProxy;
 	
-	private boolean isFinancialManager;//鏄惁鎷ユ湁璐㈡斂绠＄悊鍛樿鑹�
+	private boolean isFinancialManager;
 	
-	private boolean useFlag;//鏄惁鍙互浣跨敤
+	private boolean useFlag;
 	
-	private boolean isCityCenterManager;//鏄惁鎷ュ競涓績瑙掕壊
+	private boolean isCityCenterManager;
 	
-	private boolean isProvinceCenterManager;//鏄惁鎷ョ渷涓績瑙掕壊
+	private boolean isProvinceCenterManager;
 	
 	private String province;
 	
@@ -32,6 +32,8 @@ public class ResultBean
 	
 	private String lotteryType;
 	
+	private String code;//操作返回码：200（操作成功） 100（普通错误） 300（token错误） 301（token过期） 302（token没有值）500（服务器未应答）
+	
 	
 	
 	
@@ -39,14 +41,22 @@ public class ResultBean
 	
 	
 
-	public boolean isTokenFlag() {
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	/*public boolean isTokenFlag() {
 		return tokenFlag;
 	}
 
 	public void setTokenFlag(boolean tokenFlag) {
 		this.tokenFlag = tokenFlag;
 	}
-
+*/
 	public boolean isFlag() {
 		return flag;
 	}

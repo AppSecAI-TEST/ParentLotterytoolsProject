@@ -91,11 +91,12 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 //			httpSession.setAttribute(telephone, result.getSessionId());//放置sessionid
 //			httpSession.setMaxInactiveInterval(15*60);//15min后过期
 			resultBean.setFlag(true);
+			resultBean.setCode(Constants.SUCCESS_CODE);
 			resultBean.setMessage("发送成功");
 		} catch (Exception e) {
 			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setTokenFlag(true);
+			resultBean.setCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("发送失败,请稍候再试");
 		}
 		
@@ -131,13 +132,13 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		{//当前手机号已被注册
 			result.put("status", false);
 			result.put(Constants.FLAG_STR, false);
-			result.put(Constants.TOKEN_FLAG_STR, true);
+			result.put(Constants.CODE_STR, Constants.FAIL_CODE);
 			result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
 		}
 		else
 		{
 			result.put(Constants.FLAG_STR, true);
-			result.put(Constants.TOKEN_FLAG_STR, true);
+			result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 			result.put(Constants.MESSAGE_STR, "当前手机号未被注册");
 		}
 		
@@ -177,20 +178,20 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			if(sessionYanzhengma.getSuccess())
 			{
 				result.put(Constants.FLAG_STR, true);
-				result.put(Constants.TOKEN_FLAG_STR, true);
+				result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				result.put(Constants.MESSAGE_STR, "验证码输入正确");
 			}
 			else
 			{
 				result.put(Constants.FLAG_STR, false);
-				result.put(Constants.TOKEN_FLAG_STR, true);
+				result.put(Constants.CODE_STR, Constants.YZM_INPUT_ERROR_CODE);
 				result.put(Constants.MESSAGE_STR, "验证码输入错误");
 			}
 		}
 		else
 		{
 			result.put(Constants.FLAG_STR, false);
-			result.put(Constants.TOKEN_FLAG_STR, true);
+			result.put(Constants.CODE_STR, Constants.YZM_GET_ERROR_CODE);
 			result.put(Constants.MESSAGE_STR, "请重新获取验证码");
 		}
 		return result;
@@ -222,7 +223,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			{//当前手机号已被注册
 				result.put("status", false);
 				result.put(Constants.FLAG_STR, false);
-				result.put(Constants.TOKEN_FLAG_STR, true);
+				result.put(Constants.CODE_STR, Constants.FAIL_CODE);
 				result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
 			}
 			else
@@ -273,11 +274,13 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 					lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
 					//保存用户信息
 					lotterybuyerOrExpertService.save(lotterybuyerOrExpert);
-					BeanUtil.copyBeanProperties(lotterybuyerOrExpertDTO, lotterybuyerOrExpert);
+					LotterybuyerOrExpertDTO dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+					dto.setUserToken(TokenUtil.generateToken(dto.getTelephone(), lotterybuyerOrExpertDTO.getPassword()));
 					result.put("status", true);
 					result.put(Constants.FLAG_STR, true);
+					result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					result.put(Constants.MESSAGE_STR, "注册成功");
-					result.put("user", lotterybuyerOrExpertDTO);
+					result.put("user", dto);
 				/*}
 				else
 				{//手机验证码验证失败
@@ -294,7 +297,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			LOG.error(Constants.ERROR_STR,e);
 			result.put("status", false);
 			result.put(Constants.FLAG_STR, false);
-			result.put(Constants.TOKEN_FLAG_STR, true);
+			result.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 			result.put(Constants.MESSAGE_STR, "注册失败");
 		}
 		finally
@@ -337,7 +340,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				if(flag)
 				{
 					map.put(Constants.FLAG_STR, true);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					map.put(Constants.MESSAGE_STR, "登录成功");
 					dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
 					//放置usertoken
@@ -347,19 +350,19 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				else
 				{
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.FAIL_CODE);
 					map.put(Constants.MESSAGE_STR, "密码错误!");
 					map.put("userDto", null);
 				}
 			} catch (NoSuchAlgorithmException e) {
 				LOG.error("error:", e);
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 				map.put(Constants.MESSAGE_STR, "服务器错误!");
 			} catch (UnsupportedEncodingException e) {
 				LOG.error("error:", e);
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 				map.put(Constants.MESSAGE_STR, "服务器错误!");
 			}
 			finally{
@@ -369,7 +372,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, true);
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE);
 			map.put(Constants.MESSAGE_STR, "用户名不存在!");
 		}
 		
@@ -403,7 +406,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -413,7 +416,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				
 				//token验证成功
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "获取成功");
 				dto = lotterybuyerOrExpertService.toDTO(user);
 				map.put("userDto", dto);
@@ -423,6 +426,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -457,13 +461,16 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			if(!tokenFlag)
 			{//token不相同
 				resultBean.setFlag(false);
-				resultBean.setTokenFlag(false);
+				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 				resultBean.setMessage("token过期,请重新登录!");
 			}
 			else
 			{
+				String tel = TokenUtil.getTelephoneByToken(lotterybuyerOrExpertDTO.getUserToken());
+				/*LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+						getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());*/
 				LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-						getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());
+						getLotterybuyerOrExpertByTelephone(tel);
 				
 				try
 				{
@@ -471,14 +478,14 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 					lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 					
 					resultBean.setFlag(true);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SUCCESS_CODE);
 					resultBean.setMessage("修改密码成功");
 				}
 				catch(Exception e)
 				{
 					LOG.error("error:", e);
 					resultBean.setFlag(false);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SERVER_FAIL_CODE);
 					resultBean.setMessage("服务器错误!");
 				}
 				finally{
@@ -491,12 +498,9 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		else
 		{
 			resultBean.setFlag(false);
-			resultBean.setTokenFlag(false);
+			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			resultBean.setMessage("token值不存在!");
 		}
-		
-		
-		
 		
 		return resultBean;
 	}
@@ -527,7 +531,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			if(!tokenFlag)
 			{//token不相同
 				resultBean.setFlag(false);
-				resultBean.setTokenFlag(false);
+				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 				resultBean.setMessage("token过期,请重新登录!");
 			}
 			else
@@ -542,13 +546,13 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 					if(flag)
 					{
 						resultBean.setFlag(true);
-						resultBean.setTokenFlag(true);
+						resultBean.setCode(Constants.SUCCESS_CODE);
 						resultBean.setMessage("原密码输入正确");
 					}
 					else
 					{
 						resultBean.setFlag(false);
-						resultBean.setTokenFlag(true);
+						resultBean.setCode(Constants.FAIL_CODE);
 						resultBean.setMessage("原密码输入错误");
 					}
 					
@@ -557,7 +561,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				{
 					LOG.error("error:", e);
 					resultBean.setFlag(false);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SERVER_FAIL_CODE);
 					resultBean.setMessage("请求错误");
 				}
 				finally{
@@ -569,7 +573,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		else
 		{
 			resultBean.setFlag(false);
-			resultBean.setTokenFlag(false);
+			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			resultBean.setMessage("token值不存在!");
 		}
 		
@@ -607,12 +611,14 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		} catch (Exception e) {
 			LOG.error("error:", e);
 			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 			map.put(Constants.MESSAGE_STR, "服务器错误");
 		}
 		if(null != uploadfile)
 		{
 			map.put("id", uploadfile.getNewsUuid());
 			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 			map.put(Constants.MESSAGE_STR, "获取成功");
 		}
 		return map;
@@ -644,7 +650,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -767,27 +773,27 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 							dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
 							
 							map.put(Constants.FLAG_STR, true);
-							map.put(Constants.TOKEN_FLAG_STR, true);
+							map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 							map.put(Constants.MESSAGE_STR, "修改成功");
 							map.put("userDto", dto);
 						} catch (Exception e) {
 							LOG.error(Constants.ERROR_STR, e);
 							map.put(Constants.FLAG_STR, false);
-							map.put(Constants.TOKEN_FLAG_STR, true);
+							map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 							map.put(Constants.MESSAGE_STR, "服务器错误");
 						}
 					}
 					else
 					{
 						map.put(Constants.FLAG_STR, false);
-						map.put(Constants.TOKEN_FLAG_STR, true);
+						map.put(Constants.CODE_STR, Constants.FAIL_CODE);
 						map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
 					}
 				}
 				else
 				{
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.FAIL_CODE);
 					map.put(Constants.MESSAGE_STR, "缺少参数:id,无法获取需要修改的用户信息");
 				}
 			}
@@ -795,7 +801,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		

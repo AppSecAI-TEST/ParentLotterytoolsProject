@@ -71,7 +71,7 @@ public class Constants {
 	
 	public static final String FLAG_STR="flag";
 	
-	public static final String TOKEN_FLAG_STR="tokenFlag";
+//	public static final String TOKEN_FLAG_STR="tokenFlag";
 	
 	public static final String ERROR_STR="error:";
 	
@@ -79,5 +79,26 @@ public class Constants {
 	public static final String COMPANY_GROUP_ID="5";//公司群id
 	
 	public static final int SERIAL_NUM_LEN = 6;//流水号中自动生成的数字位数
+	
+	//操作码：
+	public static final String CODE_STR="code";
+	
+	public static final String SUCCESS_CODE="200";//操作成功
+	
+	public static final String TOKEN_IS_PASS_CODE="301";//token过期
+	public static final String TOKEN_IS_NOT_EXIST_CODE="302";//token不存在
+	
+	public static final String FAIL_CODE="400";//业务获取错误,业务处理错误的捕捉返回
+	public static final String FAIL_CODE_OF_NO_NEW_APPVERSION="401";//应用没有最新版本
+	public static final String FAIL_CODE_OF_NO_APP="402";//没有应用名为所传值的应用
+	public static final String FAIL_CODE_OF_STAION_IS_REGISTED="403";//彩站已注册
+	public static final String FAIL_CODE_OF_DELETE_GROUP="404";//群删除失败
+	public static final String FAIL_CODE_OF_JOIN_GROUP_MEMBER="405";//加群失败，超出群可以加入的群成员数
+	public static final String FAIL_CODE_OF_CREATE_GROUP="406";//群创建失败
+	
+	public static final String SERVER_FAIL_CODE="500";//服务器异常，服务器异常抛出
+	
+	public static final String YZM_INPUT_ERROR_CODE="601";//验证码输入错误
+	public static final String YZM_GET_ERROR_CODE="602";//验证码过期
 
 }

@@ -142,7 +142,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -230,13 +230,13 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					
 					lotteryGroupService.update(entity);
 					map.put(Constants.MESSAGE_STR, "删除成功");
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					map.put(Constants.FLAG_STR, true);
 				}
 				else
 				{
 					map.put(Constants.MESSAGE_STR, "删除失败");
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_DELETE_GROUP);
 					map.put(Constants.FLAG_STR, false);
 				}
 				
@@ -245,10 +245,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
-		
 		
 		return map;
 	}
@@ -283,7 +282,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -316,7 +315,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					}
 					 LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
 					 map.put(Constants.FLAG_STR, true);
-					 map.put(Constants.TOKEN_FLAG_STR, true);
+					 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					 map.put(Constants.MESSAGE_STR, "获取成功");
 					 map.put("groupNumber", group.getGroupNumber());//放置群号返回参数
 					 map.put("memberDtos", userDtos);
@@ -327,7 +326,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				{
 					LOG.error(Constants.ERROR_STR, e);
 					 map.put(Constants.FLAG_STR, false);
-					 map.put(Constants.TOKEN_FLAG_STR, true);
+					 map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 					 map.put(Constants.MESSAGE_STR, "获取失败");
 				}
 			}
@@ -335,7 +334,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -371,7 +370,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -380,14 +379,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				map.put("groupList", lotteryGroupService.toDTOs(list));
 				map.put(Constants.MESSAGE_STR, "获取成功");
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.FLAG_STR, true);
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -424,7 +423,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -554,7 +553,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				}
 				
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "获取成功");
 				map.put("groupDtos", dtos);
 			}
@@ -562,7 +561,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -597,7 +596,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				if(!tokenFlag)
 				{//token不相同
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, false);
+					map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 					map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 				}
 				else
@@ -617,7 +616,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 						 }
 						 
 						 map.put(Constants.FLAG_STR, true);
-						 map.put(Constants.TOKEN_FLAG_STR, true);
+						 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 						 map.put(Constants.MESSAGE_STR, "获取成功");
 						 map.put("groupDtos", groupDtos);
 					 }
@@ -625,7 +624,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					 {
 						 LOG.error(Constants.ERROR_STR, e);
 						 map.put(Constants.FLAG_STR, false);
-						 map.put(Constants.TOKEN_FLAG_STR, true);
+						 map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 						 map.put(Constants.MESSAGE_STR, "获取失败");
 					 }
 				}
@@ -633,7 +632,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		 else
 		 {
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 				map.put(Constants.MESSAGE_STR, "token值不存在!");
 		 }
 		 
@@ -668,7 +667,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				if(!tokenFlag)
 				{//token不相同
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, false);
+					map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 					map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 				}
 				else
@@ -694,7 +693,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 							 }
 							 
 							 map.put(Constants.FLAG_STR, true);
-							 map.put(Constants.TOKEN_FLAG_STR, true);
+							 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 							 map.put(Constants.MESSAGE_STR, "获取成功");
 							 map.put("groupDtos", groupDtos);
 						 }
@@ -703,7 +702,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					 {
 						 LOG.error(Constants.ERROR_STR, e);
 						 map.put(Constants.FLAG_STR, false);
-						 map.put(Constants.TOKEN_FLAG_STR, true);
+						 map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 						 map.put(Constants.MESSAGE_STR, "获取失败");
 					 }
 				}
@@ -711,7 +710,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		 else
 		 {
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 				map.put(Constants.MESSAGE_STR, "token值不存在!");
 		 }
 		 return map;
@@ -745,7 +744,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				if(!tokenFlag)
 				{//token不相同
 					resultBean.setFlag(false);
-					resultBean.setTokenFlag(false);
+					resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 					resultBean.setMessage("token过期,请重新登录!");
 				}
 				else
@@ -787,14 +786,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					}
 					
 					resultBean.setFlag(true);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SUCCESS_CODE);
 					resultBean.setMessage("申请成功");
 				}
 			}
 		 else
 		 {
 			 resultBean.setFlag(false);
-			 resultBean.setTokenFlag(false);
+			 resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			resultBean.setMessage("token值不存在!");
 		 }
 	
@@ -832,7 +831,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				resultBean.setFlag(false);
-				resultBean.setTokenFlag(false);
+				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 				resultBean.setMessage("token过期,请重新登录!");
 			}
 			else
@@ -872,14 +871,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					}
 				}
 				resultBean.setFlag(true);
-				resultBean.setTokenFlag(true);
+				resultBean.setCode(Constants.SUCCESS_CODE);
 				resultBean.setMessage("审核成功");
 			}
 		}
 		else
 		{
 			 resultBean.setFlag(false);
-			 resultBean.setTokenFlag(false);
+			 resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			 resultBean.setMessage("token值不存在!");
 		}
 		return resultBean;
@@ -909,7 +908,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -921,14 +920,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					List<RelaApplyOfLbuyerorexpertAndGroupDTO> dtos = relaApplybuyerAndGroupService.toDTOS(entities);
 					map.put("applyList", dtos);
 					map.put(Constants.FLAG_STR, true);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					map.put(Constants.MESSAGE_STR, "获取成功");
 				}
 				catch(Exception e)
 				{
 					LOG.error(Constants.ERROR_STR, e);
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 					map.put(Constants.MESSAGE_STR, "服务器错误");
 				}
 			}
@@ -936,7 +935,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -966,7 +965,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -980,14 +979,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					
 					map.put("approvalList", dtos);
 					map.put(Constants.FLAG_STR, true);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					map.put(Constants.MESSAGE_STR, "获取成功");
 				}
 				catch(Exception e)
 				{
 					LOG.error("error", e);
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 					map.put(Constants.MESSAGE_STR, "服务器错误");
 				}
 			}
@@ -995,7 +994,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -1077,7 +1076,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				resultBean.setFlag(false);
-				resultBean.setTokenFlag(false);
+				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 				resultBean.setMessage("token过期,请重新登录!");
 			}
 			else
@@ -1119,14 +1118,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					}
 					
 					resultBean.setFlag(true);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SUCCESS_CODE);
 					resultBean.setMessage("加入成功");
 				}
 				else
 				{
 					int couldJoin = joinUsers.length-(nowMemberCount+joinUsers.length-memberCount);
 					resultBean.setFlag(false);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.FAIL_CODE_OF_JOIN_GROUP_MEMBER);
 					resultBean.setMessage("群等级不够加入当前要求加入的人数，当前只可以加入:"+couldJoin+"人");
 				}
 			}
@@ -1134,7 +1133,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			resultBean.setFlag(false);
-			resultBean.setTokenFlag(false);
+			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			resultBean.setMessage("token值不存在!");
 		}
 		
@@ -1170,7 +1169,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				resultBean.setFlag(false);
-				resultBean.setTokenFlag(false);
+				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 				resultBean.setMessage("token过期,请重新登录!");
 			}
 			else
@@ -1206,19 +1205,19 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				{
 					LOG.error(Constants.ERROR_STR, e);
 					resultBean.setFlag(false);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SERVER_FAIL_CODE);
 					resultBean.setMessage("服务器错误");
 				}
 				
 				resultBean.setFlag(true);
-				resultBean.setTokenFlag(true);
+				resultBean.setCode(Constants.SUCCESS_CODE);
 				resultBean.setMessage("退群成功");
 			}
 		}
 		else
 		{
 			resultBean.setFlag(false);
-			resultBean.setTokenFlag(false);
+			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			resultBean.setMessage("token值不存在");
 		}
 		return resultBean;
@@ -1250,7 +1249,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1289,7 +1288,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 						//更改群名称
 						lotteryGroupService.update(group);
 						map.put(Constants.FLAG_STR, true);
-						map.put(Constants.TOKEN_FLAG_STR, true);
+						map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 						map.put(Constants.MESSAGE_STR, "更新群信息成功");
 						map.put("group", lotteryGroupService.toDTO(group));
 						
@@ -1312,7 +1311,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 						//更改群名称
 						lotteryGroupService.update(group);
 						map.put(Constants.FLAG_STR, true);
-						map.put(Constants.TOKEN_FLAG_STR, true);
+						map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 						map.put(Constants.MESSAGE_STR, "更新群信息成功");
 						map.put("group", lotteryGroupService.toDTO(group));
 					}
@@ -1345,7 +1344,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 						//更改群人数
 						lotteryGroupService.update(group);
 						map.put(Constants.FLAG_STR, true);
-						map.put(Constants.TOKEN_FLAG_STR, true);
+						map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 						map.put(Constants.MESSAGE_STR, "升级群成功");
 						map.put("group", lotteryGroupService.toDTO(group));
 					}
@@ -1354,7 +1353,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				{
 					LOG.error(Constants.ERROR_STR, e);
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 					map.put(Constants.MESSAGE_STR, "更新群信息失败");
 				}
 			}
@@ -1362,7 +1361,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -1395,7 +1394,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1516,14 +1515,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 						{//若创建失败
 							map.put(Constants.MESSAGE_STR, result.getErrorMessage());//创建失败返回融云端群创建失败信息
 							LOG.error("createGroup error:", result.getErrorMessage());
-							map.put(Constants.TOKEN_FLAG_STR, true);
+							map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_CREATE_GROUP);
 							map.put(Constants.FLAG_STR, false);
 						}
 						else
 						{
 							map.put("group", lotteryGroupService.toDTO(entity));//返回创建成功的群信息
 							map.put(Constants.MESSAGE_STR, "创建成功");
-							map.put(Constants.TOKEN_FLAG_STR, true);
+							map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 							map.put(Constants.FLAG_STR, true);
 							
 							/*建群成功后，使用机器人向群内发送消息*/
@@ -1552,7 +1551,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				{
 					LOG.error(Constants.ERROR_STR, e);
 					map.put(Constants.MESSAGE_STR, "创建失败");
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
 					map.put(Constants.FLAG_STR, false);
 				}
 			}
@@ -1560,7 +1559,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -1594,7 +1593,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1623,7 +1622,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				 }
 				 
 				 map.put(Constants.FLAG_STR, true);
-				 map.put(Constants.TOKEN_FLAG_STR, true);
+				 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				 map.put(Constants.MESSAGE_STR, "更新成功");
 				 map.put("groupDtos", dtos);
 			}
@@ -1631,7 +1630,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -1692,7 +1691,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1709,14 +1708,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					map.put("couldUse", 0);
 				}
 				map.put(Constants.MESSAGE_STR, "获取成功");
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.FLAG_STR, true);	
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -1747,7 +1746,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1758,14 +1757,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				map.put("cards", dtos);
 				map.put(Constants.MESSAGE_STR, "获取成功");
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.FLAG_STR, true);	
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -1795,7 +1794,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1819,14 +1818,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				map.put("cards", dtos);
 				map.put(Constants.MESSAGE_STR, "获取成功");
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.FLAG_STR, true);	
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -1859,7 +1858,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		lotterybuyerOrExpertService.updateCardsOfUser(owner, cardId, number);
 		
 		map.put(Constants.MESSAGE_STR, "更新成功");
-		map.put(Constants.TOKEN_FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.FLAG_STR, true);	
 		return map;
 	}
@@ -1889,7 +1888,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				result.put(Constants.FLAG_STR, false);
-				result.put(Constants.TOKEN_FLAG_STR, false);
+				result.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				result.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1915,7 +1914,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				lotteryGroupNoticeService.save(entity);
 				
 				result.put(Constants.FLAG_STR, true);
-				result.put(Constants.TOKEN_FLAG_STR, true);
+				result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				result.put(Constants.MESSAGE_STR, "添加成功");
 				
 				if(tuisongFlag)
@@ -1930,7 +1929,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		else
 		{
 			result.put(Constants.FLAG_STR, false);
-			result.put(Constants.TOKEN_FLAG_STR, false);
+			result.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			result.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -1986,7 +1985,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -1998,14 +1997,14 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				map.put("dtos", dtos);
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "获取成功");
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -2080,7 +2079,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 					}
 				lotteryGroupNoticeService.update(groupNotice);
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "更新成功");
 				/*}
 		}
@@ -2122,7 +2121,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		lotteryGroupNoticeService.update(groupNotice);
 		
 		map.put(Constants.FLAG_STR, true);
-		map.put(Constants.TOKEN_FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.MESSAGE_STR, "删除成功");
 		
 		return map;

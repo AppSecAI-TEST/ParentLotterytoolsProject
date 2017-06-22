@@ -290,7 +290,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		
 		map.put("lotteryPlays", dtos);
 		map.put(Constants.FLAG_STR, true);
-		map.put(Constants.TOKEN_FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.MESSAGE_STR, "获取成功");
 		
 		return map;
@@ -320,7 +320,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				if(!tokenFlag)
 				{//token不相同
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR, false);
+					map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 					map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 				}
 				else
@@ -358,14 +358,14 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 					
 					map.put("baseDtos", dtos);
 					map.put(Constants.FLAG_STR, true);
-					map.put(Constants.TOKEN_FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					map.put(Constants.MESSAGE_STR, "获取成功");
 				}
 			}
 		 else
 		 {
 			 map.put(Constants.FLAG_STR, false);
-			 map.put(Constants.TOKEN_FLAG_STR, false);
+			 map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			 map.put(Constants.MESSAGE_STR, "token值不存在!");
 		 }
 	
@@ -392,7 +392,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -412,14 +412,14 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				
 				map.put("preOfExperts", preOfExperts);
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "获取成功");
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -445,7 +445,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -456,7 +456,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		
@@ -483,7 +483,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -501,14 +501,14 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 						
 				map.put("preOfExperts", preOfExperts);
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "获取成功");
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -627,7 +627,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -635,7 +635,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				List<SysMessage> list = sysMessageService.getSysMessageByTarget(telephone);
 				
 				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.TOKEN_FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.MESSAGE_STR, "获取成功");
 				map.put("sysMessage", list);
 			}
@@ -643,7 +643,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;
@@ -673,7 +673,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.TOKEN_FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 			}
 			else
@@ -705,13 +705,13 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 							
 							map.put("appversion", dto);
 							map.put(Constants.FLAG_STR, true);
-							map.put(Constants.TOKEN_FLAG_STR, true);
+							map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 							map.put(Constants.MESSAGE_STR, "获取成功");
 						}
 						else
 						{
-							map.put(Constants.FLAG_STR, false);
-							map.put(Constants.TOKEN_FLAG_STR, true);
+							map.put(Constants.FLAG_STR, true);
+							map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NO_NEW_APPVERSION);
 							map.put(Constants.MESSAGE_STR, "获取失败,当前应用没有最新版本");
 						}
 					
@@ -720,7 +720,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 					{
 						LOG.error("getAppversionsOfStationCouldUse：当前应用的已发布的应用版本的版本好是null;应用name="+appName);
 						map.put(Constants.FLAG_STR, false);
-						map.put(Constants.TOKEN_FLAG_STR, true);
+						map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NO_APP);
 						map.put(Constants.MESSAGE_STR, "获取失败,应用名为所传参数的应用不存在");
 					}
 					
@@ -730,7 +730,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.TOKEN_FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			map.put(Constants.MESSAGE_STR, "token值不存在!");
 		}
 		return map;

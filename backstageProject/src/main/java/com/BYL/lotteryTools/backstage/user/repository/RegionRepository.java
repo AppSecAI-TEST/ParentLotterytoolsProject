@@ -17,4 +17,7 @@ public interface RegionRepository extends GenericRepository<Region, String> {
 	  */
 	@Query("select u from Region u where  u.acode =?1")
 	public Region getRegionByAcode(String acode);
+	
+	@Query("select u from Region u where  u.acode =?1 and u.cityCode=?2")
+	public Region getRegionByAcodeAndCityCode(String acode,String cityCode);
 }

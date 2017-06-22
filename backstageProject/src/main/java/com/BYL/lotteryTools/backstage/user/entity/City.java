@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -24,8 +25,6 @@ public class City extends BaseEntity implements Serializable {
 
 	@Id
 	@Column(name="CID", nullable=false, length=11)
-	@GenericGenerator(name="idGenerator", strategy="uuid")//uuid由机器生成的主键
-	@GeneratedValue(generator="idGenerator")	
 	private String id;
 	
 	@Column(name="Ccode")

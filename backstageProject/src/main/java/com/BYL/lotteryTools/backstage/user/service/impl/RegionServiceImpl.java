@@ -59,5 +59,17 @@ public class RegionServiceImpl implements RegionService {
 	public Region getRegionByAcode(String code) {
 		return regionRepository.getRegionByAcode(code);
 	}
+
+	public Region getRegionByAcodeAndCityCode(String acode, String cityCode) {
+		return regionRepository.getRegionByAcodeAndCityCode(acode, cityCode);
+	}
+
+	public void save(Region entity) {
+		regionRepository.save(entity);		
+	}
+
+	public List<Region> findAllRegion() {
+		return regionRepository.findAll();
+	}
 	
 }

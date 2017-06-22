@@ -23,4 +23,10 @@ public interface CityService {
 	public City getCityByCcode(String code);
 	
 	public List<City> getCityByCname(String cname);
+	
+	public void save(City entity);
+	
+	public City getCityByCcodeAndProvinceCode(String ccode,String provinceCode);
+	
+	public List<City> findAllCity();
 }

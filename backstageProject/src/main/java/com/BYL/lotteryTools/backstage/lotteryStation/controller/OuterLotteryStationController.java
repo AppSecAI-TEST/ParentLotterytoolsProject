@@ -102,8 +102,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 			if(!tokenFlag)
 			{//token不相同
 				resultBean.setFlag(false);
-				resultBean.setTokenFlag(false);
-				resultBean.setMessage("token过期,请重新登录!");
+				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
 			}
 			else
 			{
@@ -200,7 +199,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 							//保存彩票站信息
 							lotteryStationService.save(lotteryStation);
 							resultBean.setFlag(true);
-							resultBean.setTokenFlag(true);
+							resultBean.setCode(Constants.SUCCESS_CODE);
 							resultBean.setStatus("success");
 							resultBean.setMessage("提交成功");
 						/*}
@@ -214,8 +213,8 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 					else
 					{
 						resultBean.setExist(true);
-						resultBean.setFlag(true);
-						resultBean.setTokenFlag(true);
+						resultBean.setFlag(false);
+						resultBean.setCode(Constants.FAIL_CODE_OF_STAION_IS_REGISTED);
 						resultBean.setStatus("error");
 						resultBean.setMessage("当前彩票站已认证");
 					}
@@ -225,7 +224,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 				{
 					LOG.error("error:", e);
 					resultBean.setFlag(false);
-					resultBean.setTokenFlag(true);
+					resultBean.setCode(Constants.SERVER_FAIL_CODE);
 					resultBean.setMessage("服务器错误");
 				}
 			}
@@ -233,7 +232,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 		else
 		{
 			resultBean.setFlag(false);
-			resultBean.setTokenFlag(false);
+			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
 			resultBean.setMessage("token值不存在!");
 		}
 		return resultBean;
@@ -264,7 +263,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 				if(!tokenFlag)
 				{//token不相同
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.TOKEN_FLAG_STR,false);
+					map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
 					map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
 				}
 				else
@@ -275,14 +274,14 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 					 
 					 map.put("flag", true);
 					 map.put("message", "获取成功");
-					 map.put(Constants.TOKEN_FLAG_STR,true);
+					 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					 map.put("stations", dtos);
 				}
 			}
 		 else
 		 {
 			 map.put(Constants.FLAG_STR, false);
-			 map.put(Constants.TOKEN_FLAG_STR,false);
+			 map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
 			 map.put(Constants.MESSAGE_STR, "token值不存在!");
 		 }
 		 return map;

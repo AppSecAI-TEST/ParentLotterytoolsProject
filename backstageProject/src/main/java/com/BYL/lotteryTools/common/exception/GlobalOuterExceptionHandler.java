@@ -69,6 +69,7 @@ public abstract class GlobalOuterExceptionHandler {
 	        else
 	        {
 	        	returnMsg = "服务器错误";
+	        	
 	        }
 	        
 	        //添加自己的异常处理逻辑，如日志记录　　　
@@ -76,6 +77,7 @@ public abstract class GlobalOuterExceptionHandler {
 	        LOG.error("ERROR:", e);  
 	        map.put(Constants.MESSAGE_STR, returnMsg);
 	        map.put(Constants.FLAG_STR, false);
+	        map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);//服务器异常错误
 	        return map;
 	    }  
 	    
