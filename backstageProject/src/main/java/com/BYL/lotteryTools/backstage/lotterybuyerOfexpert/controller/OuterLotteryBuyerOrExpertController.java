@@ -506,6 +506,50 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	}
 	
 	/**
+	 * 修改密码
+	* @Title: findPassword 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotterybuyerOrExpertDTO
+	* @param @param request
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月22日 下午6:48:59 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/findPassword", method = RequestMethod.GET)
+	public @ResponseBody ResultBean findPassword(
+			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,
+			HttpServletRequest request)
+	{
+		ResultBean resultBean = new ResultBean();
+		
+		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+				getLotterybuyerOrExpertByTelephone(lotterybuyerOrExpertDTO.getTelephone());
+		try
+		{
+			lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
+			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+			
+			resultBean.setFlag(true);
+			resultBean.setCode(Constants.SUCCESS_CODE);
+			resultBean.setMessage("修改密码成功");
+		}
+		catch(Exception e)
+		{
+			LOG.error("error:", e);
+			resultBean.setFlag(false);
+			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setMessage("服务器错误!");
+		}
+		finally{
+			lotterybuyerOrExpertDTO = null;
+			lotterybuyerOrExpert = null;
+		}
+		return resultBean;
+	}
+	
+	/**
 	 * 校验输入密码是否和用户密码符合
 	* @Title: checkPassword 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
