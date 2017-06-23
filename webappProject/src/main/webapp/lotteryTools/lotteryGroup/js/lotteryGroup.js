@@ -522,7 +522,7 @@ function reset()
 //删除群
 function deleteLotteryGroup(id)
 {
-	var url = contextPath + '/outerLGroup/deleteGroup.action';
+	var url = contextPath + '/lgroup/deleteGroupFromBs.action';
 	var data1 = new Object();
 	
 	

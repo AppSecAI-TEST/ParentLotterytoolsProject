@@ -1,6 +1,7 @@
 package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Cacheable;
@@ -128,6 +129,19 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="USER_TOKEN")
 	private String userToken;//用户彩聊token
 	
+//	@Column(name="TOKEN_MODIFY_TIME")
+//	private Timestamp tokenModifyTime;//token变更时间
+	
+	
+	
+//	public Timestamp getTokenModifyTime() {
+//		return tokenModifyTime;
+//	}
+//
+//	public void setTokenModifyTime(Timestamp tokenModifyTime) {
+//		this.tokenModifyTime = tokenModifyTime;
+//	}
+
 	//一个用户可以进行多次彩金、彩币的充值
 	@OneToMany(mappedBy="lotterybuyerOrExpert" , fetch=FetchType.LAZY)
 	private List<RechargeForHandselOrColorcoins> rechargeForHandselOrColorcoins;

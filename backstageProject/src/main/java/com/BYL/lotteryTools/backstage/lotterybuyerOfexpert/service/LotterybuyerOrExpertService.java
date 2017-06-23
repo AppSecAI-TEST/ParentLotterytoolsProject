@@ -47,6 +47,8 @@ public interface LotterybuyerOrExpertService {
 	
 	public void updateRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity);
 	
+	public void deleteRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity);
+	
 	//彩聊卡操作
 	public LotteryChatCard getLotteryChatCardById(String id);
 	
@@ -61,4 +63,5 @@ public interface LotterybuyerOrExpertService {
 	
 	//减少一张建群卡
 	public void reduceCardsOfUser(LotterybuyerOrExpert owner,String cardId);
+	
 }

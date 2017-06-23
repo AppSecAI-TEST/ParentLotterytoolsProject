@@ -609,4 +609,12 @@ public class LotteryGroupController extends GlobalExceptionHandler
 		return resultBean;
 	}
 	
+	@RequestMapping(value="/deleteGroupFromBs", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> deleteGroupFromBs(
+			LotteryGroupDTO dto,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = lotteryGroupService.deleteGroup(dto, request, httpSession);
+		return map;
+	}
 }

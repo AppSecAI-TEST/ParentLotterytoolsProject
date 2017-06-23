@@ -27,6 +27,7 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGrou
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
@@ -304,14 +305,22 @@ public class LotteryBuyerOrExpertController
 					//TODO:删除关联关系
 					List<RelaBindOfLbuyerorexpertAndGroup> addGroups = lotterybuyerOrExpert.getRelaBindOfLbuyerorexpertAndGroups();
 					for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : addGroups) {
-						relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
+							relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
+						
 					}
 					List<RelaApplyOfLbuyerorexpertAndGroup> applyGroups = lotterybuyerOrExpert.getRelaApplyOfLbuyerorexpertAndGroups();
 					for (RelaApplyOfLbuyerorexpertAndGroup relaApplyOfLbuyerorexpertAndGroup : applyGroups) {
-						relaApplybuyerAndGroupService.delete(relaApplyOfLbuyerorexpertAndGroup);
+							relaApplybuyerAndGroupService.delete(relaApplyOfLbuyerorexpertAndGroup);
+						
 					}
-			 		
-			 		
+					List<RelaLBEUserAndLtcard> cards = lotterybuyerOrExpert.getRelaLBEUserAndLtcards();
+					for (RelaLBEUserAndLtcard relaLBEUserAndLtcard : cards) {
+							lotterybuyerOrExpertService.deleteRelaLBEUserAndLtcard(relaLBEUserAndLtcard);
+					}
+					lotterybuyerOrExpert.setRelaApplyOfLbuyerorexpertAndGroups(null);
+					lotterybuyerOrExpert.setRelaBindOfLbuyerorexpertAndGroups(null);
+					lotterybuyerOrExpert.setRelaLBEUserAndLtcards(null);
+					lotterybuyerOrExpert.setRelaBindOfLbuyerorexpertAndLStations(null);
 			 		lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			 		
 			 		 //日志输出

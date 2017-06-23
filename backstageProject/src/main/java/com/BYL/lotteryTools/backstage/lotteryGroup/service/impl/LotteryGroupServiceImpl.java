@@ -1,10 +1,16 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.service.impl;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +20,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -66,6 +74,12 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	
 	@Autowired
 	private RongyunImService rongyunImService;
+	
+	@Autowired
+	private RelaApplybuyerAndGroupService relaApplybuyerAndGroupService;
+	
+	@Autowired
+	private RelaGroupUpLevelService relaGroupUpLevelService;
 	
 	public List<LotteryGroup> findAll()
 	{
@@ -394,5 +408,100 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		return resultBean;
 	}
 	
+	public Map<String,Object> deleteGroup(
+			LotteryGroupDTO dto,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		//删除群的同时删除群绑定的机器人
+		LotteryGroup entity = this.getLotteryGroupById(dto.getId());
+		
+		if(null != entity)
+		{
+			String groupId = entity.getId();
+			entity.setGroupRobotID(null);
+			//删除融云的群信息
+			CodeSuccessResult result = rongyunImService.groupDismiss(entity.getLotteryBuyerOrExpert().getId(), groupId);
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				LOG.error("融云删除群报错", result.getErrorMessage());
+			}
+			
+			//删除数据库中的群信息
+			entity.setIsDeleted(Constants.IS_DELETED);
+			entity.setModify(dto.getOwnerId());
+			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			entity.setLotteryBuyerOrExpert(null);
+			
+			//删除群的同时删除群的关联关系(用户和群的关联关系)
+			Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+			QueryResult<RelaBindOfLbuyerorexpertAndGroup> relas = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, groupId);
+			List<RelaBindOfLbuyerorexpertAndGroup> list = relas.getResultList();
+			if(null != list)
+			{
+				for (RelaBindOfLbuyerorexpertAndGroup relaBindOfLbuyerorexpertAndGroup : list) 
+				{
+					try
+					{
+						relaBindbuyerAndGroupService.delete(relaBindOfLbuyerorexpertAndGroup);
+					}
+					catch(Exception e)
+					{
+						LOG.error("delete,error:", e);
+					}
+				}
+			}
+			
+			//删除加群申请的关联关系
+			List<RelaApplyOfLbuyerorexpertAndGroup> applys = relaApplybuyerAndGroupService.
+					getRelaApplyOfLbuyerorexpertAndGroupByGroupId(groupId);
+			if(null != applys)
+			{
+				for (RelaApplyOfLbuyerorexpertAndGroup delApply : applys) 
+				{
+					relaApplybuyerAndGroupService.delete(delApply);
+				}
+			}
+			
+			//删除群等级关联关系
+			List<RelaGroupUpLevelRecord> records = relaGroupUpLevelService.getRelaGroupUpLevelRecordByGroupId(groupId);
+			if(null != records)
+			{
+				for (RelaGroupUpLevelRecord relaGroupUpLevelRecord : records) {
+					relaGroupUpLevelService.delete(relaGroupUpLevelRecord);
+				}
+			}
+			
+			//删除群头像和群二维码
+			List<Uploadfile> touxiang = uploadfileService.getUploadfilesByNewsUuid(entity.getTouXiang());
+			if(null != touxiang &&touxiang.size()!=0)
+				uploadfileService.deleteUploadFile(touxiang, httpSession);//调用删除附件数据和附件文件方法
+			
+			//删除二维码图片
+			String savePath = httpSession.getServletContext().getRealPath(entity.getGroupQRImg());//获取二维码绝对路径
+			File dirFile = new File(savePath);
+			boolean deleteFlag = dirFile.delete();
+			if(deleteFlag)
+			{
+				LOG.info("删除成功",deleteFlag);
+			}
+			else
+			{
+				LOG.error(Constants.ERROR_STR,"删除失败，文件："+entity.getGroupQRImg());//若删除失败记录未删除成功的文件,之后做手动删除
+			}
+			
+			this.update(entity);
+			map.put(Constants.MESSAGE_STR, "删除成功");
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			map.put(Constants.FLAG_STR, true);
+		}
+		else
+		{
+			map.put(Constants.MESSAGE_STR, "删除失败");
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_DELETE_GROUP);
+			map.put(Constants.FLAG_STR, false);
+		}
+		return map;
+	}
 	
 }

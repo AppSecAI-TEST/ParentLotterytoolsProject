@@ -27,11 +27,11 @@ import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 public class RongyunImServiceImpl implements RongyunImService 
 {
 	private static final Logger LOG = LoggerFactory.getLogger(RongyunImServiceImpl.class);
-	String appKey = "82hegw5u83v8x";//开发环境，appkey
-	String appSecret = "z2VxpghbOvscFu";//上面key的secret
+//	String appKey = "82hegw5u83v8x";//开发环境，appkey
+//	String appSecret = "z2VxpghbOvscFu";//上面key的secret
 	
-//	String appKey = "e0x9wycfehpeq";//生产环境，appkey
-//	String appSecret = "aVHIVr0g67IyA";//上面key的secret
+	String appKey = "e0x9wycfehpeq";//生产环境，appkey
+	String appSecret = "aVHIVr0g67IyA";//上面key的secret
 	
 	
 	//封禁用户

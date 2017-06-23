@@ -444,4 +444,8 @@ public class LotterybuyerOrExpertServiceImpl implements
 		
 		return dtos;
 	}
+
+	public void deleteRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity) {
+			relaLBEUserAndLtcardRepository.delete(entity);
+	}
 }

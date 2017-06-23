@@ -2,6 +2,10 @@ package com.BYL.lotteryTools.backstage.lotteryGroup.service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Pageable;
 
@@ -59,4 +63,8 @@ public interface LotteryGroupService {
 	public  ResultBean joinUserInGroup(
 			String[] joinUsers,
 			String groupId);
+	
+	public Map<String,Object> deleteGroup(
+			LotteryGroupDTO dto,
+			HttpServletRequest request,HttpSession httpSession);
 }
