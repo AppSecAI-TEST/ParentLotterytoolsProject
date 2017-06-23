@@ -1787,18 +1787,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			@RequestParam(value="userId",required=false) String userId)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
-		if(null != userToken && !"".equals(userToken))
-		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(userToken);
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-			}
-			else
-			{
+		
+			
 				List<LotteryChatCard> cards = lotterybuyerOrExpertService.findAllLotteryChatCards();
 				
 				List<LotteryChatCardDTO> dtos = lotterybuyerOrExpertService.toLotteryChatCardDTOs(cards);
@@ -1820,14 +1810,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				map.put(Constants.MESSAGE_STR, "获取成功");
 				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				map.put(Constants.FLAG_STR, true);	
-			}
-		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
+			
+		
 		return map;
 	}
 	
