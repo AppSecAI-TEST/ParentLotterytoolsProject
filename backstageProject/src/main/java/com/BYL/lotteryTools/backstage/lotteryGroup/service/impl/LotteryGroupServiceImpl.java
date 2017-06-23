@@ -24,9 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroupNotice;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
+import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupNoticeRepository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
@@ -80,6 +82,9 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	
 	@Autowired
 	private RelaGroupUpLevelService relaGroupUpLevelService;
+	
+	@Autowired
+	private LotteryGroupNoticeRepository lotteryGroupNoticeRepository;
 	
 	public List<LotteryGroup> findAll()
 	{
@@ -490,6 +495,16 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 				LOG.error(Constants.ERROR_STR,"删除失败，文件："+entity.getGroupQRImg());//若删除失败记录未删除成功的文件,之后做手动删除
 			}
 			
+			//删除群公告
+			List<LotteryGroupNotice> noticelist = entity.getLotteryGroupNotices();
+			for (LotteryGroupNotice lotteryGroupNotice : noticelist) {
+				lotteryGroupNoticeRepository.delete(lotteryGroupNotice);
+			}
+			
+			entity.setRelaApplyOfLbuyerorexpertAndGroups(null);
+			entity.setRelaBindOfLbuyerorexpertAndGroups(null);
+			entity.setRelaGroupUpLevelRecords(null);
+			entity.setLotteryGroupNotices(null);
 			this.update(entity);
 			map.put(Constants.MESSAGE_STR, "删除成功");
 			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
