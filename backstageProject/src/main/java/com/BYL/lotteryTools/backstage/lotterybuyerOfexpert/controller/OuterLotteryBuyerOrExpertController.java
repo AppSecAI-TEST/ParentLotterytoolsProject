@@ -399,39 +399,15 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
-		if(null != dto.getUserToken() && !"".equals(dto.getUserToken()))
-		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(dto.getUserToken());
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-			}
-			else
-			{
-				String tel = TokenUtil.getTelephoneByToken(dto.getUserToken());//根据token获取手机号
-				LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertByTelephone(tel);
-				
-				//token验证成功
-				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
-				map.put(Constants.MESSAGE_STR, "获取成功");
-				dto = lotterybuyerOrExpertService.toDTO(user);
-				map.put("userDto", dto);
-			}
-			
-		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
+		String tel = TokenUtil.getTelephoneByToken(dto.getUserToken());//根据token获取手机号
+		LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertByTelephone(tel);
 		
-		
-		
+		//token验证成功
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		dto = lotterybuyerOrExpertService.toDTO(user);
+		map.put("userDto", dto);
 		return map;
 	}
 	
@@ -454,54 +430,32 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	{
 		ResultBean resultBean = new ResultBean();
 		
-		if(null != lotterybuyerOrExpertDTO.getUserToken() && !"".equals(lotterybuyerOrExpertDTO.getUserToken()))
-		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(lotterybuyerOrExpertDTO.getUserToken());
-			if(!tokenFlag)
-			{//token不相同
-				resultBean.setFlag(false);
-				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
-				resultBean.setMessage("token过期,请重新登录!");
-			}
-			else
-			{
-				String tel = TokenUtil.getTelephoneByToken(lotterybuyerOrExpertDTO.getUserToken());
-				/*LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-						getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());*/
-				LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-						getLotterybuyerOrExpertByTelephone(tel);
-				
-				try
-				{
-					lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
-					lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
-					
-					resultBean.setFlag(true);
-					resultBean.setCode(Constants.SUCCESS_CODE);
-					resultBean.setMessage("修改密码成功");
-				}
-				catch(Exception e)
-				{
-					LOG.error("error:", e);
-					resultBean.setFlag(false);
-					resultBean.setCode(Constants.SERVER_FAIL_CODE);
-					resultBean.setMessage("服务器错误!");
-				}
-				finally{
-					lotterybuyerOrExpertDTO = null;
-					lotterybuyerOrExpert = null;
-				}
-			}
+		String tel = TokenUtil.getTelephoneByToken(lotterybuyerOrExpertDTO.getUserToken());
+		/*LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+				getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());*/
+		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+				getLotterybuyerOrExpertByTelephone(tel);
 		
-		}
-		else
+		try
 		{
+			lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
+			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+			
+			resultBean.setFlag(true);
+			resultBean.setCode(Constants.SUCCESS_CODE);
+			resultBean.setMessage("修改密码成功");
+		}
+		catch(Exception e)
+		{
+			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
-			resultBean.setMessage("token值不存在!");
+			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setMessage("服务器错误!");
 		}
-		
+		finally{
+			lotterybuyerOrExpertDTO = null;
+			lotterybuyerOrExpert = null;
+		}
 		return resultBean;
 	}
 	
@@ -568,61 +522,39 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	{
 		ResultBean resultBean = new ResultBean();
 		
-		if(null != lotterybuyerOrExpertDTO.getUserToken() && !"".equals(lotterybuyerOrExpertDTO.getUserToken()))
+		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+				getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());
+		
+		try
 		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(lotterybuyerOrExpertDTO.getUserToken());
-			if(!tokenFlag)
-			{//token不相同
-				resultBean.setFlag(false);
-				resultBean.setCode(Constants.TOKEN_IS_PASS_CODE);
-				resultBean.setMessage("token过期,请重新登录!");
+			boolean flag = MyMD5Util.validPassword(lotterybuyerOrExpertDTO.getPassword(), lotterybuyerOrExpert.getPassword());
+			resultBean.setFlag(flag);
+			if(flag)
+			{
+				resultBean.setFlag(true);
+				resultBean.setCode(Constants.SUCCESS_CODE);
+				resultBean.setMessage("原密码输入正确");
 			}
 			else
 			{
-				LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-						getLotterybuyerOrExpertById(lotterybuyerOrExpertDTO.getId());
-				
-				try
-				{
-					boolean flag = MyMD5Util.validPassword(lotterybuyerOrExpertDTO.getPassword(), lotterybuyerOrExpert.getPassword());
-					resultBean.setFlag(flag);
-					if(flag)
-					{
-						resultBean.setFlag(true);
-						resultBean.setCode(Constants.SUCCESS_CODE);
-						resultBean.setMessage("原密码输入正确");
-					}
-					else
-					{
-						resultBean.setFlag(false);
-						resultBean.setCode(Constants.FAIL_CODE);
-						resultBean.setMessage("原密码输入错误");
-					}
-					
-				}
-				catch(Exception e)
-				{
-					LOG.error("error:", e);
-					resultBean.setFlag(false);
-					resultBean.setCode(Constants.SERVER_FAIL_CODE);
-					resultBean.setMessage("请求错误");
-				}
-				finally{
-					lotterybuyerOrExpertDTO = null;
-					lotterybuyerOrExpert = null;
-				}
+				resultBean.setFlag(false);
+				resultBean.setCode(Constants.FAIL_CODE);
+				resultBean.setMessage("原密码输入错误");
 			}
+			
 		}
-		else
+		catch(Exception e)
 		{
+			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.TOKEN_IS_NOT_EXIST_CODE);
-			resultBean.setMessage("token值不存在!");
+			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setMessage("请求错误");
 		}
-		
-		
-		
+		finally{
+			lotterybuyerOrExpertDTO = null;
+			lotterybuyerOrExpert = null;
+		}
+
 		return resultBean;
 	}
 	
@@ -687,168 +619,148 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
-		if(null != dto.getUserToken() && !"".equals(dto.getUserToken()))
+		LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
+				getLotterybuyerOrExpertById(dto.getId());
+		
+		if(null != lotterybuyerOrExpert)
 		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(dto.getUserToken());
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
+			if(null != dto.getTouXiangImg())
+			{
+				Uploadfile uploadfile =null;
+				String newsUuid = UUID.randomUUID().toString();
+				try 
+				{
+					 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
+				} 
+				catch (Exception e) 
+				{
+					LOG.error(Constants.ERROR_STR, e);
+				}
+				
+				//删除旧头像(也可以定时批量删除,若为基础头像，则不可以进行删除)
+				if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpert.getTouXiang()))
+				{
+					LOG.info("删除附件",dto.getLastTouXiang());
+					Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpert.getTouXiang());
+					if(null != lastTouxiang)
+					{//若存在旧头像，则要进行删除操作
+						uploadfileService.delete(lastTouxiang, httpSession);
+					}
+				}
+				//绑定新头像
+				if(null != uploadfile)
+				{
+					lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());//关联新头像
+				}
+				
+			}
+			
+			//修改昵称
+			if(null != dto.getName() && !"".equals(dto.getName()))
+			{
+				lotterybuyerOrExpert.setName(dto.getName());
+				CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
+						dto.getName(), null);
+					if(null != result&&!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+					{
+						LOG.error("融云同步用户名失败", result.getErrorMessage());
+					}
+				
+				
+			}
+			
+			//添加城市，省份和市
+			if(null != dto.getProvinceCode() && !"".equals(dto.getProvinceCode()))
+			{
+				lotterybuyerOrExpert.setProvinceCode(dto.getProvinceCode());
+			}
+			if(null != dto.getCityCode()&& !"".equals(dto.getCityCode()))
+			{
+				lotterybuyerOrExpert.setCityCode(dto.getCityCode());
+			}
+			
+			//性别，0：女 1：男
+			if(null != dto.getSex() && !"".equals(dto.getSex()))
+			{
+				lotterybuyerOrExpert.setSex(dto.getSex());
+			}
+			
+			
+			//个人简介
+			if(null != dto.getSignature() && !"".equals(dto.getSignature()))
+			{
+				lotterybuyerOrExpert.setSignature(dto.getSignature());
+			}
+			
+			//地址
+			if(null != dto.getAddress())
+			{
+				lotterybuyerOrExpert.setAddress(dto.getAddress());
+			}
+			
+			//坐标
+			if(null != dto.getCoordinate())
+			{
+				lotterybuyerOrExpert.setCoordinate(dto.getCoordinate());
+			}
+			
+			
+			//邮政编码
+			if(null != dto.getPostCode())
+			{
+				lotterybuyerOrExpert.setPostCode(dto.getPostCode());
+			}
+			
+			//修改彩聊号
+			boolean caiFlag = true;
+			if("".equals(lotterybuyerOrExpert.getCailiaoName())|| null == lotterybuyerOrExpert.getCailiaoName())
+			{//之前的彩聊号没填写过才可以进行填写
+				//判断彩聊号是否唯一
+				//根据彩聊号获取用户专家数据，若有返回数据，则彩聊号当前已存在，不可以被更新
+				List<LotterybuyerOrExpert> list = lotterybuyerOrExpertService.
+						getLotterybuyerOrExpertByCailiaoName(dto.getCailiaoName());
+				if(null != list&& list.size() != 0)
+				{
+					caiFlag = false;
+				}
+				
+				lotterybuyerOrExpert.setCailiaoName(dto.getCailiaoName());//添加彩聊号
+			}
+			
+			if(caiFlag)
+			{//若彩聊号唯一，则可以进行修改操作
+				lotterybuyerOrExpert.setModify("app");
+				lotterybuyerOrExpert.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+				try 
+				{
+					dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
+					
+					map.put(Constants.FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+					map.put(Constants.MESSAGE_STR, "修改成功");
+					map.put("userDto", dto);
+				} catch (Exception e) {
+					LOG.error(Constants.ERROR_STR, e);
+					map.put(Constants.FLAG_STR, false);
+					map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
+					map.put(Constants.MESSAGE_STR, "服务器错误");
+				}
 			}
 			else
 			{
-				LotterybuyerOrExpert lotterybuyerOrExpert = lotterybuyerOrExpertService.
-						getLotterybuyerOrExpertById(dto.getId());
-				
-				if(null != lotterybuyerOrExpert)
-				{
-					if(null != dto.getTouXiangImg())
-					{
-						Uploadfile uploadfile =null;
-						String newsUuid = UUID.randomUUID().toString();
-						try 
-						{
-							 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
-						} 
-						catch (Exception e) 
-						{
-							LOG.error(Constants.ERROR_STR, e);
-						}
-						
-						//删除旧头像(也可以定时批量删除,若为基础头像，则不可以进行删除)
-						if(!OuterLotteryBuyerOrExpertController.morenTouxiang.equals(lotterybuyerOrExpert.getTouXiang()))
-						{
-							LOG.info("删除附件",dto.getLastTouXiang());
-							Uploadfile lastTouxiang = uploadfileService.getUploadfileByNewsUuid(lotterybuyerOrExpert.getTouXiang());
-							if(null != lastTouxiang)
-							{//若存在旧头像，则要进行删除操作
-								uploadfileService.delete(lastTouxiang, httpSession);
-							}
-						}
-						//绑定新头像
-						if(null != uploadfile)
-						{
-							lotterybuyerOrExpert.setTouXiang(uploadfile.getNewsUuid());//关联新头像
-						}
-						
-					}
-					
-					//修改昵称
-					if(null != dto.getName() && !"".equals(dto.getName()))
-					{
-						lotterybuyerOrExpert.setName(dto.getName());
-						CodeSuccessResult result = rongyunImService.refreshUser(lotterybuyerOrExpert.getId(),
-								dto.getName(), null);
-							if(null != result&&!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
-							{
-								LOG.error("融云同步用户名失败", result.getErrorMessage());
-							}
-						
-						
-					}
-					
-					//添加城市，省份和市
-					if(null != dto.getProvinceCode() && !"".equals(dto.getProvinceCode()))
-					{
-						lotterybuyerOrExpert.setProvinceCode(dto.getProvinceCode());
-					}
-					if(null != dto.getCityCode()&& !"".equals(dto.getCityCode()))
-					{
-						lotterybuyerOrExpert.setCityCode(dto.getCityCode());
-					}
-					
-					//性别，0：女 1：男
-					if(null != dto.getSex() && !"".equals(dto.getSex()))
-					{
-						lotterybuyerOrExpert.setSex(dto.getSex());
-					}
-					
-					
-					//个人简介
-					if(null != dto.getSignature() && !"".equals(dto.getSignature()))
-					{
-						lotterybuyerOrExpert.setSignature(dto.getSignature());
-					}
-					
-					//地址
-					if(null != dto.getAddress())
-					{
-						lotterybuyerOrExpert.setAddress(dto.getAddress());
-					}
-					
-					//坐标
-					if(null != dto.getCoordinate())
-					{
-						lotterybuyerOrExpert.setCoordinate(dto.getCoordinate());
-					}
-					
-					
-					//邮政编码
-					if(null != dto.getPostCode())
-					{
-						lotterybuyerOrExpert.setPostCode(dto.getPostCode());
-					}
-					
-					//修改彩聊号
-					boolean caiFlag = true;
-					if("".equals(lotterybuyerOrExpert.getCailiaoName())|| null == lotterybuyerOrExpert.getCailiaoName())
-					{//之前的彩聊号没填写过才可以进行填写
-						//判断彩聊号是否唯一
-						//根据彩聊号获取用户专家数据，若有返回数据，则彩聊号当前已存在，不可以被更新
-						List<LotterybuyerOrExpert> list = lotterybuyerOrExpertService.
-								getLotterybuyerOrExpertByCailiaoName(dto.getCailiaoName());
-						if(null != list&& list.size() != 0)
-						{
-							caiFlag = false;
-						}
-						
-						lotterybuyerOrExpert.setCailiaoName(dto.getCailiaoName());//添加彩聊号
-					}
-					
-					if(caiFlag)
-					{//若彩聊号唯一，则可以进行修改操作
-						lotterybuyerOrExpert.setModify("app");
-						lotterybuyerOrExpert.setModifyTime(new Timestamp(System.currentTimeMillis()));
-						lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
-						try 
-						{
-							dto = lotterybuyerOrExpertService.toDTO(lotterybuyerOrExpert);
-							
-							map.put(Constants.FLAG_STR, true);
-							map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
-							map.put(Constants.MESSAGE_STR, "修改成功");
-							map.put("userDto", dto);
-						} catch (Exception e) {
-							LOG.error(Constants.ERROR_STR, e);
-							map.put(Constants.FLAG_STR, false);
-							map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
-							map.put(Constants.MESSAGE_STR, "服务器错误");
-						}
-					}
-					else
-					{
-						map.put(Constants.FLAG_STR, false);
-						map.put(Constants.CODE_STR, Constants.FAIL_CODE);
-						map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
-					}
-				}
-				else
-				{
-					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.CODE_STR, Constants.FAIL_CODE);
-					map.put(Constants.MESSAGE_STR, "缺少参数:id,无法获取需要修改的用户信息");
-				}
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.FAIL_CODE);
+				map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
 			}
 		}
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE);
+			map.put(Constants.MESSAGE_STR, "缺少参数:id,无法获取需要修改的用户信息");
 		}
-		
+
 		return map;
 	}
 	

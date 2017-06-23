@@ -39,7 +39,6 @@ import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.exception.GlobalOuterExceptionHandler;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.Constants;
-import com.BYL.lotteryTools.common.util.TokenUtil;
 
 @Controller
 @RequestMapping("/outer")
@@ -313,18 +312,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			<option value="5">两码三期计划</option>
 			<option value="6">任三精选6组</option>
 		 */
-		 if(null != userToken && !"".equals(userToken))
-			{
-				//校验token是否相同
-				boolean tokenFlag = TokenUtil.checkToken(userToken);
-				if(!tokenFlag)
-				{//token不相同
-					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-					map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-				}
-				else
-				{
+		 
 					List<TransferDTO> dtos = new ArrayList<TransferDTO>();
 					TransferDTO d1 = new TransferDTO();
 					d1.setName("前三胆杀");
@@ -360,16 +348,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 					map.put(Constants.FLAG_STR, true);
 					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 					map.put(Constants.MESSAGE_STR, "获取成功");
-				}
-			}
-		 else
-		 {
-			 map.put(Constants.FLAG_STR, false);
-			 map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			 map.put(Constants.MESSAGE_STR, "token值不存在!");
-		 }
-	
-		
+			
 		return map;
 	}
 	
@@ -385,43 +364,25 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="count",required=false) String count)//需要的专家数量
 	{
 		Map<String,Object> map = new HashMap<String,Object>();
-		if(null != userToken && !"".equals(userToken))
+		
+		//找出区域预测方案表的表名，然后在表内按顺序查询专家的列表
+		List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, baseTypeId);
+		String predictionTbname = "";//区域预测方案表
+		if(null != plist && plist.size()>0)
 		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(userToken);
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-			}
-			else
-			{
-				//找出区域预测方案表的表名，然后在表内按顺序查询专家的列表
-				List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, baseTypeId);
-				String predictionTbname = "";//区域预测方案表
-				if(null != plist && plist.size()>0)
-				{
-					predictionTbname = plist.get(0).getPredictionTable();
-				}
-				//获取当前开出的最大期号,并计算预测的期号
-				String maxIssueId = lotteryPlayService.getYuceMaxIssueId(lotteryPlayId);
-				
-				//查询专家数据
-				List<?> preOfExperts = predictionTypeService.getPredictionPlanOfExperts(maxIssueId, isFree, count, baseTypeId,predictionTbname);
-				
-				map.put("preOfExperts", preOfExperts);
-				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
-				map.put(Constants.MESSAGE_STR, "获取成功");
-			}
+			predictionTbname = plist.get(0).getPredictionTable();
 		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
+		//获取当前开出的最大期号,并计算预测的期号
+		String maxIssueId = lotteryPlayService.getYuceMaxIssueId(lotteryPlayId);
+		
+		//查询专家数据
+		List<?> preOfExperts = predictionTypeService.getPredictionPlanOfExperts(maxIssueId, isFree, count, baseTypeId,predictionTbname);
+		
+		map.put("preOfExperts", preOfExperts);
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		
 		return map;
 	}
 	
@@ -438,28 +399,8 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
-		if(null != userToken && !"".equals(userToken))
-		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(userToken);
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-			}
-			else
-			{
-				//TODO:根据省和体彩/福彩得到当前专家预测的区域彩种，然后根据区域彩种获取每个区域预测类型（将区域预测方案表去重）根据默认选择的基本预测类型分类id去查找预测数据
-			}
-		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
 		
+				//TODO:根据省和体彩/福彩得到当前专家预测的区域彩种，然后根据区域彩种获取每个区域预测类型（将区域预测方案表去重）根据默认选择的基本预测类型分类id去查找预测数据
 		
 		return map;
 	}
@@ -476,41 +417,23 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="count",required=false) String count)//需要的专家数量
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
-		if(null != userToken && !"".equals(userToken))
+		
+		//找出区域预测方案表的表名
+		List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, baseTypeId);
+		String predictionTbname = "";//区域预测方案表
+		if(null != plist && plist.size()>0)
 		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(userToken);
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-			}
-			else
-			{
-				//找出区域预测方案表的表名
-				List<PredictionType> plist = predictionTypeService.getPredictionTypeOfProAndLplay(lotteryPlayId, baseTypeId);
-				String predictionTbname = "";//区域预测方案表
-				if(null != plist && plist.size()>0)
-				{
-					predictionTbname = plist.get(0).getPredictionTable();
-				}
+			predictionTbname = plist.get(0).getPredictionTable();
+		}
+		
+		//查询当前专家的预测数据
+		List<?> preOfExperts = predictionTypeService.getHisPredictionOfExpert(count, baseTypeId,predictionTbname,expertId);
 				
-				//查询当前专家的预测数据
-				List<?> preOfExperts = predictionTypeService.getHisPredictionOfExpert(count, baseTypeId,predictionTbname,expertId);
-						
-				map.put("preOfExperts", preOfExperts);
-				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
-				map.put(Constants.MESSAGE_STR, "获取成功");
-			}
-		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
+		map.put("preOfExperts", preOfExperts);
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		
 		return map;
 	}
 	
@@ -620,32 +543,14 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="telephone",required=false)String telephone)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
-		if(null != userToken && !"".equals(userToken))
-		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(userToken);
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
-			}
-			else
-			{
-				List<SysMessage> list = sysMessageService.getSysMessageByTarget(telephone);
-				
-				map.put(Constants.FLAG_STR, true);
-				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
-				map.put(Constants.MESSAGE_STR, "获取成功");
-				map.put("sysMessage", list);
-			}
-		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
+		
+		List<SysMessage> list = sysMessageService.getSysMessageByTarget(telephone);
+		
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put("sysMessage", list);
+		
 		return map;
 	}
 	
@@ -666,73 +571,55 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			@RequestParam(value="appName",required=false)String appName)
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
-		if(null != userToken && !"".equals(userToken))
+		
+		AppversionDTO dto = new AppversionDTO();
+		if(null != appName && !"".equals(appName))
 		{
-			//校验token是否相同
-			boolean tokenFlag = TokenUtil.checkToken(userToken);
-			if(!tokenFlag)
-			{//token不相同
-				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.TOKEN_IS_PASS_CODE);
-				map.put(Constants.MESSAGE_STR, "token过期,请重新登录!");
+			App app = appService.getAppByAppName(appName);
+			if(null != app)
+			{
+				//获取当前appId下的且已上架的应用版本的最新版本数据
+				Integer maxVersionFlowId =
+						appversionService.
+						findMaxVersionFlowId(app.getId(), AppController.APP_V_STATUS_SJ);//获取当前应用下的应用版本数据是上架状态的最大版本流水号
+				if(null!=maxVersionFlowId)
+				{
+					Appversion appversion = appversionService.
+							getAppversionByAppIdAndVersionFlowId(app.getId(), maxVersionFlowId);//根据appId和版本流水号获取应用版本数据
+					
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(appversion.getAppVersionUrl());
+					
+					String apkUrl = "";
+					if(null!=uploadfile)
+					{
+						apkUrl = uploadfile.getUploadfilepath()+uploadfile.getUploadRealName();//抓取附件的真实存储路径
+						appversion.setAppVersionUrl(apkUrl);
+					}
+					dto = appversionService.toDTO(appversion);
+					
+					map.put("appversion", dto);
+					map.put(Constants.FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+					map.put(Constants.MESSAGE_STR, "获取成功");
+				}
+				else
+				{
+					map.put(Constants.FLAG_STR, true);
+					map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NO_NEW_APPVERSION);
+					map.put(Constants.MESSAGE_STR, "获取失败,当前应用没有最新版本");
+				}
+			
 			}
 			else
 			{
-				AppversionDTO dto = new AppversionDTO();
-				if(null != appName && !"".equals(appName))
-				{
-					App app = appService.getAppByAppName(appName);
-					if(null != app)
-					{
-						//获取当前appId下的且已上架的应用版本的最新版本数据
-						Integer maxVersionFlowId =
-								appversionService.
-								findMaxVersionFlowId(app.getId(), AppController.APP_V_STATUS_SJ);//获取当前应用下的应用版本数据是上架状态的最大版本流水号
-						if(null!=maxVersionFlowId)
-						{
-							Appversion appversion = appversionService.
-									getAppversionByAppIdAndVersionFlowId(app.getId(), maxVersionFlowId);//根据appId和版本流水号获取应用版本数据
-							
-							Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(appversion.getAppVersionUrl());
-							
-							String apkUrl = "";
-							if(null!=uploadfile)
-							{
-								apkUrl = uploadfile.getUploadfilepath()+uploadfile.getUploadRealName();//抓取附件的真实存储路径
-								appversion.setAppVersionUrl(apkUrl);
-							}
-							dto = appversionService.toDTO(appversion);
-							
-							map.put("appversion", dto);
-							map.put(Constants.FLAG_STR, true);
-							map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
-							map.put(Constants.MESSAGE_STR, "获取成功");
-						}
-						else
-						{
-							map.put(Constants.FLAG_STR, true);
-							map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NO_NEW_APPVERSION);
-							map.put(Constants.MESSAGE_STR, "获取失败,当前应用没有最新版本");
-						}
-					
-					}
-					else
-					{
-						LOG.error("getAppversionsOfStationCouldUse：当前应用的已发布的应用版本的版本好是null;应用name="+appName);
-						map.put(Constants.FLAG_STR, false);
-						map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NO_APP);
-						map.put(Constants.MESSAGE_STR, "获取失败,应用名为所传参数的应用不存在");
-					}
-					
-				}
+				LOG.error("getAppversionsOfStationCouldUse：当前应用的已发布的应用版本的版本好是null;应用name="+appName);
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NO_APP);
+				map.put(Constants.MESSAGE_STR, "获取失败,应用名为所传参数的应用不存在");
 			}
+			
 		}
-		else
-		{
-			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.TOKEN_IS_NOT_EXIST_CODE);
-			map.put(Constants.MESSAGE_STR, "token值不存在!");
-		}
+		
 		return map;
 	}
 	
