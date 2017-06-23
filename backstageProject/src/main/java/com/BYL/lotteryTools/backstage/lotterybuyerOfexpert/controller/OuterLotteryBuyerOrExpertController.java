@@ -91,12 +91,12 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 //			httpSession.setAttribute(telephone, result.getSessionId());//放置sessionid
 //			httpSession.setMaxInactiveInterval(15*60);//15min后过期
 			resultBean.setFlag(true);
-			resultBean.setCode(Constants.SUCCESS_CODE);
+			resultBean.setResultCode(Constants.SUCCESS_CODE);
 			resultBean.setMessage("发送成功");
 		} catch (Exception e) {
 			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("发送失败,请稍候再试");
 		}
 		
@@ -442,14 +442,14 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			
 			resultBean.setFlag(true);
-			resultBean.setCode(Constants.SUCCESS_CODE);
+			resultBean.setResultCode(Constants.SUCCESS_CODE);
 			resultBean.setMessage("修改密码成功");
 		}
 		catch(Exception e)
 		{
 			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("服务器错误!");
 		}
 		finally{
@@ -486,14 +486,14 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
 			
 			resultBean.setFlag(true);
-			resultBean.setCode(Constants.SUCCESS_CODE);
+			resultBean.setResultCode(Constants.SUCCESS_CODE);
 			resultBean.setMessage("修改密码成功");
 		}
 		catch(Exception e)
 		{
 			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("服务器错误!");
 		}
 		finally{
@@ -532,13 +532,13 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			if(flag)
 			{
 				resultBean.setFlag(true);
-				resultBean.setCode(Constants.SUCCESS_CODE);
+				resultBean.setResultCode(Constants.SUCCESS_CODE);
 				resultBean.setMessage("原密码输入正确");
 			}
 			else
 			{
 				resultBean.setFlag(false);
-				resultBean.setCode(Constants.FAIL_CODE);
+				resultBean.setResultCode(Constants.FAIL_CODE);
 				resultBean.setMessage("原密码输入错误");
 			}
 			
@@ -547,7 +547,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		{
 			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("请求错误");
 		}
 		finally{

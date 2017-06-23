@@ -32,7 +32,7 @@ public class ResultBean
 	
 	private String lotteryType;
 	
-	private String code;//操作返回码：200（操作成功） 100（普通错误） 300（token错误） 301（token过期） 302（token没有值）500（服务器未应答）
+	private String resultCode;//操作返回码：200（操作成功） 100（普通错误） 300（token错误） 301（token过期） 302（token没有值）500（服务器未应答）
 	
 	
 	
@@ -41,12 +41,13 @@ public class ResultBean
 	
 	
 
-	public String getCode() {
-		return code;
+
+	public String getResultCode() {
+		return resultCode;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
 	}
 
 	/*public boolean isTokenFlag() {

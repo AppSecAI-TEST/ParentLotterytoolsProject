@@ -81,7 +81,7 @@ public class Constants {
 	public static final int SERIAL_NUM_LEN = 6;//流水号中自动生成的数字位数
 	
 	//操作码：
-	public static final String CODE_STR="code";
+	public static final String CODE_STR="resultCode";
 	
 	public static final String SUCCESS_CODE="200";//操作成功
 	

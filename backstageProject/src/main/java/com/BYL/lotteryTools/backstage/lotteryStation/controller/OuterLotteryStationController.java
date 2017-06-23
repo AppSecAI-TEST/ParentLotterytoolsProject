@@ -188,7 +188,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 					//保存彩票站信息
 					lotteryStationService.save(lotteryStation);
 					resultBean.setFlag(true);
-					resultBean.setCode(Constants.SUCCESS_CODE);
+					resultBean.setResultCode(Constants.SUCCESS_CODE);
 					resultBean.setStatus("success");
 					resultBean.setMessage("提交成功");
 				/*}
@@ -203,7 +203,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 			{
 				resultBean.setExist(true);
 				resultBean.setFlag(false);
-				resultBean.setCode(Constants.FAIL_CODE_OF_STAION_IS_REGISTED);
+				resultBean.setResultCode(Constants.FAIL_CODE_OF_STAION_IS_REGISTED);
 				resultBean.setStatus("error");
 				resultBean.setMessage("当前彩票站已认证");
 			}
@@ -213,7 +213,7 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 		{
 			LOG.error("error:", e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("服务器错误");
 		}
 		

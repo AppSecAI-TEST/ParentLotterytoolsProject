@@ -125,6 +125,9 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="TOKEN")
 	private String token;//用户融云token
 	
+	@Column(name="USER_TOKEN")
+	private String userToken;//用户彩聊token
+	
 	//一个用户可以进行多次彩金、彩币的充值
 	@OneToMany(mappedBy="lotterybuyerOrExpert" , fetch=FetchType.LAZY)
 	private List<RechargeForHandselOrColorcoins> rechargeForHandselOrColorcoins;
@@ -170,6 +173,14 @@ public class LotterybuyerOrExpert extends BaseEntity
 	
 	
 	
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
+
 	public List<RelaLBEUserAndLtcard> getRelaLBEUserAndLtcards() {
 		return relaLBEUserAndLtcards;
 	}

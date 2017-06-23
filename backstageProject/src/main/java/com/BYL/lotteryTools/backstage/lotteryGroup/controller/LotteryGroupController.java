@@ -95,16 +95,32 @@ public class LotteryGroupController extends GlobalExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value = "/getDetailLotteryGroup", method = RequestMethod.GET)
-		public @ResponseBody LotteryGroupDTO getDetailLotteryGroup(@RequestParam(value="id",required=false) String id,
+		public @ResponseBody Map<String,Object> getDetailLotteryGroup(@RequestParam(value="id",required=false) String id,
 				@RequestParam(value="userToken",required=false) String userToken,
 				ModelMap model,HttpSession httpSession) throws Exception
 		{
+			Map<String,Object> map = new HashMap<String, Object>();
 			LotteryGroup entity = lotteryGroupService.getLotteryGroupById(id);
 			
 			LotteryGroupDTO dto  = lotteryGroupService.toDTO(entity);
 			
-			return dto;
+			map.put(Constants.MESSAGE_STR, "获取成功");
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			map.put("dto", dto);
+			return map;
 		}
+	
+	@RequestMapping(value = "/getDetailLotteryGroupFromBackStage", method = RequestMethod.GET)
+	public @ResponseBody LotteryGroupDTO getDetailLotteryGroupFromBackStage(@RequestParam(value="id",required=false) String id,
+			ModelMap model,HttpSession httpSession) throws Exception
+	{
+		LotteryGroup entity = lotteryGroupService.getLotteryGroupById(id);
+		
+		LotteryGroupDTO dto  = lotteryGroupService.toDTO(entity);
+		
+		return dto;
+	}
 	
 	/**
 	 * 获取群列表
@@ -512,6 +528,85 @@ public class LotteryGroupController extends GlobalExceptionHandler
 		
 		
 		return map;
+	}
+	
+	@RequestMapping(value="/getMembersOfGroupFromBS", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getMembersOfGroupFromBS(
+			@RequestParam(value="page",required=false)   Integer page,//当前页数
+			@RequestParam(value="rows",required=false)    Integer rows,//当前获取数据量
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
+			String groupId,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//获取当前群和用户的关联关系(TODO:当前方法获取的群成员不包括群主和群内机器人)
+		Pageable pageable = null;
+		if(null != rows && 0 != rows)
+		{
+			pageable = new PageRequest(page-1,rows);
+		}
+		else
+		{
+			pageable = new PageRequest(0,Integer.MAX_VALUE);
+		}
+		
+		//不带分页的群成员查询
+		QueryResult<RelaBindOfLbuyerorexpertAndGroup> lQueryResult = relaBindbuyerAndGroupService.getMemberOfJoinGroup(pageable, groupId);
+		List<RelaBindOfLbuyerorexpertAndGroup> relalist = lQueryResult.getResultList();
+		
+		List<LotterybuyerOrExpertDTO> userDtos = new ArrayList<LotterybuyerOrExpertDTO>();
+		try
+		{
+			for (RelaBindOfLbuyerorexpertAndGroup rela : relalist)
+			{
+				LotterybuyerOrExpertDTO dto = new  LotterybuyerOrExpertDTO();
+				dto = lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert());
+				dto.setIsGroupOwner(rela.getIsGroupOwner());
+				userDtos.add(dto);
+					
+			}
+			 LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
+			 map.put(Constants.FLAG_STR, true);
+			 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			 map.put(Constants.MESSAGE_STR, "获取成功");
+			 map.put("groupNumber", group.getGroupNumber());//放置群号返回参数
+			 map.put("memberDtos", userDtos);
+			 map.put("rows",userDtos);
+			 map.put("total", lQueryResult.getTotalCount());
+		}
+		catch(Exception e)
+		{
+			LOG.error(Constants.ERROR_STR, e);
+			 map.put(Constants.FLAG_STR, false);
+			 map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
+			 map.put(Constants.MESSAGE_STR, "获取失败");
+		}
+		return map;
+	}
+	
+	/**
+	 * 后台加入群
+	* @Title: joinUserInGroupFromBS 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userToken
+	* @param @param joinUsers
+	* @param @param groupId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月23日 下午2:54:25 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/joinUserInGroupFromBS", method = RequestMethod.GET)
+	public @ResponseBody ResultBean joinUserInGroupFromBS(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
+			@RequestParam(value="joinUsers",required=false)  String[] joinUsers,
+			@RequestParam(value="groupId",required=false) String groupId)
+	{
+		ResultBean resultBean = lotteryGroupService.joinUserInGroup(joinUsers, groupId);
+		
+		return resultBean;
 	}
 	
 }

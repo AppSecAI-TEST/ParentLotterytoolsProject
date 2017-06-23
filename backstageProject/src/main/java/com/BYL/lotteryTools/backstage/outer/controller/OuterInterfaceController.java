@@ -186,12 +186,13 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/getLotteryList",method=RequestMethod.GET)
-	public @ResponseBody List<?> getLotteryList(@RequestParam(value="id",required=true) String lotteryTypeId,
+	public @ResponseBody Map<String,Object> getLotteryList(@RequestParam(value="id",required=true) String lotteryTypeId,
 			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="provinceCode",required=false) String provinceCode,
 			@RequestParam(value="maxIssueId",required=false) String maxIssueId,
 			@RequestParam(value="minIssueId",required=false) String minIssueId)
 	{
+		Map<String,Object> map = new HashMap<String, Object>();
 		List<?> list = new ArrayList<SrcfivedataDTO>();
 		
 		//若为获取上拉/下拉数据，则加载40条
@@ -213,14 +214,19 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				{//获取3个开奖号码的开奖数据
 					list = outerInterfaceService.getLotteryListOfThree(tbName, maxIssueId, minIssueId);
 				}
-			
+			map.put("list", list);
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "获取成功");
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		}
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "获取失败");
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE);
 		}
 		
-		
-		
-		
-		
-		return list;
+		return map;
 	}
 	
 	/**
@@ -236,18 +242,19 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/getLotteryPlayListOfProvince",method=RequestMethod.GET)
-	public @ResponseBody List<LotteryPlayOfProvince> getLotteryPlayListOfProvince(
+	public @ResponseBody Map<String,Object> getLotteryPlayListOfProvince(
 			@RequestParam(value="id",required=false) String lotteryTypeId,
 			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="provinceCode",required=false) String provinceCode)
 	{
+		Map<String,Object> map = new HashMap<String, Object>();
 		List<LotteryPlayOfProvince> list = new ArrayList<LotteryPlayOfProvince>();
-		
-		
 		list = outerInterfaceService.getLotteryPlayOfProvince(provinceCode);
-		
-		
-		return list;
+		map.put("list", list);
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		return map;
 	}
 	
 	/**
@@ -262,15 +269,18 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/getProvinceOfZST",method=RequestMethod.GET)
-	public @ResponseBody List<Province> getProvinceOfZST(
+	public @ResponseBody Map<String,Object> getProvinceOfZST(
 			@RequestParam(value="userToken",required=false) String userToken,//用户token
 			@RequestParam(value="id",required=false) String id)
 	{
+		Map<String,Object> map = new HashMap<String, Object>();
 		List<Province> list = new ArrayList<Province>();
-		
 		list = outerInterfaceService.getLotteryPlayListOfProvince();
-		
-		return list;
+		map.put("list", list);
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		return map;
 	}
 	
 	

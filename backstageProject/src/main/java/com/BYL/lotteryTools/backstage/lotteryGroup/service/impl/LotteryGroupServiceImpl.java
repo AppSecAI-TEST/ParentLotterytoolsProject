@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
@@ -30,6 +32,7 @@ import com.BYL.lotteryTools.backstage.user.entity.City;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
+import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
@@ -332,6 +335,63 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 
 	public List<LotteryGroup> getLotteryGroupByLotteryType(String lotteryType) {
 		return lotteryGroupRespository.getLotteryGroupByLotteryType(lotteryType);
+	}
+	
+	public  ResultBean joinUserInGroup(
+			String[] joinUsers,
+			String groupId)
+	{
+		ResultBean resultBean = new ResultBean();
+		
+		//建立群和要加入用户的关联
+		LotteryGroup group = this.getLotteryGroupById(groupId);
+		Integer nowMemberCount = group.getRelaBindOfLbuyerorexpertAndGroups().size();//获取当前群中的群成员人数
+		Integer memberCount = group.getMemberCount();//获取群成员可以加入的人数
+		
+		//若要加入的人数和现在的人数的总和小于群可以加入的人数，则可以继续添加，否则无法添加
+		int overplusMember= memberCount-nowMemberCount-joinUsers.length;//获取可以加入的人数
+		if(overplusMember>=0)
+		{
+			LotterybuyerOrExpert user = null;
+			for (String userId : joinUsers) 
+			{
+				user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
+				RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+				rela.setIsDeleted(Constants.IS_NOT_DELETED);
+				rela.setIsReceive("1");
+				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setIsGroupOwner("0");//群成员
+				rela.setLotterybuyerOrExpert(user);
+				rela.setLotteryGroup(group);
+				rela.setCreator(groupId);
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setModify(groupId);
+				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
+
+				//保存关联
+				relaBindbuyerAndGroupService.save(rela);
+			}
+			
+			//建立融云中群和用户的关系
+			CodeSuccessResult result= rongyunImService.joinUserInGroup(joinUsers, groupId, group.getName());
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				LOG.error("融云群加入用户报错", result.getErrorMessage());
+			}
+			
+			resultBean.setFlag(true);
+			resultBean.setResultCode(Constants.SUCCESS_CODE);
+			resultBean.setMessage("加入成功");
+		}
+		else
+		{
+			int couldJoin = joinUsers.length-(nowMemberCount+joinUsers.length-memberCount);
+			resultBean.setFlag(false);
+			resultBean.setResultCode(Constants.FAIL_CODE_OF_JOIN_GROUP_MEMBER);
+			resultBean.setMessage("群等级不够加入当前要求加入的人数，当前只可以加入:"+couldJoin+"人");
+		}
+	
+		return resultBean;
 	}
 	
 	

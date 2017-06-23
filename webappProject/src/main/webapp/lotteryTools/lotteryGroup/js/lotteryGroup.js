@@ -201,7 +201,7 @@ function addMemberToGroup(userId,groupId)
 	$.messager.confirm("提示", "您确认添加此用户到群？", function (r) {  
         if (r) {  
         	
-        	var url = contextPath+'/outerLGroup/joinUserInGroup.action';
+        	var url = contextPath+'/lgroup/joinUserInGroupFromBS.action';
         	$.ajax({
         		async: false, //设置为同步获取数据形式
                 type: "get",
@@ -240,7 +240,7 @@ function manageGroupMember(groupId)
 		singleSelect:true,
 		rownumbers:false,
 		queryParams: params,
-		url:contextPath + '/outerLGroup/getMembersOfGroup.action',//'datagrid_data1.json',
+		url:contextPath + '/lgroup/getMembersOfGroupFromBS.action',//'datagrid_data1.json',
 		method:'get',
 		border:false,
 		singleSelect:false,
@@ -552,7 +552,7 @@ function deleteLotteryGroup(id)
 //修改彩聊群
 function updateLGroup(id)
 {
-	var url = contextPath + '/lgroup/getDetailLotteryGroup.action';
+	var url = contextPath + '/lgroup/getDetailLotteryGroupFromBackStage.action';
 	var data1 = new Object();
 	data1.id=id;//应用的id
 	

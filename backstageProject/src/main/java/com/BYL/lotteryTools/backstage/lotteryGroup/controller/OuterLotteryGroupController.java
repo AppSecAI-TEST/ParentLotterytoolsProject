@@ -644,7 +644,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		}
 		
 		resultBean.setFlag(true);
-		resultBean.setCode(Constants.SUCCESS_CODE);
+		resultBean.setResultCode(Constants.SUCCESS_CODE);
 		resultBean.setMessage("申请成功");
 		
 	
@@ -711,7 +711,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			}
 		}
 		resultBean.setFlag(true);
-		resultBean.setCode(Constants.SUCCESS_CODE);
+		resultBean.setResultCode(Constants.SUCCESS_CODE);
 		resultBean.setMessage("审核成功");
 		
 		return resultBean;
@@ -864,56 +864,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			@RequestParam(value="joinUsers",required=false)  String[] joinUsers,
 			@RequestParam(value="groupId",required=false) String groupId)
 	{
-		ResultBean resultBean = new ResultBean();
+		ResultBean resultBean = lotteryGroupService.joinUserInGroup(joinUsers, groupId);
 		
-		//建立群和要加入用户的关联
-		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
-		Integer nowMemberCount = group.getRelaBindOfLbuyerorexpertAndGroups().size();//获取当前群中的群成员人数
-		Integer memberCount = group.getMemberCount();//获取群成员可以加入的人数
-		
-		//若要加入的人数和现在的人数的总和小于群可以加入的人数，则可以继续添加，否则无法添加
-		int overplusMember= memberCount-nowMemberCount-joinUsers.length;//获取可以加入的人数
-		if(overplusMember>=0)
-		{
-			LotterybuyerOrExpert user = null;
-			for (String userId : joinUsers) 
-			{
-				user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
-				RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
-				rela.setIsDeleted(Constants.IS_NOT_DELETED);
-				rela.setIsReceive("1");
-				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
-				rela.setIsGroupOwner("0");//群成员
-				rela.setLotterybuyerOrExpert(user);
-				rela.setLotteryGroup(group);
-				rela.setCreator(groupId);
-				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
-				rela.setModify(groupId);
-				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
-
-				//保存关联
-				relaBindbuyerAndGroupService.save(rela);
-			}
-			
-			//建立融云中群和用户的关系
-			CodeSuccessResult result= rongyunImService.joinUserInGroup(joinUsers, groupId, group.getName());
-			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
-			{
-				LOG.error("融云群加入用户报错", result.getErrorMessage());
-			}
-			
-			resultBean.setFlag(true);
-			resultBean.setCode(Constants.SUCCESS_CODE);
-			resultBean.setMessage("加入成功");
-		}
-		else
-		{
-			int couldJoin = joinUsers.length-(nowMemberCount+joinUsers.length-memberCount);
-			resultBean.setFlag(false);
-			resultBean.setCode(Constants.FAIL_CODE_OF_JOIN_GROUP_MEMBER);
-			resultBean.setMessage("群等级不够加入当前要求加入的人数，当前只可以加入:"+couldJoin+"人");
-		}
-	
 		return resultBean;
 	}
 	
@@ -970,12 +922,12 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		{
 			LOG.error(Constants.ERROR_STR, e);
 			resultBean.setFlag(false);
-			resultBean.setCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
 			resultBean.setMessage("服务器错误");
 		}
 		
 		resultBean.setFlag(true);
-		resultBean.setCode(Constants.SUCCESS_CODE);
+		resultBean.setResultCode(Constants.SUCCESS_CODE);
 		resultBean.setMessage("退群成功");
 		return resultBean;
 	}

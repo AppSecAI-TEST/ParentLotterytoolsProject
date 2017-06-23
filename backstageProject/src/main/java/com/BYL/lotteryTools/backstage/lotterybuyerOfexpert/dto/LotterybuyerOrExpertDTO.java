@@ -83,6 +83,7 @@ public class LotterybuyerOrExpertDTO {
 	private String userToken;//用户token
 	
 	
+	
 
 	public String getUserToken() {
 		return userToken;

@@ -20,7 +20,8 @@ public class APIInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request,  
             HttpServletResponse response, Object handler) throws Exception {  
           
-        String token = request.getParameter("userToken");  
+//        String token = request.getParameter("userToken");  
+        String token = request.getHeader("userToken");
         boolean flag = false;
         if(null != token &&!"".equals(token))
         {

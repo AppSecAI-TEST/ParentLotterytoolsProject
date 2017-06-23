@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
+import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 public interface LotteryGroupService {
@@ -54,4 +55,8 @@ public interface LotteryGroupService {
 	* @throws
 	 */
 	public List<LotteryGroup> getLotteryGroupByLotteryType(String lotteryType);
+	
+	public  ResultBean joinUserInGroup(
+			String[] joinUsers,
+			String groupId);
 }
