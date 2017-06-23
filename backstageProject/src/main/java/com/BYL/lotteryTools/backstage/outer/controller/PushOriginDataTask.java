@@ -187,10 +187,10 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 							if("3".equals(lotteryPlay.getLotteryNumber()))
 							{
 								issueNumContent.append(lotteryPlay.getName()+" ").
-								append(maxdto.getIssueNumber()+"开奖号码:").
-								append(maxdto.getNo1()+",").
-								append(maxdto.getNo2()+",").
-								append(maxdto.getNo3()+",");
+								append(maxThreedto.getIssueNumber()+"开奖号码:").
+								append(maxThreedto.getNo1()+",").
+								append(maxThreedto.getNo2()+",").
+								append(maxThreedto.getNo3()+",");
 								
 								msgContent.append(maxThreedto.getIssueNumber()).append(",");
 								msgContent.append(maxThreedto.getNo1()).append(",");
