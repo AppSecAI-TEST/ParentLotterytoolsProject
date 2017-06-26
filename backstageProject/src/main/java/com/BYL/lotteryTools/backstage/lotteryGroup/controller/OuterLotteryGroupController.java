@@ -1032,7 +1032,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				//TODO:放置群等级
 				String level1Id = "1";//等级1群的等级id
-				entity.setMemberCount(20);//以及群
+				entity.setMemberCount(202);//以及群
 				entity.setGroupLevel(level1Id);
 				
 				entity.setIsDeleted(Constants.IS_NOT_DELETED);
