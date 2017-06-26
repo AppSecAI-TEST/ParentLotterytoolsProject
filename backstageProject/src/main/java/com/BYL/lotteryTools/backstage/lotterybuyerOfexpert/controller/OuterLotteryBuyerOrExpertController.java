@@ -132,7 +132,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		{//当前手机号已被注册
 			result.put("status", false);
 			result.put(Constants.FLAG_STR, false);
-			result.put(Constants.CODE_STR, Constants.FAIL_CODE);
+			result.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_TEL_IS_REGITED);
 			result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
 		}
 		else
@@ -223,7 +223,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			{//当前手机号已被注册
 				result.put("status", false);
 				result.put(Constants.FLAG_STR, false);
-				result.put(Constants.CODE_STR, Constants.FAIL_CODE);
+				result.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_TEL_IS_REGITED);
 				result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
 			}
 			else
@@ -350,7 +350,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				else
 				{
 					map.put(Constants.FLAG_STR, false);
-					map.put(Constants.CODE_STR, Constants.FAIL_CODE);
+					map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_PWD_ERROR);
 					map.put(Constants.MESSAGE_STR, "密码错误!");
 					map.put("userDto", null);
 				}
@@ -372,7 +372,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		else
 		{
 			map.put(Constants.FLAG_STR, false);
-			map.put(Constants.CODE_STR, Constants.FAIL_CODE);
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_TEL_IS_NOT_EXIST);
 			map.put(Constants.MESSAGE_STR, "用户名不存在!");
 		}
 		
@@ -538,7 +538,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			else
 			{
 				resultBean.setFlag(false);
-				resultBean.setResultCode(Constants.FAIL_CODE);
+				resultBean.setResultCode(Constants.FAIL_CODE_OF_ORIGIN_PWD_ERROR);
 				resultBean.setMessage("原密码输入错误");
 			}
 			
@@ -750,7 +750,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 			else
 			{
 				map.put(Constants.FLAG_STR, false);
-				map.put(Constants.CODE_STR, Constants.FAIL_CODE);
+				map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_CAILIAO_IS_NOT_ONLY);
 				map.put(Constants.MESSAGE_STR, "彩聊号不唯一");
 			}
 		}

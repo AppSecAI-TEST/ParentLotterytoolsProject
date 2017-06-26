@@ -95,6 +95,11 @@ public class Constants {
 	public static final String FAIL_CODE_OF_DELETE_GROUP="404";//群删除失败
 	public static final String FAIL_CODE_OF_JOIN_GROUP_MEMBER="405";//加群失败，超出群可以加入的群成员数
 	public static final String FAIL_CODE_OF_CREATE_GROUP="406";//群创建失败
+	public static final String FAIL_CODE_OF_PWD_ERROR="407";//登录密码失败
+	public static final String FAIL_CODE_OF_TEL_IS_REGITED="408";//手机号已被注册
+	public static final String FAIL_CODE_OF_TEL_IS_NOT_EXIST="409";//用户名不存在
+	public static final String FAIL_CODE_OF_ORIGIN_PWD_ERROR="410";//原密码输入错误
+	public static final String FAIL_CODE_OF_CAILIAO_IS_NOT_ONLY="411";//彩聊号不唯一
 	
 	public static final String SERVER_FAIL_CODE="500";//服务器异常，服务器异常抛出
 	
