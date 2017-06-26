@@ -1,9 +1,15 @@
 package com.BYL.lotteryTools.backstage.outer.controller;
 
+import io.netty.handler.codec.http.HttpRequest;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.BYL.lotteryTools.backstage.app.controller.AppController;
 import com.BYL.lotteryTools.backstage.app.dto.AppversionDTO;
@@ -629,6 +636,51 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			}
 			
 		}
+		
+		return map;
+	}
+	
+	/**
+	 * 
+	* @Title: loggingForApp 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userToken
+	* @param @param appName
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月26日 上午9:22:13 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/loggingForApp", method = RequestMethod.POST)
+	public @ResponseBody Map<String,Object> loggingForApp(
+			@RequestParam(value="logFile",required=false) MultipartFile logFile,
+			HttpSession session)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		String path = session.getServletContext().getRealPath("appLog");
+		File targetFile = new File(path, logFile.getOriginalFilename());//设置上传目录以及存储的名称
+        if(!targetFile.exists()){  //若上传目录不存在，则创建目录
+            targetFile.mkdirs();  
+        }  
+        //上传文件
+       //传入文件对象调用上传方法，将文件上传到目录中
+        try {
+			logFile.transferTo(targetFile);
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "上传成功");
+		} catch (IllegalStateException e) {
+			map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "上传失败");
+		} catch (IOException e) {
+			e.printStackTrace();
+			map.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "上传成功");
+		} 
 		
 		return map;
 	}
