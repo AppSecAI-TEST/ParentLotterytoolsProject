@@ -20,6 +20,7 @@ import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryDiPinPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryDiPinPlayService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.exception.GlobalExceptionHandler;
+import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.LoginUtils;
 import com.BYL.lotteryTools.common.util.QueryResult;
@@ -100,7 +101,8 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 	 */
 	@RequestMapping(value="/saveOrUpdate",method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> saveOrUpdate(
-			LotteryDiPinPlayDTO dto)
+			LotteryDiPinPlayDTO dto,
+			HttpSession session) throws Exception
 	{
 		Map<String,Object> map = new HashMap<String, Object>();
 		
@@ -108,15 +110,57 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 		if(null != entity)
 		{
 			//修改
+			entity.setEndNumber(dto.getEndNumber());
+			entity.setMoreEndNumber(dto.getMoreEndNumber());
+			entity.setMorePartKj(dto.getMorePartKj());
+			entity.setMoreStartNumber(dto.getMoreStartNumber());
+			entity.setNumOrChar(dto.getNumOrChar());
+			entity.setOtherNum(dto.getOtherNum());
+			entity.setOtherPlan(dto.getOtherPlan());
+			entity.setPlanName(dto.getPlanName());
+			entity.setRepeatNum(dto.getRepeatNum());
+			entity.setStartNumber(dto.getStartNumber());
+			entity.setModify(LoginUtils.getAuthenticatedUserCode(session));
+			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			
+			lotteryDiPinPlayService.update(entity);
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "修改成功");
 		}
 		else
 		{
 			//添加
+			entity = new LotteryDiPinPlay();
+			BeanUtil.copyBeanProperties(entity, dto);
+			
+			entity.setCreator(LoginUtils.getAuthenticatedUserCode(session));
+			entity.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			entity.setModify(LoginUtils.getAuthenticatedUserCode(session));
+			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			entity.setIsDeleted(Constants.IS_NOT_DELETED);
+			
+			lotteryDiPinPlayService.save(entity);
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.MESSAGE_STR, "添加成功");
 		}
 		
 		return map;
 	}
 	
+	/**
+	 * 删除低频彩种数据方案
+	* @Title: deleteLotteryDiPinPlay 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param ids
+	* @param @param model
+	* @param @param httpSession
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年6月26日 下午5:49:17 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
 	@RequestMapping(value = "/deleteLotteryDiPinPlay", method = RequestMethod.POST)
 	public @ResponseBody ResultBean  deleteLotteryDiPinPlay(
 			@RequestParam(value="ids",required=false) String[] ids,
