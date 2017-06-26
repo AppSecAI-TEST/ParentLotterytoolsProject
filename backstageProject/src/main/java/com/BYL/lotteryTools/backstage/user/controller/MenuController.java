@@ -443,6 +443,19 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 低频玩法管理菜单
+	 * @return
+	 */
+	@RequestMapping(value = "/lotteryDiPinPlayManage.action", method = RequestMethod.GET)
+	public String lotteryDiPinPlayManage()
+	{
+		String indexPage = "lotteryTools/lotteryDiPinPlayManage/lotteryDiPinPlayManage";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页
