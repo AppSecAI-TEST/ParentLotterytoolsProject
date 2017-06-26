@@ -197,6 +197,8 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 								msgContent.append(maxThreedto.getNo2()).append(",");
 								msgContent.append(maxThreedto.getNo3());
 								extra = "kuai3";
+								imgFile = "/home/server/webappProject/webapps/webappProject/images/5in11ImgBase.jpg";//服务器版本
+								imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/5in11Img.png");//拼接走势图图片
 							}
 						//extra:0:
 						PushController.sendPushWithCallback(tagsand, null, msgContent.toString(), extra);
