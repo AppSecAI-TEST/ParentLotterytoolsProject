@@ -27,4 +27,6 @@ public interface RelaApplybuyerAndGroupService {
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByGroupId(String groupId);
 	
 	public List<RelaApplyOfLbuyerorexpertAndGroup> getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndStatus(String creator,String groupId);
+	
+	public RelaApplyOfLbuyerorexpertAndGroup getRelaApplyOfLbuyerorexpertAndGroupById(String id);
 }

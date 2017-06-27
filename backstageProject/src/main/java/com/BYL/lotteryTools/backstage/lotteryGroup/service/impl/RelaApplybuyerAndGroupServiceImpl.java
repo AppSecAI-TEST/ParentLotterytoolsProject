@@ -137,4 +137,9 @@ public class RelaApplybuyerAndGroupServiceImpl implements RelaApplybuyerAndGroup
 		return relaApplyOfBuyyerorexpertAndGroupRespository.getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndGroupId(creator,groupId);
 	}
 
+	public RelaApplyOfLbuyerorexpertAndGroup getRelaApplyOfLbuyerorexpertAndGroupById(
+			String id) {
+		return relaApplyOfBuyyerorexpertAndGroupRespository.getRelaApplyOfLbuyerorexpertAndGroupById(id);
+	}
+
 }

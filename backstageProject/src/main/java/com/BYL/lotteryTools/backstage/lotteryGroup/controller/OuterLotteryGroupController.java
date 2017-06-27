@@ -634,6 +634,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/gOwnerApprovalApplys", method = RequestMethod.GET)
 	public @ResponseBody ResultBean gOwnerApprovalApplys(
+			@RequestParam(value="id",required=false) String id,//申请加群数据id
 			@RequestParam(value="userId",required=false) String userId,
 			@RequestParam(value="groupId",required=false) String groupId,
 			@RequestParam(value="groupOwnerId",required=false) String groupOwnerId,//群主id
@@ -645,19 +646,34 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		
 		//##如果审批通过，执行将用户加入群的操作##
 		//根据用户id和群id获取用户申请加入群的信息
+		RelaApplyOfLbuyerorexpertAndGroup entity = relaApplybuyerAndGroupService.getRelaApplyOfLbuyerorexpertAndGroupById(id);
+		
 		List<RelaApplyOfLbuyerorexpertAndGroup> entities = relaApplybuyerAndGroupService.
 				getRelaApplyOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
 		
-		RelaApplyOfLbuyerorexpertAndGroup entity = null;
-		if(null != entities  && entities.size()>0)
+		if(null != entity)
 		{
-			entity = entities.get(0);
 			entity.setStatus(isPass);//放置审核状态
 			
 			if("1".equals(isPass))
 			{//审核通过，执行加群操作
 				String[] joinUsers = {userId};//组合加群用户数组
 				this.joinUserInGroup(userToken,joinUsers, groupId);
+				
+				/*审核通过后，将之前当前用户申请的当前群的加群申请全部清空*/
+				RelaApplyOfLbuyerorexpertAndGroup preEntity = null;
+				for(int i=1;i<entities.size();i++)
+				{
+					preEntity = entities.get(i);
+					if(!entity.getId().equals(preEntity.getId()))
+					{
+						//将除了操作的申请外的其他申请全部置成删除状态
+						preEntity.setIsDeleted(Constants.IS_DELETED);
+						preEntity.setModify(groupOwnerId);
+						preEntity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+						relaApplybuyerAndGroupService.update(preEntity);
+					}
+				}
 			}
 			else
 				if("0".equals(isPass))
@@ -676,10 +692,18 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				String[] tagsand = {entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
 				PushController.sendPushWithCallback(tagsand, null, "0", "group");//推送给用户展示的是“0”
 			}
+			
+			resultBean.setFlag(true);
+			resultBean.setResultCode(Constants.SUCCESS_CODE);
+			resultBean.setMessage("审核成功");
 		}
-		resultBean.setFlag(true);
-		resultBean.setResultCode(Constants.SUCCESS_CODE);
-		resultBean.setMessage("审核成功");
+		else
+		{
+			resultBean.setFlag(false);
+			resultBean.setResultCode(Constants.FAIL_CODE_OF_JOINGROUP_APPLY_IS_NOT_FIND);
+			resultBean.setMessage("当前加群申请不存在");
+		}
+		
 		
 		return resultBean;
 	}

@@ -102,6 +102,7 @@ public class Constants {
 	public static final String FAIL_CODE_OF_CAILIAO_IS_NOT_ONLY="411";//彩聊号不唯一
 	public static final String FAIL_CODE_OF_GROUP_IS_NOT_FIND="412";//未找到群
 	public static final String FAIL_CODE_OF_STATION_IS_NOT_FIND="413";//根据邀请码未找到彩票站
+	public static final String FAIL_CODE_OF_JOINGROUP_APPLY_IS_NOT_FIND="414";//加群申请不存在
 	
 	public static final String SERVER_FAIL_CODE="500";//服务器异常，服务器异常抛出
 	
