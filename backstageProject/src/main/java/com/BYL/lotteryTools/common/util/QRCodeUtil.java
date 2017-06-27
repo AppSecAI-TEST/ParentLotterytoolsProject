@@ -271,8 +271,8 @@ public class QRCodeUtil {
 		return QRCodeUtil.decode(new File(path));
 	}
 
-/*	public static void main(String[] args) throws Exception {
-		String text = "http://www.yihaomen.com";//需要生成二维码的内容
-		QRCodeUtil.encode(text, "c:/me.jpg", "f:/barcode", true);
+	/*public static void main(String[] args) throws Exception {
+		String text = "groupNumber,100000009";//需要生成二维码的内容
+		QRCodeUtil.encode(text, "f:/barcode", true);
 	}*/
 }

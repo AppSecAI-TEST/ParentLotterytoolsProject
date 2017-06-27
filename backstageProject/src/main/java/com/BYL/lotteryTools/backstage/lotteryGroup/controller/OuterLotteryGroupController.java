@@ -564,6 +564,56 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	}
 	
 	/**
+	 * 校验当前用户是否可以加入当前群号的群
+	* @Title: checkUserCouldJoinByQRcode 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userId
+	* @param @param groupNumber
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月27日 上午11:08:13 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/checkUserCouldJoinByQRcode", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> checkUserCouldJoinByQRcode(
+			@RequestParam(value="userId",required=false) String userId,
+			@RequestParam(value="groupNumber",required=false) String groupNumber)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LotteryGroup group = lotteryGroupService.getLotteryGroupByGroupNumber(groupNumber);
+		
+		if(null != group)
+		{
+			RelaBindOfLbuyerorexpertAndGroup rela = relaBindbuyerAndGroupService.
+					getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, group.getId());
+			if(null != rela)
+			{//当前用户已在群内，不可以继续加群
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.MESSAGE_STR, "当前用户已在群内，不可以继续加入");
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			}
+			else
+			{
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.MESSAGE_STR, "当前用户可以加入");
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+				map.put("groupDto", lotteryGroupService.toDTO(group));
+			}
+		}
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.MESSAGE_STR, "当前群不存在");
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_GROUP_IS_NOT_FIND);
+		}
+		
+		
+		return map;
+	}
+	
+	/**
 	 * 群主审批加群申请
 	* @Title: gOwnerApprovalApplys 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
@@ -1048,7 +1098,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				if(null != uploadfile)
 					logo = path+File.separator+uploadfile.getUploadRealName();
 				
-				String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
+				String fileName = QRCodeUtil.encode("groupNumber,"+entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
 				entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
 				//保存群信息
 				lotteryGroupService.save(entity);
