@@ -41,6 +41,8 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGrou
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.SysMessageService;
+import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
+import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotteryChatCardDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
@@ -111,6 +113,9 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private SysMessageService sysMessageService;
+	
+	@Autowired
+	private LotteryStationService lotteryStationService;
 	
 	public static final String SUCCESS_CODE = "200";//成功返回码
 	
@@ -832,6 +837,56 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	}
 	
 	/**
+	 * 根据邀请码获取可以加入的群
+	* @Title: quitUserFronGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param inviteCode
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月27日 上午11:40:13 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getGroupListOfInviteCode", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> quitUserFronGroup(
+			@RequestParam(value="inviteCode",required=false) String inviteCode,//用户token
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LotteryStation lotteryStation = lotteryStationService.getLotteryStationByInviteCode(inviteCode);
+		
+		if(null != lotteryStation)
+		{
+			LotterybuyerOrExpert user = lotteryStation.getLotteryBuyerOrExpert();//获取站主
+			
+			//获取当前站主是群主的可以加入的群
+			List<LotteryGroup> list = lotteryGroupService.getLotteryGroupByGroupOwnerId(user.getId());
+			List<LotteryGroupDTO> dtos = new ArrayList<LotteryGroupDTO>();
+			for (LotteryGroup entity : list) {
+				dtos.add(lotteryGroupService.toDTO(entity));
+			}
+			
+			map.put(Constants.FLAG_STR, true);
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			map.put(Constants.MESSAGE_STR, "获取成功");
+			map.put("groupDtos", dtos);
+		}
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_STATION_IS_NOT_FIND);
+			map.put(Constants.MESSAGE_STR, "没有对应当前邀请码的彩票站");
+		}
+		
+		
+		
+		return map;
+	}
+	
+	/**
 	 * 从群中移除用户(机器人用户不可以被删除，前台也要做校验)
 	* @Title: quitUserFronGroup 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
@@ -1082,7 +1137,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				
 				//TODO:放置群等级
 				String level1Id = "1";//等级1群的等级id
-				entity.setMemberCount(202);//以及群
+				entity.setMemberCount(Constants.GROUP_DEFAULT_MEMBERCOUNT);//以及群
 				entity.setGroupLevel(level1Id);
 				
 				entity.setIsDeleted(Constants.IS_NOT_DELETED);

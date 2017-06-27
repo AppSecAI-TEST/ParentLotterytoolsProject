@@ -28,4 +28,6 @@ public interface LotteryStationService {
 	public List<LotteryStation> getLotteryStationByUserId(String userId);
 	
 	public List<LotteryStation> findAll();
+	
+	public LotteryStation getLotteryStationByInviteCode(String inviteCode);
 }

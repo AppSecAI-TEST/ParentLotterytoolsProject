@@ -1,11 +1,8 @@
 package com.BYL.lotteryTools.backstage.lotteryStation.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -194,6 +191,10 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 	public List<LotteryStation> findAll()
 	{
 		return lotteryStationRepository.findAll();
+	}
+
+	public LotteryStation getLotteryStationByInviteCode(String inviteCode) {
+		return lotteryStationRepository.getLotteryStationByInviteCode(inviteCode);
 	}
 	
 }

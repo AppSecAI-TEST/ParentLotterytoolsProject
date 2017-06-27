@@ -67,4 +67,6 @@ public interface LotteryGroupService {
 	public Map<String,Object> deleteGroup(
 			LotteryGroupDTO dto,
 			HttpServletRequest request,HttpSession httpSession);
+	
+	public List<LotteryGroup> getLotteryGroupByGroupOwnerId(String groupOwnerId);
 }

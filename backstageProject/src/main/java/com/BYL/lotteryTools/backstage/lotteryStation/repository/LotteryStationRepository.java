@@ -17,4 +17,7 @@ public interface LotteryStationRepository extends GenericRepository<LotteryStati
 	
 	@Query("select u from LotteryStation u where  u.isDeleted = 1 and u.lotteryBuyerOrExpert.id=?1 order by u.status desc")
 	public List<LotteryStation> getLotteryStationByUserId(String userId);
+	
+	@Query("select u from LotteryStation u where  u.isDeleted = 1 and u.inviteCode=?1")
+	public LotteryStation getLotteryStationByInviteCode(String inviteCode);
 }

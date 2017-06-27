@@ -71,7 +71,31 @@ public class LotteryGroupDTO {
 	
 	private String userToken;//用户token
 	
+	private String[] lotteryNumber;//高频彩种开奖号码个数
 	
+	private String[] gaoPinLotteryPlay;//高频彩种玩法名称
+	
+	
+	
+	
+
+	public String[] getLotteryNumber() {
+		return lotteryNumber;
+	}
+
+	public void setLotteryNumber(String[] lotteryNumber) {
+		this.lotteryNumber = lotteryNumber;
+	}
+
+
+	public String[] getGaoPinLotteryPlay() {
+		return gaoPinLotteryPlay;
+	}
+
+	public void setGaoPinLotteryPlay(String[] gaoPinLotteryPlay) {
+		this.gaoPinLotteryPlay = gaoPinLotteryPlay;
+	}
+
 	public String getUserToken() {
 		return userToken;
 	}

@@ -34,6 +34,9 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
+import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
+import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayRepository;
+import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -85,6 +88,10 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	
 	@Autowired
 	private LotteryGroupNoticeRepository lotteryGroupNoticeRepository;
+	
+	@Autowired
+	private LotteryPlayRepository lotteryPlayRepository;
+	
 	
 	public List<LotteryGroup> findAll()
 	{
@@ -141,6 +148,18 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 					Province province = provinceService.getProvinceByPcode(entity.getProvince());
 					
 					dto.setProvinceName(province.getPname());
+					
+					//获取当前群的高频彩种
+					List<LotteryPlay> gaopin = lotteryPlayRepository.
+							getLotteryPlayByProvinceAndLotteryType(entity.getProvince(), entity.getLotteryType());
+					String lnumArr[] = new String[gaopin.size()];
+					String lplayNameArr[] = new String[gaopin.size()];
+					for (int i=0;i<gaopin.size();i++) {
+						lnumArr[i] = gaopin.get(i).getLotteryNumber();
+						lplayNameArr[i] = gaopin.get(i).getName();
+					}
+					dto.setLotteryNumber(lnumArr);
+					dto.setGaoPinLotteryPlay(lplayNameArr);
 				}
 				
 				if(null != entity.getCity() && !Constants.CITY_ALL.equals(entity.getCity()))
@@ -539,6 +558,10 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 			map.put(Constants.FLAG_STR, false);
 		}
 		return map;
+	}
+
+	public List<LotteryGroup> getLotteryGroupByGroupOwnerId(String groupOwnerId) {
+		return lotteryGroupRespository.getLotteryGroupByGroupOwnerId(groupOwnerId);
 	}
 	
 }
