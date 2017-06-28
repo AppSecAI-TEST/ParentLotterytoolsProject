@@ -422,19 +422,19 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 						{
 							LOG.error("融云群加入用户报错", result.getErrorMessage());
 						}
+						resultBean.setFlag(true);
+						resultBean.setResultCode(Constants.SUCCESS_CODE);
+						resultBean.setMessage("加入成功");
 					}
 					else
 					{
 						LOG.error("加群错误", "当前userId="+userId+"的用户已加入:"+group.getName()+"群内，无法多次加入");
+						resultBean.setFlag(false);
+						resultBean.setResultCode(Constants.FAIL_CODE_OF_USER_IS_ALREADY_JOIN_GROUP);
+						resultBean.setMessage("加入失败");
 					}
 					
 				}
-				
-				
-				
-				resultBean.setFlag(true);
-				resultBean.setResultCode(Constants.SUCCESS_CODE);
-				resultBean.setMessage("加入成功");
 			}
 			else
 			{

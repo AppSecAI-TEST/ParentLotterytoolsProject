@@ -861,6 +861,36 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	}
 	
 	/**
+	 * 用户加入多个群
+	* @Title: userJoinGroups 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userToken
+	* @param @param userId
+	* @param @param groupIds
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月28日 下午5:10:08 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/userJoinGroups", method = RequestMethod.GET)
+	public @ResponseBody ResultBean userJoinGroups(
+			@RequestParam(value="userId",required=false)  String userId,
+			@RequestParam(value="groupIds",required=false) String[] groupIds)
+	{
+		String[] joinUsers = {userId};  
+		ResultBean resultBean = null;
+		for (String groupId : groupIds) {
+			resultBean = lotteryGroupService.joinUserInGroup(joinUsers, groupId);
+		}
+		resultBean.setFlag(true);
+		resultBean.setResultCode(Constants.SUCCESS_CODE);
+		resultBean.setMessage("加入成功");
+		
+		return resultBean;
+	}
+	
+	/**
 	 * 根据邀请码获取可以加入的群
 	* @Title: quitUserFronGroup 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 
