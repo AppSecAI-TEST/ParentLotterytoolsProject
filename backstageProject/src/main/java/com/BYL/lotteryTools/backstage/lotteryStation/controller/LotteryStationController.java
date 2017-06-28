@@ -298,7 +298,7 @@ public class LotteryStationController
 			//TODO:审核通过后生成彩票站邀请码
 			if("1".equals(lotteryStationDTO.getStatus()))
 			{//审核通过生成邀请码
-				lotteryStation.setInviteCode(this.generateInviteCode());
+				lotteryStation.setInviteCode(lotteryStation.getStationNumber()+this.generateInviteCode());
 				
 				if("1".equals(lotteryStation.getIsBylStation()))
 				{
@@ -374,7 +374,7 @@ public class LotteryStationController
 		int code = alllist.size()+1;
 		StringBuffer str = new StringBuffer(code+"");
 		//6位邀请码
-		while(str.length()<6)
+		while(str.length()<3)
 		{
 			str.insert(0, "0");
 		}
