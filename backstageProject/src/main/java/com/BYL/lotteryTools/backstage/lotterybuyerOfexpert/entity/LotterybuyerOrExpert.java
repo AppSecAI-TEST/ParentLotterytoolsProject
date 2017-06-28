@@ -132,7 +132,8 @@ public class LotterybuyerOrExpert extends BaseEntity
 //	@Column(name="TOKEN_MODIFY_TIME")
 //	private Timestamp tokenModifyTime;//token变更时间
 	
-	
+	@Column(name="ALREADY_LOGIN")
+	private Integer alreadyLogin;
 	
 //	public Timestamp getTokenModifyTime() {
 //		return tokenModifyTime;
@@ -186,7 +187,15 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private List<RelaLBEUserAndLtcard> relaLBEUserAndLtcards ;
 	
 	
-	
+
+	public Integer getAlreadyLogin() {
+		return alreadyLogin;
+	}
+
+	public void setAlreadyLogin(Integer alreadyLogin) {
+		this.alreadyLogin = alreadyLogin;
+	}
+
 	public String getUserToken() {
 		return userToken;
 	}

@@ -82,8 +82,19 @@ public class LotterybuyerOrExpertDTO {
 	
 	private String userToken;//用户token
 	
+	private Integer alreadyLogin;
 	
 	
+	
+
+
+	public Integer getAlreadyLogin() {
+		return alreadyLogin;
+	}
+
+	public void setAlreadyLogin(Integer alreadyLogin) {
+		this.alreadyLogin = alreadyLogin;
+	}
 
 	public String getUserToken() {
 		return userToken;

@@ -886,6 +886,12 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		{
 			LotterybuyerOrExpert user = lotteryStation.getLotteryBuyerOrExpert();//获取站主
 			
+			//首次根据inviteCode获取群列表后，则更新这个已经登录的状态
+			user.setAlreadyLogin(1);
+			user.setModify(user.getId());
+			user.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			lotterybuyerOrExpertService.update(user);
+			
 			//获取当前站主是群主的可以加入的群
 			List<LotteryGroup> list = lotteryGroupService.getLotteryGroupByGroupOwnerId(user.getId());
 			List<LotteryGroupDTO> dtos = new ArrayList<LotteryGroupDTO>();
