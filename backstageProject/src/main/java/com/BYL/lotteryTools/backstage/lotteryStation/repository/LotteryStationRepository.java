@@ -20,4 +20,8 @@ public interface LotteryStationRepository extends GenericRepository<LotteryStati
 	
 	@Query("select u from LotteryStation u where  u.isDeleted = 1 and u.inviteCode=?1")
 	public LotteryStation getLotteryStationByInviteCode(String inviteCode);
+	
+	//获取当前未审核的彩票站数据
+	@Query("select u from LotteryStation u where  u.isDeleted = 1 and u.status is null and u.lotteryBuyerOrExpert.id=?1")
+	public List<LotteryStation> getLotteryStationByManagerId(String managerId);
 }

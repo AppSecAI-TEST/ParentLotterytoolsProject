@@ -25,6 +25,8 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexp
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpertAndGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
+import com.BYL.lotteryTools.backstage.lotteryStation.entity.LotteryStation;
+import com.BYL.lotteryTools.backstage.lotteryStation.service.LotteryStationService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
@@ -66,6 +68,9 @@ public class LotteryBuyerOrExpertController
 	
 	@Autowired
 	private RelaBindbuyerAndGroupService relaBindbuyerAndGroupService;
+	
+	@Autowired
+	private LotteryStationService lotteryStationService;
 	
 	/**
 	 * 获取用户详情
@@ -322,6 +327,15 @@ public class LotteryBuyerOrExpertController
 					lotterybuyerOrExpert.setRelaLBEUserAndLtcards(null);
 					lotterybuyerOrExpert.setRelaBindOfLbuyerorexpertAndLStations(null);
 			 		lotterybuyerOrExpertService.update(lotterybuyerOrExpert);
+			 		
+			 		//删除申请彩站申请未认证数据
+			 		List<LotteryStation> stationList = lotteryStationService.getLotteryStationByManagerId(id);//获取申请认证的彩票站
+			 		for (LotteryStation lotteryStation : stationList) {
+			 			lotteryStation.setIsDeleted(Constants.IS_DELETED);
+			 			lotteryStation.setModify(LoginUtils.getAuthenticatedUserCode(httpSession));
+			 			lotteryStation.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			 			lotteryStationService.update(lotteryStation);
+					}
 			 		
 			 		 //日志输出
 					 LOG.info("删除彩民数据--id="+id+"--操作人="+LoginUtils.getAuthenticatedUserId(httpSession));

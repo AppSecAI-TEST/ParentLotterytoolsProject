@@ -196,5 +196,9 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 	public LotteryStation getLotteryStationByInviteCode(String inviteCode) {
 		return lotteryStationRepository.getLotteryStationByInviteCode(inviteCode);
 	}
+
+	public List<LotteryStation> getLotteryStationByManagerId(String managerId) {
+		return lotteryStationRepository.getLotteryStationByManagerId(managerId);
+	}
 	
 }
