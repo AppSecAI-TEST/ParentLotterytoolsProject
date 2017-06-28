@@ -175,18 +175,25 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		{
 			sessionYanzhengma = rongyunImService.verifyCode(sessionId, yanzhengma);
 			
-			if(sessionYanzhengma.getSuccess())
+			if(sessionYanzhengma.getCode().toString().equals(Constants.SUCCESS_CODE) || sessionYanzhengma.getCode() == 1014)//1014:短信验证码已验证过，再次验证失效
 			{
 				result.put(Constants.FLAG_STR, true);
 				result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				result.put(Constants.MESSAGE_STR, "验证码输入正确");
 			}
 			else
-			{
-				result.put(Constants.FLAG_STR, false);
-				result.put(Constants.CODE_STR, Constants.YZM_INPUT_ERROR_CODE);
-				result.put(Constants.MESSAGE_STR, "验证码输入错误");
-			}
+				if(1015 == sessionYanzhengma.getCode())
+				{
+					result.put(Constants.FLAG_STR, false);
+					result.put(Constants.CODE_STR, Constants.YZM_INPUT_ERROR_CODE);
+					result.put(Constants.MESSAGE_STR, "短信验证码过期无效");
+				}
+				else
+				{
+					result.put(Constants.FLAG_STR, false);
+					result.put(Constants.CODE_STR, Constants.YZM_INPUT_ERROR_CODE);
+					result.put(Constants.MESSAGE_STR, "验证码输入错误");
+				}
 		}
 		else
 		{
@@ -243,6 +250,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 					lotterybuyerOrExpert = new LotterybuyerOrExpert();
 					lotterybuyerOrExpertDTO.setHandSel(new BigDecimal(0));
 					lotterybuyerOrExpertDTO.setColorCoins(new BigDecimal(0));
+					lotterybuyerOrExpertDTO.setAlreadyLogin(0);//注册后还没用登录
 					BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
 					lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
 					//对密码进行加密
