@@ -103,6 +103,7 @@ public class Constants {
 	public static final String FAIL_CODE_OF_GROUP_IS_NOT_FIND="412";//未找到群
 	public static final String FAIL_CODE_OF_STATION_IS_NOT_FIND="413";//根据邀请码未找到彩票站
 	public static final String FAIL_CODE_OF_JOINGROUP_APPLY_IS_NOT_FIND="414";//加群申请不存在
+	public static final String FAIL_CODE_OF_USER_IS_ALREADY_JOIN_GROUP="415";//用户已加入群
 	
 	public static final String SERVER_FAIL_CODE="500";//服务器异常，服务器异常抛出
 	

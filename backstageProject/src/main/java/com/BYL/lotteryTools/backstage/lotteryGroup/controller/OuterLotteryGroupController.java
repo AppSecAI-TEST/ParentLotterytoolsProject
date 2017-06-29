@@ -874,20 +874,24 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/userJoinGroups", method = RequestMethod.GET)
-	public @ResponseBody ResultBean userJoinGroups(
+	public @ResponseBody Map<String,Object> userJoinGroups(
 			@RequestParam(value="userId",required=false)  String userId,
 			@RequestParam(value="groupIds",required=false) String[] groupIds)
 	{
 		String[] joinUsers = {userId};  
-		ResultBean resultBean = null;
+		Map<String,Object> map = new HashMap<String, Object>();
+		List<LotteryGroup> groupList = new ArrayList<LotteryGroup>();
 		for (String groupId : groupIds) {
-			resultBean = lotteryGroupService.joinUserInGroup(joinUsers, groupId);
+			lotteryGroupService.joinUserInGroup(joinUsers, groupId);
+			LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
+			groupList.add(group);
 		}
-		resultBean.setFlag(true);
-		resultBean.setResultCode(Constants.SUCCESS_CODE);
-		resultBean.setMessage("加入成功");
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "加入成功");
+		map.put("groupDtos", lotteryGroupService.toDTOs(groupList));
 		
-		return resultBean;
+		return map;
 	}
 	
 	/**
