@@ -301,7 +301,7 @@ function manageGroupMember(groupId)
 //删除群成员
 function removeMemberFromGroup(memberId,groupId,isGroupOwner)
 {
-	var url = contextPath + '/outerLGroup/quitUserFronGroup.action';
+	var url = contextPath + '/lgroup/quitUserFronGroupFromBS.action';
 	var data1 = new Object();
 	var flag = true;
 	
