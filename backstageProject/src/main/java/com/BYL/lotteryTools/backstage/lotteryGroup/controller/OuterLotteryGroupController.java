@@ -909,6 +909,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	 */
 	@RequestMapping(value="/getGroupListOfInviteCode", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getGroupListOfInviteCode(
+			@RequestParam(value="userId",required=false) String userId,
 			@RequestParam(value="inviteCode",required=false) String inviteCode,//用户token
 			HttpServletRequest request,HttpSession httpSession)
 	{
@@ -919,12 +920,13 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		if(null != lotteryStation)
 		{
 			LotterybuyerOrExpert user = lotteryStation.getLotteryBuyerOrExpert();//获取站主
-			
+			//获取使用邀请码获取群列表数据的用户信息
+			LotterybuyerOrExpert useUser = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
 			//首次根据inviteCode获取群列表后，则更新这个已经登录的状态
-			user.setAlreadyLogin(1);
-			user.setModify(user.getId());
-			user.setModifyTime(new Timestamp(System.currentTimeMillis()));
-			lotterybuyerOrExpertService.update(user);
+			useUser.setAlreadyLogin(1);
+			useUser.setModify(userId);
+			useUser.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			lotterybuyerOrExpertService.update(useUser);
 			
 			//获取当前站主是群主的可以加入的群
 			List<LotteryGroup> list = lotteryGroupService.getLotteryGroupByGroupOwnerId(user.getId());
