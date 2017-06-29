@@ -434,6 +434,9 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 						resultBean.setMessage("加入失败");
 					}
 					
+					//向群内发送“加群”小灰条消息
+					String[] groupIds = {groupId};
+					rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"加入"+group.getName()+"群", null);
 				}
 			}
 			else

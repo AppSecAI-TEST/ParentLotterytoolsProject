@@ -212,4 +212,23 @@ public interface RongyunImService {
 	 */
 	public CodeSuccessResult sendImgTextMessgeToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String content,
 			String imageUri,String type,String title,String url);
+	
+	/**
+	 * 提示条（小灰条）通知消息。此类型消息没有 Push 通知。
+	* @Title: sendInfoNtfMessageToGroups 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param fromUseId
+	* @param @param messagePublishGroupToGroupId
+	* @param @param content
+	* @param @param type
+	* @param @param title
+	* @param @param url
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月29日 上午10:28:23 
+	* @return CodeSuccessResult    返回类型 
+	* @throws
+	 */
+	public CodeSuccessResult sendInfoNtfMessageToGroups(String fromUseId,String[] messagePublishGroupToGroupId,String content,
+			String type);
 }

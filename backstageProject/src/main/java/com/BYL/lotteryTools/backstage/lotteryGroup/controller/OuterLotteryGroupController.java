@@ -908,7 +908,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	* @throws
 	 */
 	@RequestMapping(value="/getGroupListOfInviteCode", method = RequestMethod.GET)
-	public @ResponseBody Map<String,Object> quitUserFronGroup(
+	public @ResponseBody Map<String,Object> getGroupListOfInviteCode(
 			@RequestParam(value="inviteCode",required=false) String inviteCode,//用户token
 			HttpServletRequest request,HttpSession httpSession)
 	{
@@ -973,6 +973,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	{
 		ResultBean resultBean = new ResultBean();
 		//解除群和要加入用户的关联
+		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
+		String[] groupIds = {groupId};
 		for (String userId : quitUsers) 
 		{
 			//根据用户id和群id获取关联关系
@@ -988,7 +990,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				rela.setIsDeleted(Constants.IS_DELETED);
 				relaBindbuyerAndGroupService.update(rela);
 			}
-			
+			//向群内发送“加群”小灰条消息
+			rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"退出"+group.getName()+"群", null);
 		}
 		//删除融云中群和用户的关系
 		try
