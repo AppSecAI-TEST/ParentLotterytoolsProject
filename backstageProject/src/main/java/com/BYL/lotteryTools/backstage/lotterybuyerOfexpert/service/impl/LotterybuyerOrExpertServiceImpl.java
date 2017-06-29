@@ -5,12 +5,16 @@ import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +34,14 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.LotteryCha
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.LotterybuyerOrExpertRepository;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.repository.RelaLBEUserAndLtcardRepository;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSSendCodeResult;
+import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.SMSVerifyCodeResult;
 import com.BYL.lotteryTools.backstage.outer.service.RongyunImService;
 import com.BYL.lotteryTools.backstage.user.entity.City;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.CityService;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
+import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
@@ -42,11 +49,14 @@ import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.MyMD5Util;
 import com.BYL.lotteryTools.common.util.QueryResult;
+import com.BYL.lotteryTools.common.util.TokenUtil;
 
 @Service("lotterybuyerOrExpertService")
 @Transactional(propagation= Propagation.REQUIRED,rollbackForClassName={"Exception"})
 public class LotterybuyerOrExpertServiceImpl implements
 		LotterybuyerOrExpertService {
+	
+	private Logger LOG = LoggerFactory.getLogger(LotterybuyerOrExpertServiceImpl.class);
 
 	@Autowired
 	private LotterybuyerOrExpertRepository lotterybuyerOrExpertRepository;
@@ -447,5 +457,164 @@ public class LotterybuyerOrExpertServiceImpl implements
 
 	public void deleteRelaLBEUserAndLtcard(RelaLBEUserAndLtcard entity) {
 			relaLBEUserAndLtcardRepository.delete(entity);
+	}
+
+	//获取验证码
+	public ResultBean getYanzhengmaForRegister(String telephone) {
+		ResultBean resultBean = new ResultBean();
+		String templateId = "3dPWOS6S4Kx84BbwDRNwQ4";//设置模板id
+		try {
+			SMSSendCodeResult result = rongyunImService.sendCode(telephone, templateId, "86", null, null);
+			OuterLotteryBuyerOrExpertController.sessionMap.put(telephone, result.getSessionId());
+			resultBean.setFlag(true);
+			resultBean.setResultCode(Constants.SUCCESS_CODE);
+			resultBean.setMessage("发送成功");
+		} catch (Exception e) {
+			LOG.error("error:", e);
+			resultBean.setFlag(false);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setMessage("发送失败,请稍候再试");
+		}
+		
+		return resultBean;
+	}
+
+	public Map<String, Object> checkYanzhengma(String yanzhengma,
+			String telephone) throws Exception
+	{
+		Map<String,Object> result = new HashMap<String, Object>();
+		String sessionId = OuterLotteryBuyerOrExpertController.sessionMap.get(telephone);
+		SMSVerifyCodeResult sessionYanzhengma = null;
+		if(null != sessionId)
+		{
+			sessionYanzhengma = rongyunImService.verifyCode(sessionId, yanzhengma);
+			
+			if(sessionYanzhengma.getCode().toString().equals(Constants.SUCCESS_CODE) || sessionYanzhengma.getCode() == 1014)//1014:短信验证码已验证过，再次验证失效
+			{
+				result.put(Constants.FLAG_STR, true);
+				result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+				result.put(Constants.MESSAGE_STR, "验证码输入正确");
+			}
+			else
+				if(1015 == sessionYanzhengma.getCode())
+				{
+					result.put(Constants.FLAG_STR, false);
+					result.put(Constants.CODE_STR, Constants.YZM_INPUT_ERROR_CODE);
+					result.put(Constants.MESSAGE_STR, "短信验证码过期无效");
+				}
+				else
+				{
+					result.put(Constants.FLAG_STR, false);
+					result.put(Constants.CODE_STR, Constants.YZM_INPUT_ERROR_CODE);
+					result.put(Constants.MESSAGE_STR, "验证码输入错误");
+				}
+		}
+		else
+		{
+			result.put(Constants.FLAG_STR, false);
+			result.put(Constants.CODE_STR, Constants.YZM_GET_ERROR_CODE);
+			result.put(Constants.MESSAGE_STR, "请重新获取验证码");
+		}
+		return result;
+	}
+
+	public Map<String, Object> saveFromApp(
+			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,HttpServletRequest request) {
+		Map<String,Object> result = new HashMap<String, Object>();
+		//app端传的保存参数中，图片是file类型的文件，而后台是存储之后的图片id
+		LotterybuyerOrExpert lotterybuyerOrExpert = this.
+				getLotterybuyerOrExpertByTelephone(lotterybuyerOrExpertDTO.getTelephone());
+		try
+		{
+			if(null != lotterybuyerOrExpert)
+			{//当前手机号已被注册
+				result.put("status", false);
+				result.put(Constants.FLAG_STR, false);
+				result.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_TEL_IS_REGITED);
+				result.put(Constants.MESSAGE_STR, "当前手机号已被注册");
+			}
+			else
+			{//当前手机号未被注册
+				//根据手机号获取sessionid
+//				String sessionId = (String) httpSession.getAttribute(lotterybuyerOrExpertDTO.getTelephone());
+				/*String sessionId = sessionMap.get(lotterybuyerOrExpertDTO.getTelephone());
+				SMSVerifyCodeResult yanzhengma = null;
+				if(null != sessionId)
+				{
+					 yanzhengma = rongyunImService.verifyCode(sessionId, lotterybuyerOrExpertDTO.getYanzhengma());
+				}
+				
+				if(yanzhengma.getSuccess())
+				{*/
+					//注册时彩币、彩金的金额都是null
+					lotterybuyerOrExpert = new LotterybuyerOrExpert();
+					lotterybuyerOrExpertDTO.setHandSel(new BigDecimal(0));
+					lotterybuyerOrExpertDTO.setColorCoins(new BigDecimal(0));
+					lotterybuyerOrExpertDTO.setAlreadyLogin(0);//注册后还没用登录
+					BeanUtil.copyBeanProperties(lotterybuyerOrExpert, lotterybuyerOrExpertDTO);
+					lotterybuyerOrExpert.setId(UUID.randomUUID().toString());
+					//对密码进行加密
+					lotterybuyerOrExpert.setPassword(MyMD5Util.getEncryptedPwd(lotterybuyerOrExpertDTO.getPassword()));
+					
+					StringBuffer imguri = new StringBuffer();//头像uri（注册时默认不进行头像的上传）
+					//添加默认头像(TODO:需要初始化一张默认头像图片到upload文件夹和uploadfile表中)
+					lotterybuyerOrExpert.setTouXiang(OuterLotteryBuyerOrExpertController.morenTouxiang);//关联新头像
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(OuterLotteryBuyerOrExpertController.morenTouxiang);
+					//刷新融云用户信息,将图片信息同步
+					imguri.append(OuterLotteryBuyerOrExpertController.DOMAIN)
+							.append(request.getContextPath()).append(uploadfile.getUploadfilepath()).append(uploadfile.getUploadRealName());
+					//创建融云用户id
+					String token = rongyunImService.getUserToken(lotterybuyerOrExpert.getId(),
+							lotterybuyerOrExpert.getName(), imguri.toString());
+					lotterybuyerOrExpert.setToken(token);
+					
+					lotterybuyerOrExpert.setIsPhone("1");//从app端走注册接口的一定是手机用户
+					lotterybuyerOrExpert.setIsExpert("0");//注册时用户的默认身份是彩民
+					lotterybuyerOrExpert.setIsVirtual("0");//是否为虚拟用户（虚拟用户是由公司来创建的，没有实际意义）
+					lotterybuyerOrExpert.setIsRobot("0");//从app端注册的用户都不是机器人用户
+					lotterybuyerOrExpert.setIsStationOwner("0");//在注册时默认都不是站主
+					lotterybuyerOrExpert.setFromApp("1");//app注册入口进入则为app用户
+					
+					lotterybuyerOrExpert.setIsDeleted(Constants.IS_NOT_DELETED);
+					lotterybuyerOrExpert.setCreator(lotterybuyerOrExpert.getId());
+					lotterybuyerOrExpert.setCreateTime(new Timestamp((System.currentTimeMillis())));
+					lotterybuyerOrExpert.setModify(lotterybuyerOrExpert.getId());
+					lotterybuyerOrExpert.setModifyTime(new Timestamp((System.currentTimeMillis())));
+					//保存用户信息
+					this.save(lotterybuyerOrExpert);
+					LotterybuyerOrExpertDTO dto = this.toDTO(lotterybuyerOrExpert);
+					dto.setUserToken(TokenUtil.generateToken(dto.getTelephone(), lotterybuyerOrExpertDTO.getPassword()));
+					result.put("status", true);
+					result.put(Constants.FLAG_STR, true);
+					result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+					result.put(Constants.MESSAGE_STR, "注册成功");
+					result.put("user", dto);
+				/*}
+				else
+				{//手机验证码验证失败
+					result.put("status", false);
+					result.put("message", yanzhengma.getErrorMessage());//放置验证码错误信息
+				}
+				*/
+				
+			}
+		
+		}
+		catch(Exception e)
+		{
+			LOG.error(Constants.ERROR_STR,e);
+			result.put("status", false);
+			result.put(Constants.FLAG_STR, false);
+			result.put(Constants.CODE_STR, Constants.SERVER_FAIL_CODE);
+			result.put(Constants.MESSAGE_STR, "注册失败");
+		}
+		finally
+		{
+			//置无用对象为null，告知GC可以进行回收
+			lotterybuyerOrExpert = null;
+		}
+		
+		
+		return result;
 	}
 }

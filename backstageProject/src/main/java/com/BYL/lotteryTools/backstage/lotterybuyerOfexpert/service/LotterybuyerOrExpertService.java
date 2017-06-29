@@ -1,6 +1,7 @@
 package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,6 +10,7 @@ import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExp
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotteryChatCard;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.RelaLBEUserAndLtcard;
+import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 public interface LotterybuyerOrExpertService {
@@ -63,5 +65,18 @@ public interface LotterybuyerOrExpertService {
 	
 	//减少一张建群卡
 	public void reduceCardsOfUser(LotterybuyerOrExpert owner,String cardId);
+	
+	
+	public ResultBean getYanzhengmaForRegister(String telephone);
+	
+	//校验验证码
+	public Map<String,Object> checkYanzhengma(
+			String yanzhengma,
+			String telephone) throws Exception;
+	
+	
+	public Map<String,Object> saveFromApp(
+			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,HttpServletRequest request);
+			
 	
 }
