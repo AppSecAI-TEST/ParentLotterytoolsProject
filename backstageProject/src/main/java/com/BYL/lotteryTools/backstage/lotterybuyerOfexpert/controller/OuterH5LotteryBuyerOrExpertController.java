@@ -1,5 +1,6 @@
 package com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,9 +72,12 @@ public class OuterH5LotteryBuyerOrExpertController extends GlobalOuterExceptionH
 	{
 		ResultBean resultBean = lotterybuyerOrExpertService.getYanzhengmaForRegister(telephone);
 		 String callback = request.getParameter("jsoncallback");
+		 PrintWriter out = response.getWriter();
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*"); 
-		response.getWriter().write(callback+"([ { resultCode:\""+resultBean.getResultCode()+"\"}])");
+		out.write(callback+"([ { resultCode:\""+resultBean.getResultCode()+"\"}])");
+		out.flush();
+		out.close();
 	}
 	
 	
@@ -100,9 +104,12 @@ public class OuterH5LotteryBuyerOrExpertController extends GlobalOuterExceptionH
 	{
 		Map<String,Object> result = lotterybuyerOrExpertService.checkYanzhengma(yanzhengma, telephone);
 		 String callback = request.getParameter("jsoncallback");
+		 PrintWriter out = response.getWriter();
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*"); 
-		response.getWriter().write(callback+"([ { resultCode:\""+result.get("resultCode")+"\",message:\""+result.get("message")+"\"}])");
+		out.write(callback+"([ { resultCode:\""+result.get("resultCode")+"\",message:\""+result.get("message")+"\"}])");
+		out.flush();
+		out.close();
 	}
 	
 	/**
@@ -126,9 +133,12 @@ public class OuterH5LotteryBuyerOrExpertController extends GlobalOuterExceptionH
 	{
 		Map<String,Object> result = lotterybuyerOrExpertService.saveFromApp(lotterybuyerOrExpertDTO, request);
 		 String callback = request.getParameter("jsoncallback");
+		 PrintWriter out = response.getWriter();
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*"); 
-		response.getWriter().write(callback+"([ { resultCode:\""+result.get("resultCode")+"\",message:\""+result.get("message")+"\"}])");
+		out.write(callback+"([ { resultCode:\""+result.get("resultCode")+"\",message:\""+result.get("message")+"\"}])");
+		out.flush();
+		out.close();
 	}
 	
 	
