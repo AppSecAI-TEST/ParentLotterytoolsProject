@@ -424,7 +424,7 @@ public class RongyunImServiceImpl implements RongyunImService
 			InfoNtfMessage messagePublishGroupTxtMessage = new InfoNtfMessage(content, type);
 			messagePublishGroupResult = rongCloud.message.
 					publishGroup(fromUseId, messagePublishGroupToGroupId, messagePublishGroupTxtMessage
-							, "thisisapush", "{\"pushData\":\"hello\"}", 1, 1, 0);
+							, "thisisapush", "{\"pushData\":\"hello\"}", 1, 1, 1);//最后一个参数：isIncludeSender:发送用户自已是否接收消息，0 表示为不接收，1 表示为接收，默认为 0 不接收。（可选）
 			
 		}
 		catch(Exception e)
