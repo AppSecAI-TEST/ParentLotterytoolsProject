@@ -36,7 +36,6 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroup
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaGroupUpLevelService;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayRepository;
-import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -565,6 +564,52 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 
 	public List<LotteryGroup> getLotteryGroupByGroupOwnerId(String groupOwnerId) {
 		return lotteryGroupRespository.getLotteryGroupByGroupOwnerId(groupOwnerId);
+	}
+
+	public ResultBean quitUserFronGroup(String[] quitUsers, String groupId) {
+		//解除群和要加入用户的关联
+		ResultBean resultBean = new ResultBean();
+		LotteryGroup group = this.getLotteryGroupById(groupId);
+		String[] groupIds = {groupId};
+		for (String userId : quitUsers) 
+		{
+			//根据用户id和群id获取关联关系
+			RelaBindOfLbuyerorexpertAndGroup rela = relaBindbuyerAndGroupService.
+					getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
+			LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
+			//机器人用户不可以被删除
+			if(null != rela && !"1".equals(user.getIsRobot()))
+			{
+				//删除关联
+				rela.setLotterybuyerOrExpert(null);
+				rela.setLotteryGroup(null);
+				rela.setIsDeleted(Constants.IS_DELETED);
+				relaBindbuyerAndGroupService.update(rela);
+			}
+			//向群内发送“加群”小灰条消息
+			rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"退出"+group.getName()+"群", null);
+		}
+		//删除融云中群和用户的关系
+		try
+		{
+			CodeSuccessResult result = rongyunImService.quitUserFronGroup(quitUsers, groupId);
+			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+			{
+				LOG.error("融云执行用户退群时错误：", result.getErrorMessage());
+			}
+		}
+		catch(Exception e)
+		{
+			LOG.error(Constants.ERROR_STR, e);
+			resultBean.setFlag(false);
+			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
+			resultBean.setMessage("服务器错误");
+		}
+		
+		resultBean.setFlag(true);
+		resultBean.setResultCode(Constants.SUCCESS_CODE);
+		resultBean.setMessage("退群成功");
+		return resultBean;
 	}
 	
 }

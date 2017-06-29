@@ -609,6 +609,34 @@ public class LotteryGroupController extends GlobalExceptionHandler
 		return resultBean;
 	}
 	
+	/**
+	 * 后台退群
+	* @Title: quitUserFronGroup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param userToken
+	* @param @param quitUsers
+	* @param @param groupId
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年6月29日 上午10:43:11 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/quitUserFronGroupFromBS", method = RequestMethod.GET)
+	public @ResponseBody ResultBean quitUserFronGroup(
+			@RequestParam(value="userToken",required=false) String userToken,//用户token
+			@RequestParam(value="quitUsers",required=false)   String[] quitUsers,
+			@RequestParam(value="groupId",required=false)   String groupId,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		ResultBean resultBean = lotteryGroupService.quitUserFronGroup(quitUsers, groupId);
+		
+		return resultBean;
+	}
+	
+	
 	@RequestMapping(value="/deleteGroupFromBs", method = RequestMethod.GET)
 	public @ResponseBody Map<String,Object> deleteGroupFromBs(
 			LotteryGroupDTO dto,

@@ -971,48 +971,8 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			@RequestParam(value="groupId",required=false)   String groupId,
 			HttpServletRequest request,HttpSession httpSession)
 	{
-		ResultBean resultBean = new ResultBean();
-		//解除群和要加入用户的关联
-		LotteryGroup group = lotteryGroupService.getLotteryGroupById(groupId);
-		String[] groupIds = {groupId};
-		for (String userId : quitUsers) 
-		{
-			//根据用户id和群id获取关联关系
-			RelaBindOfLbuyerorexpertAndGroup rela = relaBindbuyerAndGroupService.
-					getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, groupId);
-			LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
-			//机器人用户不可以被删除
-			if(null != rela && !"1".equals(user.getIsRobot()))
-			{
-				//删除关联
-				rela.setLotterybuyerOrExpert(null);
-				rela.setLotteryGroup(null);
-				rela.setIsDeleted(Constants.IS_DELETED);
-				relaBindbuyerAndGroupService.update(rela);
-			}
-			//向群内发送“加群”小灰条消息
-			rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"退出"+group.getName()+"群", null);
-		}
-		//删除融云中群和用户的关系
-		try
-		{
-			CodeSuccessResult result = rongyunImService.quitUserFronGroup(quitUsers, groupId);
-			if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
-			{
-				LOG.error("融云执行用户退群时错误：", result.getErrorMessage());
-			}
-		}
-		catch(Exception e)
-		{
-			LOG.error(Constants.ERROR_STR, e);
-			resultBean.setFlag(false);
-			resultBean.setResultCode(Constants.SERVER_FAIL_CODE);
-			resultBean.setMessage("服务器错误");
-		}
+		ResultBean resultBean = lotteryGroupService.quitUserFronGroup(quitUsers, groupId);
 		
-		resultBean.setFlag(true);
-		resultBean.setResultCode(Constants.SUCCESS_CODE);
-		resultBean.setMessage("退群成功");
 		return resultBean;
 	}
 	

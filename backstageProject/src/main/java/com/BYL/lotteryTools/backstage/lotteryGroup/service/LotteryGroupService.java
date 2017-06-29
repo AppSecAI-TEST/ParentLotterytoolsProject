@@ -64,6 +64,10 @@ public interface LotteryGroupService {
 			String[] joinUsers,
 			String groupId);
 	
+	public ResultBean quitUserFronGroup(
+			String[] quitUsers,
+			String groupId);
+	
 	public Map<String,Object> deleteGroup(
 			LotteryGroupDTO dto,
 			HttpServletRequest request,HttpSession httpSession);
