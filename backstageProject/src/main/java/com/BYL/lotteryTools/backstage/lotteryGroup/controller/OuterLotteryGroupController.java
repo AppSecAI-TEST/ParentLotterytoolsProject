@@ -79,7 +79,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 	
 	
 	@Autowired
-	private RongyunImService rongyunImService;
+	private RongyunImService rongyunImService;	
 	
 	@Autowired
 	private LotteryGroupService lotteryGroupService;
@@ -239,6 +239,95 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.FLAG_STR, true);
 		
+		return map;
+	}
+	
+	/**
+	 * 获取公司群列表
+	* @Title: getCompanyGroupList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param userId
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月3日 下午3:21:19 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getCompanyGroupList", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getCompanyGroupList(
+			LotteryGroupDTO dto,
+			@RequestParam(value="userId",required=false)   String userId,//当前发出获取群列表的的用户id
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//放置分页参数
+		Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+		
+		//参数
+		StringBuffer buffer = new StringBuffer();
+		List<Object> params = new ArrayList<Object>();
+		
+		//只查询未删除数据
+		params.add("1");//只查询有效的数据
+		buffer.append(" isDeleted = ?").append(params.size());
+		
+		//搜索群时，只能搜索出体彩和福彩群
+		params.add(Constants.COMPANY_GROUP_ID);//公司群
+		buffer.append(" and lotteryType != ?").append(params.size());
+		
+		
+		//排序
+		List<LotteryGroupDTO> dtos =  null;
+		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
+		orderBy.put("createTime", "desc");
+		
+		QueryResult<LotteryGroup> lQueryResult = lotteryGroupService
+				.getLotteryGroupList(LotteryGroup.class,
+				buffer.toString(), params.toArray(),orderBy, pageable);
+				
+		List<LotteryGroup> list = lQueryResult.getResultList();
+		
+		dtos = lotteryGroupService.toDTOs(list);
+		
+		if(null != userId && !"".equals(userId))
+		{
+			for (LotteryGroupDTO group : dtos) 
+			{
+				//判断当前用户是否已加入此群
+				RelaBindOfLbuyerorexpertAndGroup rela = relaBindbuyerAndGroupService.
+						getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(userId, group.getId());
+				
+				if(null != rela)
+				{
+					group.setIsJoinOfUser("1");//当前用户已加入当前群
+					group.setIsOwner(rela.getIsGroupOwner());
+				}
+				else
+				{
+					group.setIsJoinOfUser("0");
+					//判断当前用户是否已申请加群(status is null 是还没进行审核的加群申请)
+					List<RelaApplyOfLbuyerorexpertAndGroup> applys = relaApplybuyerAndGroupService.
+							getRelaApplyOfLbuyerorexpertAndGroupByCreatorAndStatus(userId,group.getId());
+					if(null != applys && applys.size()>0)
+					{
+						group.setAlreadyApplyOfUser("1");
+					}
+					else
+					{
+						group.setAlreadyApplyOfUser("0");
+					}
+				}
+			}
+		}
+		
+		map.put(Constants.FLAG_STR, true);
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put("groupDtos", dtos);
 		return map;
 	}
 	
