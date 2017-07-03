@@ -74,8 +74,8 @@ public class OuterH5LotteryBuyerOrExpertController extends GlobalOuterExceptionH
 		 String callback = request.getParameter("jsoncallback");
 		 PrintWriter out = response.getWriter();
 		response.setCharacterEncoding("utf-8");
-		response.setHeader("Access-Control-Allow-Origin", "*"); 
-		out.write(callback+"([ { resultCode:\""+resultBean.getResultCode()+"\"}])");
+		response.setHeader("Access-Control-Allow-Origin", "*");//设置允许所有域名可以跨域
+		out.write(callback+"([ { resultCode:\""+resultBean.getResultCode()+"\",message:\""+resultBean.getMessage()+"\"}])");
 		out.flush();
 		out.close();
 	}
