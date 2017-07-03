@@ -1,13 +1,17 @@
 package com.BYL.lotteryTools.backstage.lotteryManage.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryDiPinPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryDiPinPlay;
+import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlayBulufangan;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryDiPinPlayService;
 import com.BYL.lotteryTools.common.bean.ResultBean;
 import com.BYL.lotteryTools.common.exception.GlobalExceptionHandler;
@@ -182,5 +187,42 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 		 return resultBean;
 	}
 	
-	
+	/**
+	 * 
+	* @Title: checkPlanName 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param rows
+	* @param @param page
+	* @param @param model
+	* @param @param httpSession
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年7月3日 下午2:11:55 
+	* @return ResultBean    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/checkPlanName", method = RequestMethod.POST)
+	public @ResponseBody ResultBean  checkPlanName(
+			LotteryDiPinPlayDTO dto,
+			ModelMap model,HttpSession httpSession) throws Exception {
+		
+		ResultBean resultBean = new ResultBean ();
+		
+		
+		QueryResult<LotteryDiPinPlay> alist = lotteryDiPinPlayService.getLotteryDiPinPlayList(dto, Integer.MAX_VALUE, 1);
+		
+		if(alist.getResultList().size()>0)
+		{
+			resultBean.setExist(true);//若查询的数据条数大于0，则当前输入值已存在，不符合唯一性校验
+		}
+		else
+		{
+			resultBean.setExist(false);
+		}
+		
+		return resultBean;
+		
+	}
 }

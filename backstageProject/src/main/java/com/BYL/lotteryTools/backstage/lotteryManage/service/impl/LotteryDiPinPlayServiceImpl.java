@@ -51,6 +51,19 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 		params.add("1");//只查询有效的数据
 		buffer.append(" isDeleted = ?").append(params.size());
 		
+		if(null != dto.getPlanName() && !"".equals(dto.getPlanName()))
+		{
+			params.add(dto.getPlanName());
+			buffer.append(" and planName = ?").append(params.size());
+		}
+		
+		
+		if(null != dto.getId() && !"".equals(dto.getId()))
+		{//校验修改中的值的唯一性
+			params.add(dto.getId());
+			buffer.append(" and id != ?").append(params.size());
+		}
+		
 		
 	 	
 		//排序

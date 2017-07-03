@@ -87,7 +87,7 @@ function initDatagrid()
 		singleSelect:false,
 		rownumbers:false,
 		queryParams: params,
-		url:contextPath + '/lotteryManage/getLotteryPlayBuluPlanList.action',//'datagrid_data1.json',
+		url:contextPath + '/lDipinPlay/getLotteryDiPinPlayList.action',//'datagrid_data1.json',
 		method:'get',
 		border:false,
 		singleSelect:false,
@@ -100,7 +100,7 @@ function initDatagrid()
 				{field:'ck',checkbox:true},
 				{field:'id',hidden:true},
 				{field:'planName',title:'方案名称',width:'25%',align:'center'},
-				{field:'numOrChar',width:'15%',title:'彩种',align:'center',  
+				{field:'numOrChar',width:'15%',title:'方案类型',align:'center',  
 		            formatter:function(value,row,index){  
 		            	var numOrCharName ='';
 		            	switch(value)
@@ -110,7 +110,7 @@ function initDatagrid()
 		            	}
 		            	return numOrCharName;  
 		            }  },
-				{field:'createTime',title:'创建时间',width:'25%',align:'center'},
+				{field:'createTimeStr',title:'创建时间',width:'25%',align:'center'},
 				{field:'opt',title:'操作',width:'25%',align:'center',  
 			            formatter:function(value,row,index){  
 			                var btn = '<a class="editcls" onclick="updateLotteryPlayBuluPlan(&quot;'+row.id+'&quot;)" href="javascript:void(0)">编辑</a>'
@@ -125,7 +125,7 @@ function initDatagrid()
 	        
 	        if(data.rows.length==0){
 				var body = $(this).data().datagrid.dc.body2;
-				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="4">没有数据</td></tr>');
+				body.find('table tbody').append('<tr><td width="'+body.width()+'" style="height: 25px; text-align: center;" colspan="5">没有数据</td></tr>');
 			}
 	        
 	        
@@ -149,7 +149,7 @@ function addLotteryPlayBuluPlan()
  */
 function updateLotteryPlayBuluPlan(id)
 {
-	var url = contextPath + '/lotteryManage/getDetailLotteryPlayBuluPlan.action';
+	var url = contextPath + '/lDipinPlay/getLotteryDiPinPlayById.action';
 	var data1 = new Object();
 	data1.id=id;//应用的id
 	
@@ -167,6 +167,9 @@ function updateLotteryPlayBuluPlan(id)
 					numOrChar:data.numOrChar,
 					startNumber:data.startNumber,
 					endNumber:data.endNumber,
+					morePartKj:data.morePartKj,
+					moreStartNumber:data.moreStartNumber,
+					moreEndNumber:data.moreEndNumber,
 					otherPlan:data.otherPlan,
 					otherNum:data.otherNum,
 					repeatNum:data.repeatNum//开奖号码是否重复
@@ -205,10 +208,10 @@ function updateLotteryPlayBuluPlan(id)
  */
 function deleteLotteryPlayBuluPlan(id)
 {
-	var url = contextPath + '/lotteryManage/deleteLotteryPlayBuluPlans.action';
+	var url = contextPath + '/lDipinPlay/deleteLotteryDiPinPlay.action';
 	var data1 = new Object();
 	
-	var delFlag = checkCouldDeleted(id);
+	var delFlag = true;
 	
 	if(delFlag)
 		{
@@ -245,34 +248,7 @@ function deleteLotteryPlayBuluPlan(id)
 	
 }
 
-/**
- * 查询是否可以进行删除
- * @param id
- */
-function checkCouldDeleted(id)
-{
-	var flag = true;
-	
-	var data = new Object();
-	
-	data.id = id;
-	
-	$.ajax({
-		async: false,   //设置为同步获取数据形式
-        type: "get",
-        url: contextPath+'/lotteryManage/checkCouldDeleted.action',
-        data:data,
-        dataType: "json",
-        success: function (data) {
-        	flag = data.exist;
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            window.parent.location.href = contextPath + "/menu/error.action";
-        }
-   });
-	
-	return flag;
-}
+
 
 
 
@@ -283,7 +259,7 @@ function checkCouldDeleted(id)
 function submitAddBuluPlan()
 {
 	$('#ff').form('submit',{
-		url:contextPath+'/lotteryManage/saveOrUpdateLotteryPlayBuluPlan.action',
+		url:contextPath+'/lDipinPlay/saveOrUpdate.action',
 		onSubmit:function(param){
 			var flag = false;
 			
@@ -344,7 +320,7 @@ function submitAddBuluPlan()
 function submitUpdateBuluPlan()
 {
 	$('#ffUpdate').form('submit',{
-		url:contextPath+'/lotteryManage/saveOrUpdateLotteryPlayBuluPlan.action',
+		url:contextPath+'/lDipinPlay/saveOrUpdate.action',
 		onSubmit:function(param){
 			var flag = false;
 			if($('#ffUpdate').form('enableValidation').form('validate') )
@@ -433,12 +409,12 @@ function checkPlanName(id,name)
 	var data = new Object();
 	
 	data.id = id;
-	data.name = name;
+	data.planName = name;
 	
 	$.ajax({
 		async: false,   //设置为同步获取数据形式
         type: "post",
-        url: contextPath+'/lotteryManage/checkPlanName.action',
+        url: contextPath+'/lDipinPlay/checkPlanName.action',
         data:data,
         dataType: "json",
         success: function (data) {

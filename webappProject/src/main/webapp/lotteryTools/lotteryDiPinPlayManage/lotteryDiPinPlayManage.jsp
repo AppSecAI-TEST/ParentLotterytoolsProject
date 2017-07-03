@@ -109,7 +109,7 @@
   
   
     <!-- 添加补录方案弹框 -->
-  <div id="addBuluPlan" class="easyui-dialog"  title="添加补录方案" style="width:600px;height:400px;padding:0px;border:0;top:1px;"
+  <div id="addBuluPlan" class="easyui-dialog"  title="添加低频方案" style="width:600px;height:600px;padding:0px;border:0;top:1px;"
             data-options="
             modal:true,
                 iconCls: 'icon-save',
@@ -131,7 +131,7 @@
 		
 			<div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
 				<div region="north" style="height:100%;" hide="false">
-	    	 		<form id="ff" method="get" novalidate style="margin-top:5px;">
+	    	 		<form id="ff" method="post" novalidate style="margin-top:5px;">
 		    	 		<div class="ftitle" >
 				            <label for="planNameA">方案名称:</label>
 				            <input type="hidden" name="id" id="idA"/>
@@ -144,6 +144,15 @@
 				            	   <select class="easyui-combobox" id="numOrCharA" name="numOrChar" style="width:200px;">
 									<option value="0">数字</option>
 									<option value="1">其他</option>
+									</select>
+					        
+				        </div>
+				        <div class="ftitle">
+				            <label for="morePartKjA">红蓝号开奖:</label>
+				            
+				            	   <select class="easyui-combobox" id="morePartKjA" name="morePartKj" style="width:200px;">
+									<option value="1">否</option>
+									<option value="2">是</option>
 									</select>
 					        
 				        </div>
@@ -166,6 +175,16 @@
 				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="endNumberA" name="endNumber" style="width:200px"  
 				              ></input>
 				        </div>
+				        <div class="ftitle" id="snDivA">
+				            <label for="moreStartNumberA">蓝号开始号码:</label>
+				            <input class="easyui-numberbox numberInput" precision="0"  type="text" id="moreStartNumberA" name="moreStartNumber" style="width:200px"  
+				               >
+				        </div>
+				        <div class="ftitle" id="enDivA">
+				            <label for="moreEndNumberA">蓝号结束号码:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="moreEndNumberA" name="moreEndNumber" style="width:200px"  
+				              ></input>
+				        </div>
 				         <div class="ftitle" id="opDivA">
 				            <label for="otherPlanA">其他方案:</label>
 				            <textarea id="otherPlanA" name="otherPlan" class="easyui-validatebox" 
@@ -186,7 +205,7 @@
     
     
      <!-- 修改应用弹框 -->
-     <div id="updateBuluPlan" class="easyui-dialog"   title="修改补录方案" style="width:600px;height:400px;padding:0px;border:0;top:1px;"
+     <div id="updateBuluPlan" class="easyui-dialog"   title="修改补录方案" style="width:600px;height:600px;padding:0px;border:0;top:1px;"
             data-options="
             modal:true,
                 iconCls: 'icon-save',
@@ -206,7 +225,7 @@
             ">
 	      <div class="easyui-layout" style="height:100%;padding:0;width:100%;" >
 	     	 <div region="north" style="height:100%;"  hide="false">
-	    	 	<form id="ffUpdate" method="get" novalidate style="margin-top:5px;">
+	    	 	<form id="ffUpdate" method="post" novalidate style="margin-top:5px;">
 	    	 			<div class="ftitle" >
 				            <label for="planNameU">方案名称:</label>
 				            <input type="hidden" name="id" id="idU"/>
@@ -220,6 +239,15 @@
 									<option value="0">数字</option>
 									<option value="1">其他</option>
 								</select>
+				        </div>
+				         <div class="ftitle">
+				            <label for="morePartKjA">红蓝号开奖:</label>
+				            
+				            	   <select class="easyui-combobox" id="morePartKjA" name="morePartKj" style="width:200px;">
+									<option value="1">否</option>
+									<option value="2">是</option>
+									</select>
+					        
 				        </div>
 				        <div class="ftitle">
 				            <label for="repeatNumU">开奖号码是否重复:</label>
@@ -238,6 +266,16 @@
 				        <div class="ftitle" id="enDivU"><!-- precision="0" 的含义是：小数点后保留0位数字 -->
 				            <label for="endNumberU" >结束号码:</label>
 				            <input class="easyui-numberbox numberInput" precision="0"  type="text" id="endNumberU" name="endNumber" style="width:200px"  
+				              ></input>
+				        </div>
+				         <div class="ftitle" id="snDivA">
+				            <label for="moreStartNumberA">蓝号开始号码:</label>
+				            <input class="easyui-numberbox numberInput" precision="0"  type="text" id="moreStartNumberA" name="moreStartNumber" style="width:200px"  
+				               >
+				        </div>
+				        <div class="ftitle" id="enDivA">
+				            <label for="moreEndNumberA">蓝号结束号码:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="moreEndNumberA" name="moreEndNumber" style="width:200px"  
 				              ></input>
 				        </div>
 				         <div class="ftitle" id="opDivU">
