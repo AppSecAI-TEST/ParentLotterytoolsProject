@@ -138,6 +138,21 @@
 				            <input class="easyui-validatebox commonInput"  type="text" id="planNameA" name="planName" data-options="required:true"
 				              validType="checkAname['#planNameA','idA']"  missingMessage="方案名称不可以为空" >
 				        </div>
+				        <div class="ftitle" >
+				            <label for="planCodeA">方案编码:</label>
+				            <input class="easyui-validatebox commonInput"  type="text" id="planCodeA" name="planCode" data-options="required:true"
+				              validType="checkCode['#planCodeA','idA']"  missingMessage="方案编码不可以为空" >
+				        </div>
+				         <div class="ftitle">
+				            <label for="lotteryTypeA">彩种:</label>
+				            
+				            	   <select class="easyui-combobox" id="lotteryTypeA" name="lotteryType" style="width:200px;">
+									<option value="1">体彩</option>
+									<option value="2">福彩</option>
+									</select>
+					        
+				        </div>
+				        
 		    	 		<div class="ftitle">
 				            <label for="numOrCharA">数字或其他方案:</label>
 				            
@@ -184,6 +199,26 @@
 				            <label for="moreEndNumberA">蓝号结束号码:</label>
 				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="moreEndNumberA" name="moreEndNumber" style="width:200px"  
 				              ></input>
+				        </div>
+				        <div class="ftitle" >
+				            <label for="issueNumLenA">期号长度:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="issueNumLenA" name="issueNumLen" style="width:200px"  
+				              ></input>
+				        </div>
+				         <div class="ftitle" >
+				            <label for="lotteryNumberA">开奖号码个数:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="lotteryNumberA" name="lotteryNumber" style="width:200px"  
+				              ></input>
+				        </div>
+				         <div class="ftitle" >
+				            <label for="blueLotteryNumberA">蓝号开奖号码个数:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="blueLotteryNumberA" name="blueLotteryNumber" style="width:200px"  
+				              ></input>
+				        </div>
+				        <div class="ftitle" >
+				            <label for="correspondingTableA">存储表:</label>
+				            <input class="easyui-validatebox commonInput"  type="text" id="correspondingTableA" name="correspondingTable" data-options="required:true"
+				                missingMessage="存储表不可以为空" >
 				        </div>
 				         <div class="ftitle" id="opDivA">
 				            <label for="otherPlanA">其他方案:</label>
@@ -232,6 +267,21 @@
 				            <input class="easyui-validatebox commonInput"  type="text" id="planNameU" name="planName" data-options="required:true"
 				              validType="checkAname['#planNameU','idU']"  missingMessage="方案名称不可以为空" >
 				        </div>
+				         <div class="ftitle" >
+				            <label for="planCodeU">方案编码:</label>
+				            <input class="easyui-validatebox commonInput"  type="text" id="planCodeU" name="planCode" data-options="required:true"
+				              validType="checkCode['#planCodeU','idU']"  missingMessage="方案编码不可以为空" >
+				        </div>
+				         <div class="ftitle">
+				            <label for="lotteryTypeA">彩种:</label>
+				            
+				            	   <select class="easyui-combobox" id="lotteryTypeU" name="lotteryType" style="width:200px;">
+									<option value="1">体彩</option>
+									<option value="2">福彩</option>
+									</select>
+					        
+				        </div>
+				        
 		    	 		<div class="ftitle">
 				            <label for="numOrCharU">数字或其他方案:</label>
 				            
@@ -243,7 +293,7 @@
 				         <div class="ftitle">
 				            <label for="morePartKjA">红蓝号开奖:</label>
 				            
-				            	   <select class="easyui-combobox" id="morePartKjA" name="morePartKj" style="width:200px;">
+				            	   <select class="easyui-combobox" id="morePartKjU" name="morePartKj" style="width:200px;">
 									<option value="1">否</option>
 									<option value="2">是</option>
 									</select>
@@ -270,13 +320,33 @@
 				        </div>
 				         <div class="ftitle" id="snDivA">
 				            <label for="moreStartNumberA">蓝号开始号码:</label>
-				            <input class="easyui-numberbox numberInput" precision="0"  type="text" id="moreStartNumberA" name="moreStartNumber" style="width:200px"  
+				            <input class="easyui-numberbox numberInput" precision="0"  type="text" id="moreStartNumberU" name="moreStartNumber" style="width:200px"  
 				               >
 				        </div>
 				        <div class="ftitle" id="enDivA">
 				            <label for="moreEndNumberA">蓝号结束号码:</label>
-				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="moreEndNumberA" name="moreEndNumber" style="width:200px"  
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="moreEndNumberU" name="moreEndNumber" style="width:200px"  
 				              ></input>
+				        </div>
+				         <div class="ftitle" >
+				            <label for="issueNumLenA">期号长度:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="issueNumLenU" name="issueNumLen" style="width:200px"  
+				              ></input>
+				        </div>
+				         <div class="ftitle" >
+				            <label for="lotteryNumberA">开奖号码个数:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="lotteryNumberU" name="lotteryNumber" style="width:200px"  
+				              ></input>
+				        </div>
+				         <div class="ftitle" >
+				            <label for="blueLotteryNumberA">蓝号开奖号码个数:</label>
+				            <input class="easyui-numberbox numberInput" precision="0" type="text" id="blueLotteryNumberU" name="blueLotteryNumber" style="width:200px"  
+				              ></input>
+				        </div>
+				        <div class="ftitle" >
+				            <label for="correspondingTableA">存储表:</label>
+				            <input class="easyui-validatebox commonInput"  type="text" id="correspondingTableU" name="correspondingTable" data-options="required:true"
+				                missingMessage="存储表不可以为空" >
 				        </div>
 				         <div class="ftitle" id="opDivU">
 				            <label for="otherPlanU">其他方案:</label>

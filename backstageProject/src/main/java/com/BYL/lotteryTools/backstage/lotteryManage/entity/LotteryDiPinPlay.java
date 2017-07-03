@@ -39,6 +39,9 @@ public class LotteryDiPinPlay extends BaseEntity implements Serializable
 	@Column(name="PLAN_NAME", length=45)
 	private String planName;//方案名称
 	
+	@Column(name="PLAN_CODE", length=45)
+	private String planCode;//方案编码
+	
 	@Column(name="START_NUMBER", length=45)
 	private String startNumber;//号码选择范围的开始号码是几，11选5是1开始，时时彩是0开始，用来确认前台的补录方案号码以几开始
 	
@@ -67,7 +70,75 @@ public class LotteryDiPinPlay extends BaseEntity implements Serializable
 	@Column(name="MORE_END_NUMBER", length=45)
 	private String moreEndNumber;//第二部分范围结束号码
 	
+	@Column(name="LOTTERY_TYPE", length=45)
+	private String lotteryType;//彩种，1：体彩，2：福彩
 	
+	@Column(name="ISSUENUM_NUMBER_LEN", length=45)
+	private String issueNumLen;//期号长度
+	
+	@Column(name="LOTTERY_NUMBER", length=45)
+	private String lotteryNumber;//开奖号码个数
+	
+	@Column(name="BLUE_LOTTERY_NUMBER", length=45)
+	private String blueLotteryNumber;//蓝号开奖号码个数
+	
+	@Column(name="CORRESPONDINGTABLE", length=45)
+	private String correspondingTable;//彩种对应的补录表
+	
+	
+	
+	public String getPlanCode() {
+		return planCode;
+	}
+
+	public void setPlanCode(String planCode) {
+		this.planCode = planCode;
+	}
+
+	public String getBlueLotteryNumber() {
+		return blueLotteryNumber;
+	}
+
+	public void setBlueLotteryNumber(String blueLotteryNumber) {
+		this.blueLotteryNumber = blueLotteryNumber;
+	}
+
+	public String getLotteryType() {
+		return lotteryType;
+	}
+
+	public void setLotteryType(String lotteryType) {
+		this.lotteryType = lotteryType;
+	}
+
+	public String getIssueNumLen() {
+		return issueNumLen;
+	}
+
+	public void setIssueNumLen(String issueNumLen) {
+		this.issueNumLen = issueNumLen;
+	}
+
+	public String getLotteryNumber() {
+		return lotteryNumber;
+	}
+
+	public void setLotteryNumber(String lotteryNumber) {
+		this.lotteryNumber = lotteryNumber;
+	}
+
+	public String getCorrespondingTable() {
+		return correspondingTable;
+	}
+
+	public void setCorrespondingTable(String correspondingTable) {
+		this.correspondingTable = correspondingTable;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	public String getRepeatNum() {
 		return repeatNum;
 	}

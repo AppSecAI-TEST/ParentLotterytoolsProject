@@ -115,6 +115,7 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 		if(null != entity)
 		{
 			//修改
+			entity.setPlanCode(dto.getPlanCode());
 			entity.setEndNumber(dto.getEndNumber());
 			entity.setMoreEndNumber(dto.getMoreEndNumber());
 			entity.setMorePartKj(dto.getMorePartKj());
@@ -125,6 +126,11 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 			entity.setPlanName(dto.getPlanName());
 			entity.setRepeatNum(dto.getRepeatNum());
 			entity.setStartNumber(dto.getStartNumber());
+			entity.setLotteryType(dto.getLotteryType());
+			entity.setBlueLotteryNumber(dto.getBlueLotteryNumber());
+			entity.setLotteryNumber(dto.getLotteryNumber());
+			entity.setIssueNumLen(dto.getIssueNumLen());
+			entity.setCorrespondingTable(dto.getCorrespondingTable());
 			entity.setModify(LoginUtils.getAuthenticatedUserCode(session));
 			entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			
@@ -203,7 +209,7 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 	* @return ResultBean    返回类型 
 	* @throws
 	 */
-	@RequestMapping(value = "/checkPlanName", method = RequestMethod.POST)
+	@RequestMapping(value = "/checkPlanName", method = RequestMethod.GET)
 	public @ResponseBody ResultBean  checkPlanName(
 			LotteryDiPinPlayDTO dto,
 			ModelMap model,HttpSession httpSession) throws Exception {

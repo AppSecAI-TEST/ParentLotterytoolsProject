@@ -57,6 +57,12 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 			buffer.append(" and planName = ?").append(params.size());
 		}
 		
+		if(null != dto.getPlanCode() && !"".equals(dto.getPlanCode()))
+		{
+			params.add(dto.getPlanCode());
+			buffer.append(" and planCode = ?").append(params.size());
+		}
+		
 		
 		if(null != dto.getId() && !"".equals(dto.getId()))
 		{//校验修改中的值的唯一性

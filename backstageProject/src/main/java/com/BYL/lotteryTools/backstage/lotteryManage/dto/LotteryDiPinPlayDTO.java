@@ -2,6 +2,7 @@ package com.BYL.lotteryTools.backstage.lotteryManage.dto;
 
 
 
+
 public class LotteryDiPinPlayDTO  
 {
 	
@@ -31,9 +32,70 @@ public class LotteryDiPinPlayDTO
 	
 	private String createTimeStr;
 	
+	private String lotteryType;//彩种，1：体彩，2：福彩
+	
+	private String issueNumLen;//期号长度
+	
+	private String lotteryNumber;//开奖号码个数
+	
+	private String blueLotteryNumber;//蓝号开奖号码个数
+	
+	private String correspondingTable;//彩种对应的补录表
+	
+	
+	private String planCode;//方案编码
 	
 	
 	
+	
+	public String getPlanCode() {
+		return planCode;
+	}
+
+	public void setPlanCode(String planCode) {
+		this.planCode = planCode;
+	}
+
+	public String getBlueLotteryNumber() {
+		return blueLotteryNumber;
+	}
+
+	public void setBlueLotteryNumber(String blueLotteryNumber) {
+		this.blueLotteryNumber = blueLotteryNumber;
+	}
+
+	public String getLotteryType() {
+		return lotteryType;
+	}
+
+	public void setLotteryType(String lotteryType) {
+		this.lotteryType = lotteryType;
+	}
+
+	public String getIssueNumLen() {
+		return issueNumLen;
+	}
+
+	public void setIssueNumLen(String issueNumLen) {
+		this.issueNumLen = issueNumLen;
+	}
+
+	public String getLotteryNumber() {
+		return lotteryNumber;
+	}
+
+	public void setLotteryNumber(String lotteryNumber) {
+		this.lotteryNumber = lotteryNumber;
+	}
+
+	public String getCorrespondingTable() {
+		return correspondingTable;
+	}
+
+	public void setCorrespondingTable(String correspondingTable) {
+		this.correspondingTable = correspondingTable;
+	}
+
 	public String getCreateTimeStr() {
 		return createTimeStr;
 	}

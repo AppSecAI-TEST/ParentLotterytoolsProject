@@ -99,7 +99,7 @@ function initDatagrid()
 		columns:[[
 				{field:'ck',checkbox:true},
 				{field:'id',hidden:true},
-				{field:'planName',title:'方案名称',width:'25%',align:'center'},
+				{field:'planName',title:'方案名称',width:'15%',align:'center'},
 				{field:'numOrChar',width:'15%',title:'方案类型',align:'center',  
 		            formatter:function(value,row,index){  
 		            	var numOrCharName ='';
@@ -110,7 +110,17 @@ function initDatagrid()
 		            	}
 		            	return numOrCharName;  
 		            }  },
-				{field:'createTimeStr',title:'创建时间',width:'25%',align:'center'},
+	            {field:'lotteryType',width:'15%',title:'彩种',align:'center',  
+		            formatter:function(value,row,index){  
+		            	var numOrCharName ='';
+		            	switch(value)
+		            	{
+		            		case '1':numOrCharName='体彩';break;
+		            		case '2':numOrCharName='福彩';break;
+		            	}
+		            	return numOrCharName;  
+		            }  },
+				{field:'createTimeStr',title:'创建时间',width:'15%',align:'center'},
 				{field:'opt',title:'操作',width:'25%',align:'center',  
 			            formatter:function(value,row,index){  
 			                var btn = '<a class="editcls" onclick="updateLotteryPlayBuluPlan(&quot;'+row.id+'&quot;)" href="javascript:void(0)">编辑</a>'
@@ -163,6 +173,7 @@ function updateLotteryPlayBuluPlan(id)
         	
 				$('#ffUpdate').form('load',{
 					id:data.id,
+					planCode:data.planCode,
 					planName:data.planName,
 					numOrChar:data.numOrChar,
 					startNumber:data.startNumber,
@@ -172,6 +183,11 @@ function updateLotteryPlayBuluPlan(id)
 					moreEndNumber:data.moreEndNumber,
 					otherPlan:data.otherPlan,
 					otherNum:data.otherNum,
+					lotteryType:data.lotteryType,
+					issueNumLen:data.issueNumLen,
+					lotteryNumber:data.lotteryNumber,
+					blueLotteryNumber:data.blueLotteryNumber,
+					correspondingTable:data.correspondingTable,
 					repeatNum:data.repeatNum//开奖号码是否重复
 					
 				});
@@ -304,6 +320,9 @@ function submitAddBuluPlan()
 	    	//添加角色后刷新数据列表
 	    	$('#ff').form('clear');//清空表单内容
 	    	$("#numOrCharA").combobox('setValue',"0");
+	    	$("#morePartKjA").combobox('setValue',"1");
+	    	$("#repeatNumA").combobox('setValue',"0");
+	    	$("#lotteryTypeA").combobox('setValue',"1");
 	    	initDatagrid();
 	    	
 	    	
@@ -400,6 +419,25 @@ $.extend($.fn.validatebox.defaults.rules, {
     }
 });
 
+$.extend($.fn.validatebox.defaults.rules, {
+	checkCode: {//自定义校验name
+        validator: function(value,param){
+        	var rules = $.fn.validatebox.defaults.rules;  
+        	if(value.length==0||value.length>15){  
+        		rules.checkCode.message = "当前方案编码不可为空且长度不可以超过15个字符";  
+                return false;  
+            }
+        	else
+    		{
+        		rules.checkCode.message = "当前方案编码已存在"; 
+        		
+                return !checkPlanCode($("#"+param[1]).val(),value);
+    		}
+        	
+        }
+    }
+});
+
 
 
 //校验方案名称（方案名称全局唯一）
@@ -413,7 +451,36 @@ function checkPlanName(id,name)
 	
 	$.ajax({
 		async: false,   //设置为同步获取数据形式
-        type: "post",
+        type: "get",
+        url: contextPath+'/lDipinPlay/checkPlanName.action',
+        data:data,
+        dataType: "json",
+        success: function (data) {
+        	if(data.exist)//若data.isExist==true,则当前校验值已存在，则不可用使用
+        		{
+        			flag = true;
+        		}
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            window.parent.location.href = contextPath + "/menu/error.action";
+        }
+   });
+	
+	return flag;
+}
+
+//校验方案编码（方案编码全局唯一）
+function checkPlanCode(id,code)
+{
+	var flag = false;//当前值可用，不存在
+	var data = new Object();
+	
+	data.id = id;
+	data.planCode = code;
+	
+	$.ajax({
+		async: false,   //设置为同步获取数据形式
+        type: "get",
         url: contextPath+'/lDipinPlay/checkPlanName.action',
         data:data,
         dataType: "json",
