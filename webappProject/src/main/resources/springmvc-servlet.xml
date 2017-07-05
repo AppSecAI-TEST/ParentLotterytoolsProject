@@ -88,6 +88,7 @@
 	        <mvc:exclude-mapping path="/outer/getProvinceOfZST*"/>  
 	        <mvc:exclude-mapping path="/outer/getPredictiontypeOfProvince*"/>
 	        <mvc:exclude-mapping path="/outer/loggingForApp*"/><!-- 日志记录接口不进行token验证 -->
+	       <!--  <mvc:exclude-mapping path="/outer/getDipinLotteryList*"/>test open -->
 	        
 	        <mvc:exclude-mapping path="/outerLGroup/getGroupByGroupnumber*"/>    
 	        <mvc:exclude-mapping path="/outerLGroup/updateNumberOfCardForUser*"/>
