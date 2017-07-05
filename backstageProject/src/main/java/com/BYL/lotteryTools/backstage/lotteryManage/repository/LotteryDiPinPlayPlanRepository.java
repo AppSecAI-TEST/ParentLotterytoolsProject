@@ -15,7 +15,9 @@ import com.BYL.lotteryTools.common.repository.GenericRepository;
  */
 public interface LotteryDiPinPlayPlanRepository extends GenericRepository<LotteryDiPinPlay, String> {
 
-	@Query("select u from LotteryDiPinPlay u where  u.id =?1")
+	@Query("select u from LotteryDiPinPlay u where u.isDeleted='1' and  u.id =?1")
 	public LotteryDiPinPlay getLotteryDiPinPlayById(String id);
 	
+	@Query("select u from LotteryDiPinPlay u where u.isDeleted='1' and  u.planCode =?1")
+	public LotteryDiPinPlay getLotteryDiPinPlayByPlanCode(String planCode);
 }

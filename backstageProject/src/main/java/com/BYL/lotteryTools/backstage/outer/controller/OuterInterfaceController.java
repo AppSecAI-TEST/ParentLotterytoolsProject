@@ -28,7 +28,9 @@ import com.BYL.lotteryTools.backstage.app.service.AppversionService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.SysMessage;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.SysMessageService;
 import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryPlayDTO;
+import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryDiPinPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
+import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryDiPinPlayService;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.dto.TransferDTO;
@@ -81,6 +83,9 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private AppService appService;
+	
+	@Autowired
+	private LotteryDiPinPlayService lotteryDiPinPlayService;
 	
 	
 	private static final String NO5 = "5";
@@ -679,6 +684,51 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			map.put(Constants.FLAG_STR, false);
 			map.put(Constants.MESSAGE_STR, "上传成功");
 		} 
+		
+		return map;
+	}
+	
+	@RequestMapping(value="/getDipinLotteryList",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getDipinLotteryList(@RequestParam(value="planCode",required=true) String planCode,
+			@RequestParam(value="maxIssueId",required=false) String maxIssueId,
+			@RequestParam(value="minIssueId",required=false) String minIssueId)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LotteryDiPinPlay entity = lotteryDiPinPlayService.getLotteryDiPinPlayByPlanCode(planCode);
+		
+		
+		if(null != entity)
+		{
+			String lotteryNumber = entity.getLotteryNumber();//获取开奖号码个数
+			List<?> result = null;
+			int ln = Integer.parseInt(lotteryNumber);
+			switch(ln)
+			{
+				case 3:
+						result = lotteryDiPinPlayService.get3DNumKaijiang(entity.getCorrespondingTable());
+						break;
+				case 5:
+						result = lotteryDiPinPlayService.getPailie5NumKaijiang(entity.getCorrespondingTable());
+						break;
+				case 7:
+						result = lotteryDiPinPlayService.getSevenNumberKaijiang(entity.getCorrespondingTable());
+						break;
+				case 8:
+						result = lotteryDiPinPlayService.getEightNumberKaijiang(entity.getCorrespondingTable());
+						break;
+			}
+			
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			map.put(Constants.MESSAGE_STR, "获取成功");
+			map.put("result", result);
+		}
+		else
+		{
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NOT_FOUNT_DIPIN_PLAY);
+			map.put(Constants.MESSAGE_STR, "根据playCode未找到低频玩法");
+		}
+		
 		
 		return map;
 	}

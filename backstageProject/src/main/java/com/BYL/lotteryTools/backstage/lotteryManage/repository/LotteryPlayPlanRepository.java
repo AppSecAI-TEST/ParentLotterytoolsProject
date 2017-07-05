@@ -15,7 +15,7 @@ import com.BYL.lotteryTools.common.repository.GenericRepository;
  */
 public interface LotteryPlayPlanRepository extends GenericRepository<LotteryPlayBulufangan, String> {
 
-	@Query("select u from LotteryPlayBulufangan u where  u.id =?1")
+	@Query("select u from LotteryPlayBulufangan u where u.isDeleted='1' and  u.id =?1")
 	public LotteryPlayBulufangan getLotteryPlayBulufanganById(String id);
 	
 }

@@ -17,7 +17,7 @@ import com.BYL.lotteryTools.common.repository.GenericRepository;
  */
 public interface LotteryPlayRepository extends GenericRepository<LotteryPlay, String> {
 
-	@Query("select u from LotteryPlay u where  u.id =?1")
+	@Query("select u from LotteryPlay u where u.isDeleted='1' and  u.id =?1")
 	public LotteryPlay getLotteryPlayById(String id);
 	
 	@Query("select u from LotteryPlay u where u.isDeleted='1' and  u.province =?1 and u.lotteryType =?2")

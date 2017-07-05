@@ -15,6 +15,14 @@ import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryDiPinPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryDiPinPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryDiPinPlayPlanRepository;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryDiPinPlayService;
+import com.BYL.lotteryTools.backstage.outer.entity.PailieFive;
+import com.BYL.lotteryTools.backstage.outer.entity.QiLeCai;
+import com.BYL.lotteryTools.backstage.outer.entity.ShuangSQ;
+import com.BYL.lotteryTools.backstage.outer.entity.ThreeD;
+import com.BYL.lotteryTools.backstage.outer.repository.PailieFiveRepository;
+import com.BYL.lotteryTools.backstage.outer.repository.QiLeCaiRepository;
+import com.BYL.lotteryTools.backstage.outer.repository.ShuangSQRepository;
+import com.BYL.lotteryTools.backstage.outer.repository.ThreeDRepository;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
@@ -25,6 +33,18 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 
 	@Autowired
 	private LotteryDiPinPlayPlanRepository lotteryDiPinPlayPlanRepository;
+	
+	@Autowired
+	private ThreeDRepository threeDRepository;
+	
+	@Autowired
+	private PailieFiveRepository pailieFiveRepository;
+	
+	@Autowired
+	private ShuangSQRepository shuangSQRepository;
+	
+	@Autowired
+	private QiLeCaiRepository qiLeCaiRepository;
 
 	public void save(LotteryDiPinPlay entity) {
 		lotteryDiPinPlayPlanRepository.save(entity);		
@@ -119,6 +139,51 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 		
 		return dtos;
 	}
+
+	public LotteryDiPinPlay getLotteryDiPinPlayByPlanCode(String planCode) {
+		return lotteryDiPinPlayPlanRepository.getLotteryDiPinPlayByPlanCode(planCode);
+	}
+
+	public List<ThreeD> get3DNumKaijiang(String tableName) {
+		int limit =300;
+		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,TEST_NUM FROM analysis."+tableName+" ");
+		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
+		Object[] queryParams = new Object[]{
+		};
+		List<ThreeD> threeDList =threeDRepository.getEntityListBySql(ThreeD.class,execSql.toString(), queryParams);
+		return threeDList;
+	}
+
+	public List<PailieFive> getPailie5NumKaijiang(String tableName) {
+		int limit =300;
+		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 FROM analysis."+tableName+" ");
+		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
+		Object[] queryParams = new Object[]{
+		};
+		List<PailieFive> datalist =pailieFiveRepository.getEntityListBySql(PailieFive.class,execSql.toString(), queryParams);
+		return datalist;
+	}
+
+	public List<ShuangSQ> getSevenNumberKaijiang(String tableName) {
+		int limit =300;
+		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,NO6,NO7 FROM analysis."+tableName+" ");
+		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
+		Object[] queryParams = new Object[]{
+		};
+		List<ShuangSQ> datalist =shuangSQRepository.getEntityListBySql(ShuangSQ.class,execSql.toString(), queryParams);
+		return datalist;
+	}
+
+	public List<QiLeCai> getEightNumberKaijiang(String tableName) {
+		int limit =300;
+		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,NO6,NO7,NO8 FROM analysis."+tableName+" ");
+		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
+		Object[] queryParams = new Object[]{
+		};
+		List<QiLeCai> datalist =qiLeCaiRepository.getEntityListBySql(QiLeCai.class,execSql.toString(), queryParams);
+		return datalist;
+	}
+
 	
 	
 	
