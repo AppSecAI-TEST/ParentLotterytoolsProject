@@ -9,6 +9,7 @@ public class GroupMsgOfPushDTO {
 
 	private String message;//文字内容
 	
+	private String status;//群推送通知状态，0：保存，1：发送
 	
 	private String imgFileUuid;//图片id
 	
@@ -17,6 +18,14 @@ public class GroupMsgOfPushDTO {
 	private String createTimeStr;
 	
 	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getCreateTimeStr() {
 		return createTimeStr;

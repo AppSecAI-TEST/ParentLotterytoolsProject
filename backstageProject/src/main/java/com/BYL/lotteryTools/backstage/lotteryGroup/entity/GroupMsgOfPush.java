@@ -51,6 +51,10 @@ public class GroupMsgOfPush extends BaseEntity
 	
 	@Column(name="IMG_FILE_UUID")
 	private String imgFileUuid;//图片id
+	
+
+	@Column(name="STATUS")
+	private String status;//群推送通知状态，0：保存，1：发送
 
 
 	public String getId() {
@@ -63,6 +67,26 @@ public class GroupMsgOfPush extends BaseEntity
 	}
 
 
+
+
+	public List<LotteryGroup> getLotteryGroupList() {
+		return lotteryGroupList;
+	}
+
+
+	public void setLotteryGroupList(List<LotteryGroup> lotteryGroupList) {
+		this.lotteryGroupList = lotteryGroupList;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 
 	public String getType() {
