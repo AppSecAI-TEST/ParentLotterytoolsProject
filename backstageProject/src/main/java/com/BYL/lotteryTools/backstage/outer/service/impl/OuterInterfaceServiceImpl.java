@@ -639,6 +639,35 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		returnMap.put("fast3Analysis", list);
 		return returnMap;
 	}
+
+	/**
+	 * 获取快三遗漏
+	* @Title: getFast3MissAnalysisData 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param type
+	* @param @param selectnum
+	* @param @param groupnum
+	* @param @param tableName
+	* @param @param orderby
+	* @param @param endNumber
+	* @param @param ascOrDesc
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月7日 下午4:58:16 
+	* @throws
+	 */
+	public Map<String, Object> getFast3MissAnalysisData(String type,
+			String selectnum, String groupnum, String tableName,
+			String orderby, String endNumber, String ascOrDesc) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		//放置理论周期和遗漏数据
+		
+		
+		
+		return map;
+	}
 	
 	
 	

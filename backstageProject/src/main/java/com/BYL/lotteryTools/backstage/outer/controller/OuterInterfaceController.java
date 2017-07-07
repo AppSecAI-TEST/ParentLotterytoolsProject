@@ -502,10 +502,9 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		String yilouTableEnd = "MISSANALYSIS";
 		//0：T 1：省份 2：玩法名称
 		tableName = tableNameStart[0] + "_" + tableNameStart[1] + "_" + tableNameStart[2] + "_" + yilouTableEnd; 
-		
+		String groupnum = "";
 		if("5".equals(lotteryPlay.getLotteryNumber()))
 		{//11选5和12选5的遗漏查询
-			String groupnum = "";
 			if(null != groupnumarr)
 			{
 				for (String number : groupnumarr) 
@@ -538,8 +537,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		else
 			if("3".equals(lotteryPlay.getLotteryNumber()))
 			{//TODO:快三遗漏查询
-				
-				
+				returnMap = outerInterfaceService.getFast3MissAnalysisData(type, selectnum, groupnum, tableName, orderby, endNumber, ascOrDesc);
 			}
 		
 		
