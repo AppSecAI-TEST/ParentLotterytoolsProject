@@ -562,15 +562,25 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			 if(null != user)
 			 {
 				 List<RelaBindOfLbuyerorexpertAndGroup> relaGroups = relaBindbuyerAndGroupService.getRelaList(userId);
-				 
+				 List<RelaBindOfLbuyerorexpertAndGroup> usesOfGroup = null;
+				 List<LotterybuyerOrExpertDTO> usersDtos = new ArrayList<LotterybuyerOrExpertDTO>();
 				 for (RelaBindOfLbuyerorexpertAndGroup relaGroup : relaGroups)
 				 {
 					if(null != relaGroup.getLotteryGroup())
 					{
+						usesOfGroup = null;
 						LotteryGroupDTO dto = new LotteryGroupDTO();
-						dto = lotteryGroupService.toDTO(relaGroup.getLotteryGroup());
+						LotteryGroup group = relaGroup.getLotteryGroup();
+						usesOfGroup =  group.getRelaBindOfLbuyerorexpertAndGroups();//获取群成员
+						usersDtos.clear();//清空群成员列表
+						for (RelaBindOfLbuyerorexpertAndGroup rela : usesOfGroup) 
+						{
+							usersDtos.add(lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert()));
+						}
+						dto = lotteryGroupService.toDTO(group);
 						dto.setIsOwner(relaGroup.getIsGroupOwner());
 						dto.setIsTop(relaGroup.getIsTop());
+						dto.setUserList(usersDtos);
 						groupDtos.add(dto);
 					}
 				 }

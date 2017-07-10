@@ -1,6 +1,10 @@
 package com.BYL.lotteryTools.backstage.lotteryGroup.dto;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.dto.LotterybuyerOrExpertDTO;
 
 
 public class LotteryGroupDTO {
@@ -75,9 +79,19 @@ public class LotteryGroupDTO {
 	
 	private String[] gaoPinLotteryPlay;//高频彩种玩法名称
 	
+	private List<LotterybuyerOrExpertDTO> userList;
 	
 	
 	
+	
+
+	public List<LotterybuyerOrExpertDTO> getUserList() {
+		return userList;
+	}
+
+	public void setUserList(List<LotterybuyerOrExpertDTO> userList) {
+		this.userList = userList;
+	}
 
 	public String[] getLotteryNumber() {
 		return lotteryNumber;
