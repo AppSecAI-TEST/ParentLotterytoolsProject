@@ -25,6 +25,19 @@ public class Fast3Analysis
 	
 	@Column(name="TYPE")
 	private int type;
+	
+	@Column(name="CYCLE")
+	private double cycle;
+	
+	
+
+	public double getCycle() {
+		return cycle;
+	}
+
+	public void setCycle(double cycle) {
+		this.cycle = cycle;
+	}
 
 	public int getId() {
 		return id;

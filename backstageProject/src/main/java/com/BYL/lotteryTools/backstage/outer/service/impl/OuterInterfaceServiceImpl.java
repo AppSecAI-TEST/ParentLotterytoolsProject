@@ -658,15 +658,84 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	 */
 	public Map<String, Object> getFast3MissAnalysisData(String type,
 			String selectnum, String groupnum, String tableName,
-			String orderby, String endNumber, String ascOrDesc) {
+			String orderby, String endNumber, String ascOrDesc) 
+	{
+		Map<String,Object> returnMap = new HashMap<String, Object>();
+		List<Fast3Analysis> list = new ArrayList<Fast3Analysis>();
+//		double lilunzhouqi = 1;//理论周期
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		//放置理论周期和遗漏数据
-		
-		
-		
-		return map;
+		StringBuffer execSql = new StringBuffer();
+		if("234".equals(type))
+		{//全部--二同+三同+全不同
+			execSql.append("SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE,CYCLE FROM analysis."
+					 + tableName + " WHERE TYPE in(2,3,4) ");
+			if(null != groupnum && !"".equals(groupnum))//如果组合号码不为空，则要查询当前组合号码的遗漏值
+			{
+				execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
+			}
+			execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
+		}
+		else
+			if("91012".equals(type))//形态--大小
+			{
+				execSql.append("SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE,CYCLE FROM analysis."
+						 + tableName + " WHERE TYPE in(9,10,11,12) ");
+				if(null != groupnum && !"".equals(groupnum))//如果组合号码不为空，则要查询当前组合号码的遗漏值
+				{
+					execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
+				}
+				execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
+			}
+			else
+				if("13456".equals(type))//形态--奇偶
+				{
+					execSql.append("SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE,CYCLE FROM analysis."
+							 + tableName + " WHERE TYPE in(13,14,15,16) ");
+					if(null != groupnum && !"".equals(groupnum))//如果组合号码不为空，则要查询当前组合号码的遗漏值
+					{
+						execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
+					}
+					execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
+				}
+				else
+					if("67".equals(type))//两码--全部
+					{
+						execSql.append("SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE,CYCLE FROM analysis."
+								 + tableName + " WHERE TYPE in(6,7) ");
+						if(null != groupnum && !"".equals(groupnum))//如果组合号码不为空，则要查询当前组合号码的遗漏值
+						{
+							execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
+						}
+						execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
+					}
+					else
+						if("1789".equals(type))//和值--012路
+						{
+							execSql.append("SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE,CYCLE FROM analysis."
+									 + tableName + " WHERE TYPE in(17,18,19) ");
+							if(null != groupnum && !"".equals(groupnum))//如果组合号码不为空，则要查询当前组合号码的遗漏值
+							{
+								execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
+							}
+							execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
+						}
+					else 
+					{
+						execSql.append("SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE,CYCLE FROM analysis."
+								 + tableName + " WHERE TYPE = "+type);
+						if(null != groupnum && !"".equals(groupnum))//如果组合号码不为空，则要查询当前组合号码的遗漏值
+						{
+							execSql.append(" AND GROUP_NUMBER = '"+groupnum+"'")  ;
+						}
+						execSql.append(" order by "+orderby+" "+"  "+ascOrDesc+ " ;")  ;
+						
+					}
+		Object[] queryParams = new Object[]{
+		};
+		list = fast3AnalysisRepository.getEntityListBySql(Fast3Analysis.class, execSql.toString(), queryParams);
+//		returnMap.put("lilunzhouqi", lilunzhouqi);
+		returnMap.put("fast3Analysis", list);
+		return returnMap;
 	}
 	
 	
