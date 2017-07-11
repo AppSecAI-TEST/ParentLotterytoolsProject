@@ -141,6 +141,10 @@ public class PlanPackageFromAppServiceImpl implements PlanPackageFromAppService 
 		
 		return dto;
 	}
+
+	public List<PlanPackageFromApp> getPlanPackageFromAppByUserId(String userId) {
+		return planPackageFromAppRepository.getPlanPackageFromAppByUserId(userId);
+	}
 	
 	
 }

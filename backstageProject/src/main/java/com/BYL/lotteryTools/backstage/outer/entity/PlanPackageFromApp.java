@@ -24,6 +24,9 @@ public class PlanPackageFromApp extends BaseEntity
 	@Id
     @Column(name="ID")
     private String id;
+	
+	@Column(name="SERIAL_NUM")
+	private String serialNum;
     
 	@Column(name="USER_ID")
 	private String userId;
@@ -37,6 +40,9 @@ public class PlanPackageFromApp extends BaseEntity
 	@Column(name="LOTTERY_NUMBER")
 	private String lotteryNumber;//开奖号码个数
 	
+	@Column(name="STAGE")
+	private String stage;//方案包期号
+	
 	@Column(name="KJ_NUMBER")
 	private String kjNumber;//开奖号
 	
@@ -44,6 +50,14 @@ public class PlanPackageFromApp extends BaseEntity
 	private List<PlanFromApp> planFromApps;
 	
 	
+
+	public String getStage() {
+		return stage;
+	}
+
+	public void setStage(String stage) {
+		this.stage = stage;
+	}
 
 	public List<PlanFromApp> getPlanFromApps() {
 		return planFromApps;
@@ -54,6 +68,14 @@ public class PlanPackageFromApp extends BaseEntity
 	}
 
 	
+
+	public String getSerialNum() {
+		return serialNum;
+	}
+
+	public void setSerialNum(String serialNum) {
+		this.serialNum = serialNum;
+	}
 
 	public String getId() {
 		return id;

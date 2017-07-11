@@ -30,4 +30,6 @@ public interface PlanPackageFromAppService {
 	public List<PlanPackageFromAppDTO> toDTOsOfPlanPackage(List<PlanPackageFromApp> entities);
 	
 	public PlanPackageFromAppDTO toDTOOfPlanPackage(PlanPackageFromApp entity);
+	
+	public List<PlanPackageFromApp> getPlanPackageFromAppByUserId(String userId);
 }

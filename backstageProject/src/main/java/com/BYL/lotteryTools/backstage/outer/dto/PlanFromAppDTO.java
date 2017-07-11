@@ -24,6 +24,18 @@ public class PlanFromAppDTO
 	private String stage;
 	
 	private String state;
+	
+	private String kjNum;
+	
+	
+
+	public String getKjNum() {
+		return kjNum;
+	}
+
+	public void setKjNum(String kjNum) {
+		this.kjNum = kjNum;
+	}
 
 	public int getId() {
 		return id;

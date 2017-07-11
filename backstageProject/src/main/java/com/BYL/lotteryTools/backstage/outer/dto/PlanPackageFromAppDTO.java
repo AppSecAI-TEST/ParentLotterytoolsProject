@@ -15,6 +15,18 @@ public class PlanPackageFromAppDTO
 	private String lotteryNumber;//开奖号码个数
 	
 	private String kjNumber;//开奖号
+	
+	private String stage;//期号
+	
+	
+
+	public String getStage() {
+		return stage;
+	}
+
+	public void setStage(String stage) {
+		this.stage = stage;
+	}
 
 	public int getId() {
 		return id;

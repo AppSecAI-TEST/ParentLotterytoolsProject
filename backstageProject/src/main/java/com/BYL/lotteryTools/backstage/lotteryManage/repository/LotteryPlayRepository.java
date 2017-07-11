@@ -23,6 +23,9 @@ public interface LotteryPlayRepository extends GenericRepository<LotteryPlay, St
 	@Query("select u from LotteryPlay u where u.isDeleted='1' and  u.province =?1 and u.lotteryType =?2")
 	public List<LotteryPlay> getLotteryPlayByProvinceAndLotteryType(String province,String lotteryType);
 	
+	@Query("select u from LotteryPlay u where u.isDeleted='1' and  u.province =?1 and u.lotteryType =?2 and u.lotteryNumber =?3")
+	public LotteryPlay getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(String province,String lotteryType,String lotteryNumber);
+	
 	@Query("select u from LotteryPlay u where u.isDeleted='1' ")
 	public List<LotteryPlay> getLotteryPlayList();
 	

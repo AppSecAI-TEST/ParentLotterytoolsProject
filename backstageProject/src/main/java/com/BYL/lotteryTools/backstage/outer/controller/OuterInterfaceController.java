@@ -777,15 +777,19 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		PlanPackageFromApp planPackageFromApp = new PlanPackageFromApp();
 		JSONObject json1 = JSONObject.fromObject(plan);
 		String userId = json1.getString("userId");
+		List<PlanPackageFromApp> countlist = planPackageFromAppService.getPlanPackageFromAppByUserId(userId);
 		String lotteryType = json1.getString("lotteryType");
 		String lotteryNumber = json1.getString("lotteryNumber");
 		String provinceCode = json1.getString("provinceCode");
+		String stage = json1.getString("stage");
 		JSONArray planFromApps = json1.getJSONArray("list");//获取方案包内的方案
 		planPackageFromApp.setId(UUID.randomUUID().toString().replace("-", ""));
+		planPackageFromApp.setSerialNum((countlist.size()+1)+"");
 		planPackageFromApp.setUserId(userId);
 		planPackageFromApp.setLotteryType(lotteryType);
 		planPackageFromApp.setProvinceCode(provinceCode);
 		planPackageFromApp.setLotteryNumber(lotteryNumber);
+		planPackageFromApp.setStage(stage);
 		planPackageFromApp.setIsDeleted(Constants.IS_NOT_DELETED);
 		planPackageFromApp.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		planPackageFromApp.setCreator("app");
@@ -845,6 +849,14 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		PlanPackageFromApp planPackage = planPackageFromAppService.getPlanPackageFromAppByID(id);
 		List<PlanFromApp> planFromApps = planPackage.getPlanFromApps();
 		List<PlanFromAppDTO> appDTOs = planPackageFromAppService.toDTOsOfPlanFromApp(planFromApps);
+		//获取开奖号码，将开奖号码放到返回值中
+		String kjNum = outerInterfaceService.
+				getKjNumber(planPackage.getLotteryType(), planPackage.getProvinceCode(),
+						planPackage.getLotteryNumber(), planPackage.getStage());
+		for (PlanFromAppDTO planFromAppDTO : appDTOs) 
+		{
+			planFromAppDTO.setKjNum(kjNum);
+		}
 		
 		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.MESSAGE_STR, "获取成功");
@@ -875,10 +887,15 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		List<PlanPackageFromApp> list = new ArrayList<PlanPackageFromApp>();
 		
 		list = planPackageFromAppService.getPlanPackageFromAppList(page, rows, dto);
-		
+		List<PlanPackageFromAppDTO> dtos =  planPackageFromAppService.toDTOsOfPlanPackage(list);
+		for (PlanPackageFromAppDTO planPackageFromAppDTO : dtos) {
+			planPackageFromAppDTO.setKjNumber(outerInterfaceService.
+					getKjNumber(planPackageFromAppDTO.getLotteryType(), planPackageFromAppDTO.getProvinceCode(),
+							planPackageFromAppDTO.getLotteryNumber(), planPackageFromAppDTO.getStage()));
+		}
 		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.MESSAGE_STR, "获取成功");
-		map.put("list", planPackageFromAppService.toDTOsOfPlanPackage(list));
+		map.put("list",dtos);
 		
 		return map;
 	}

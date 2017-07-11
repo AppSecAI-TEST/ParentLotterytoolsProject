@@ -181,6 +181,12 @@ public class LotteryPlayServiceImpl implements LotteryPlayService
 	    }
 	    return issueNumber.substring(0, issueNumber.length() - 2) + "0" + nextIssue;
 	  }
+
+
+	public LotteryPlay getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(
+			String province, String lotteryType, String lotteryNumber) {
+		return lotteryPlayRepository.getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(province, lotteryType, lotteryNumber);
+	}
 	
 	
 	

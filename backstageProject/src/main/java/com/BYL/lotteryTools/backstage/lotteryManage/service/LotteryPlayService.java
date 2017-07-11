@@ -87,5 +87,7 @@ public interface LotteryPlayService
 	 */
 	public String getYuceMaxIssueId(String lotteryPlayId);
 	
+	public LotteryPlay getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(String province,String lotteryType,String lotteryNumber);
+	
 	
 }

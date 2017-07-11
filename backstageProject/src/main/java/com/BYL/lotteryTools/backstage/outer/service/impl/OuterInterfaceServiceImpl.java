@@ -742,6 +742,64 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		returnMap.put("fast3Analysis", list);
 		return returnMap;
 	}
+
+	public String getKjNumber(String lotteryType, String province,
+			String lotteryNumber, String issueNumber) {
+
+		StringBuffer kjStr = new StringBuffer();
+		String execSql = "";
+		LotteryPlay lotteryPlay = lotteryPlayRepository.
+				getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(province, lotteryType, lotteryNumber);
+		if("5".equals(lotteryPlay.getLotteryNumber()))
+		{
+			execSql = "SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 "
+					+ " FROM analysis."+lotteryPlay.getCorrespondingTable() +"   WHERE ISSUE_NUMBER = ? ";
+			Object[] queryParams = new Object[]{
+					issueNumber
+			};
+			
+			List<SrcfivedataDTO> dtoFives = srcfivedataDTORepository.getEntityListBySql(SrcfivedataDTO.class, execSql, queryParams);
+			if(null != dtoFives && dtoFives.size() != 0)
+			{
+				SrcfivedataDTO dtoFive = dtoFives.get(0);
+				if(null != dtoFive && null != dtoFive.getIssueNumber() && !"".equals(dtoFive.getIssueNumber()))
+				{
+					kjStr.append(dtoFive.getNo1()).append(",")
+						 .append(dtoFive.getNo2()).append(",")
+						 .append(dtoFive.getNo3()).append(",")
+						 .append(dtoFive.getNo4()).append(",")
+						 .append(dtoFive.getNo5());
+				}
+			}
+			
+			
+		}
+		else
+			if("3".equals(lotteryPlay.getLotteryNumber()))
+			{
+				execSql = "SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3 "
+						+ " FROM analysis."+lotteryPlay.getCorrespondingTable() +"  WHERE ISSUE_NUMBER = ? LIMIT 1 ";
+				Object[] queryParams = new Object[]{
+						issueNumber
+				};
+				
+				List<SrcthreedataDTO> dtoThrees = srcthreedataDTORepository.getEntityListBySql(SrcthreedataDTO.class, execSql, queryParams);
+				if(null != dtoThrees&& dtoThrees.size() != 0)
+				{
+					SrcthreedataDTO dtoThree = dtoThrees.get(0);
+					if(null != dtoThree && null != dtoThree.getIssueNumber() && !"".equals(dtoThree.getIssueNumber()))
+					{
+						kjStr.append(dtoThree.getNo1()).append(",")
+							 .append(dtoThree.getNo2()).append(",")
+							 .append(dtoThree.getNo3());
+					}
+				}
+				
+				
+			}
+		
+		return kjStr.toString();
+	}
 	
 	
 	
