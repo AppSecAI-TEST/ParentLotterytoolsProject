@@ -540,7 +540,8 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				returnMap = outerInterfaceService.getFast3MissAnalysisData(type, selectnum, groupnum, tableName, orderby, endNumber, ascOrDesc);
 			}
 		
-		
+		returnMap.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		returnMap.put(Constants.MESSAGE_STR, "获取成功");
 		return returnMap;
 	}
 	
