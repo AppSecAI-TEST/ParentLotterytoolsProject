@@ -792,7 +792,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			if(null != entity.getLotterybuyerOrExpert())
 			{
 				String[] tagsand = {entity.getLotterybuyerOrExpert().getTelephone()};//推送给申请加群的用户手机号
-				PushController.sendPushWithCallback(tagsand, null, "0", "group");//推送给用户展示的是“0”
+				PushController.sendPushWithCallback(tagsand, null, "0,"+groupId, "group");//推送给用户展示的是“0”
 			}
 			
 			resultBean.setFlag(true);
