@@ -20,9 +20,11 @@ import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryPlayReposi
 import com.BYL.lotteryTools.backstage.outer.controller.OuterInterfaceController;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.entity.Fast3Analysis;
+import com.BYL.lotteryTools.backstage.outer.entity.Fast3WithCycleAnalysis;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
 import com.BYL.lotteryTools.backstage.outer.repository.Fast3AnalysisRepository;
+import com.BYL.lotteryTools.backstage.outer.repository.Fast3WithCycleAnalysisRepository;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcfivedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcthreedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
@@ -45,6 +47,9 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	
 	@Autowired
 	private Fast3AnalysisRepository fast3AnalysisRepository;
+	
+	@Autowired
+	private Fast3WithCycleAnalysisRepository fast3WithCycleAnalysisRepository;
 	
 	@Autowired
 	private ProvinceService provinceService;
@@ -661,7 +666,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 			String orderby, String endNumber, String ascOrDesc) 
 	{
 		Map<String,Object> returnMap = new HashMap<String, Object>();
-		List<Fast3Analysis> list = new ArrayList<Fast3Analysis>();
+		List<Fast3WithCycleAnalysis> list = new ArrayList<Fast3WithCycleAnalysis>();
 //		double lilunzhouqi = 1;//理论周期
 		
 		StringBuffer execSql = new StringBuffer();
@@ -732,7 +737,7 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 					}
 		Object[] queryParams = new Object[]{
 		};
-		list = fast3AnalysisRepository.getEntityListBySql(Fast3Analysis.class, execSql.toString(), queryParams);
+		list = fast3WithCycleAnalysisRepository.getEntityListBySql(Fast3WithCycleAnalysis.class, execSql.toString(), queryParams);
 //		returnMap.put("lilunzhouqi", lilunzhouqi);
 		returnMap.put("fast3Analysis", list);
 		return returnMap;
