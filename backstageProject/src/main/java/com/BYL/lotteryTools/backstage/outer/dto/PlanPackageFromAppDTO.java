@@ -18,7 +18,19 @@ public class PlanPackageFromAppDTO
 	
 	private String stage;//期号
 	
+	private String serialNum;
 	
+	
+	
+	
+
+	public String getSerialNum() {
+		return serialNum;
+	}
+
+	public void setSerialNum(String serialNum) {
+		this.serialNum = serialNum;
+	}
 
 	public String getStage() {
 		return stage;
