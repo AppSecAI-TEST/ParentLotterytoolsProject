@@ -75,6 +75,18 @@ public class PlanPackageFromAppServiceImpl implements PlanPackageFromAppService 
 		LinkedHashMap<String, String> orderBy = new LinkedHashMap<String, String>();
 		orderBy.put("createTime", "desc");
 		
+		if(null != dto.getUserId())
+		{
+			params.add(dto.getUserId());//只查询有效的数据
+			buffer.append(" and userId = ?").append(params.size());
+		}
+		
+		if(null != dto.getProvinceCode())
+		{
+			params.add(dto.getProvinceCode());//只查询有效的数据
+			buffer.append(" and provinceCode = ?").append(params.size());
+		}
+		
 		QueryResult<PlanPackageFromApp> lQueryResult = planPackageFromAppRepository
 				.getScrollDataByJpql(PlanPackageFromApp.class,
 				buffer.toString(), params.toArray(),orderBy, pageable);
