@@ -562,24 +562,26 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			 if(null != user)
 			 {
 				 List<RelaBindOfLbuyerorexpertAndGroup> relaGroups = relaBindbuyerAndGroupService.getRelaList(userId);
-				 List<RelaBindOfLbuyerorexpertAndGroup> usesOfGroup = null;
-				 List<LotterybuyerOrExpertDTO> usersDtos = new ArrayList<LotterybuyerOrExpertDTO>();
+				 Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
 				 for (RelaBindOfLbuyerorexpertAndGroup relaGroup : relaGroups)
 				 {
 					if(null != relaGroup.getLotteryGroup())
 					{
-						usesOfGroup = null;
 						LotteryGroupDTO dto = new LotteryGroupDTO();
 						LotteryGroup group = relaGroup.getLotteryGroup();
-						usesOfGroup =  group.getRelaBindOfLbuyerorexpertAndGroups();//获取群成员
-						usersDtos.clear();//清空群成员列表
-						for (RelaBindOfLbuyerorexpertAndGroup rela : usesOfGroup) 
-						{
-							usersDtos.add(lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert()));
-						}
 						dto = lotteryGroupService.toDTO(group);
 						dto.setIsOwner(relaGroup.getIsGroupOwner());
 						dto.setIsTop(relaGroup.getIsTop());
+						
+//						QueryResult<RelaBindOfLbuyerorexpertAndGroup> qresult= relaBindbuyerAndGroupService.
+//										getMemberOfJoinGroup(pageable, group.getId());
+						List<RelaBindOfLbuyerorexpertAndGroup> usersOfGroup = group.getRelaBindOfLbuyerorexpertAndGroups();
+						List<LotterybuyerOrExpertDTO> usersDtos = new ArrayList<LotterybuyerOrExpertDTO>();
+						for (RelaBindOfLbuyerorexpertAndGroup rela : usersOfGroup) 
+						{
+							usersDtos.add(lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert()));
+						}
+						
 						dto.setUserList(usersDtos);
 						groupDtos.add(dto);
 					}
@@ -589,6 +591,7 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 				 map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 				 map.put(Constants.MESSAGE_STR, "获取成功");
 				 map.put("groupDtos", groupDtos);
+				 
 			 }
 		 }
 		 catch(Exception e)
