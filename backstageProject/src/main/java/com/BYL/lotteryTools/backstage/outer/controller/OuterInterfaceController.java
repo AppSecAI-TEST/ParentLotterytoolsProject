@@ -2,12 +2,17 @@ package com.BYL.lotteryTools.backstage.outer.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +38,14 @@ import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryDiPinPlayService;
 import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
+import com.BYL.lotteryTools.backstage.outer.dto.PlanFromAppDTO;
+import com.BYL.lotteryTools.backstage.outer.dto.PlanPackageFromAppDTO;
 import com.BYL.lotteryTools.backstage.outer.dto.TransferDTO;
+import com.BYL.lotteryTools.backstage.outer.entity.PlanFromApp;
+import com.BYL.lotteryTools.backstage.outer.entity.PlanPackageFromApp;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
+import com.BYL.lotteryTools.backstage.outer.service.PlanPackageFromAppService;
 import com.BYL.lotteryTools.backstage.prediction.entity.PredictionType;
 import com.BYL.lotteryTools.backstage.prediction.service.PredictionTypeService;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
@@ -86,6 +96,9 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	
 	@Autowired
 	private LotteryDiPinPlayService lotteryDiPinPlayService;
+	
+	@Autowired
+	private PlanPackageFromAppService planPackageFromAppService;
 	
 	
 	private static final String NO5 = "5";
@@ -687,6 +700,19 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		return map;
 	}
 	
+	/**
+	 * 获取低频开奖号码
+	* @Title: getDipinLotteryList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param planCode
+	* @param @param maxIssueId
+	* @param @param minIssueId
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月11日 下午12:50:52 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
 	@RequestMapping(value="/getDipinLotteryList",method=RequestMethod.GET)
 	public @ResponseBody Map<String,Object> getDipinLotteryList(@RequestParam(value="planCode",required=true) String planCode,
 			@RequestParam(value="maxIssueId",required=false) String maxIssueId,
@@ -728,6 +754,131 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			map.put(Constants.MESSAGE_STR, "根据playCode未找到低频玩法");
 		}
 		
+		
+		return map;
+	}
+	
+	/**
+	 * 保存app方案
+	* @Title: savePlanFromApp 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param plan
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月11日 下午1:34:06 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/savePlanFromApp",method=RequestMethod.POST)
+	public @ResponseBody Map<String,Object> savePlanFromApp(
+			@RequestParam(value="plan",required=true) String plan)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		PlanPackageFromApp planPackageFromApp = new PlanPackageFromApp();
+		JSONObject json1 = JSONObject.fromObject(plan);
+		String userId = json1.getString("userId");
+		String lotteryType = json1.getString("lotteryType");
+		String lotteryNumber = json1.getString("lotteryNumber");
+		String provinceCode = json1.getString("provinceCode");
+		JSONArray planFromApps = json1.getJSONArray("list");//获取方案包内的方案
+		planPackageFromApp.setId(UUID.randomUUID().toString().replace("-", ""));
+		planPackageFromApp.setUserId(userId);
+		planPackageFromApp.setLotteryType(lotteryType);
+		planPackageFromApp.setProvinceCode(provinceCode);
+		planPackageFromApp.setLotteryNumber(lotteryNumber);
+		planPackageFromApp.setIsDeleted(Constants.IS_NOT_DELETED);
+		planPackageFromApp.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		planPackageFromApp.setCreator("app");
+		planPackageFromApp.setModifyTime(new Timestamp(System.currentTimeMillis()));
+		planPackageFromApp.setModify("app");
+		planPackageFromAppService.savePackage(planPackageFromApp);
+		
+		List<PlanFromApp> list = new ArrayList<PlanFromApp>();
+		for (int i=0;i<planFromApps.size();i++) {
+			JSONObject jobject = (JSONObject) planFromApps.get(i);
+			PlanFromApp planFromApp = new PlanFromApp();
+			planFromApp.setCost(jobject.getString("cost"));
+			planFromApp.setCount(jobject.getString("count"));
+			planFromApp.setMultiple(jobject.getString("multiple"));
+			planFromApp.setNumber(jobject.getString("number"));
+			planFromApp.setNumberTwo(jobject.getString("numberTwo"));
+			planFromApp.setNumberThree(jobject.getString("numberThree"));
+			planFromApp.setPlay(jobject.getString("play"));
+			planFromApp.setProvinceCode(jobject.getString("provinceCode"));
+			planFromApp.setProvinceName(jobject.getString("provinceName"));
+			planFromApp.setStage(jobject.getString("stage"));
+			planFromApp.setState(jobject.getString("state"));
+			planFromApp.setPlanPackageFromApp(planPackageFromApp);
+//			planFromApp.setId(UUID.randomUUID().toString());
+			planFromApp.setCreator("app");
+			planFromApp.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			planFromApp.setModify("app");
+			planFromApp.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			planFromApp.setIsDeleted(Constants.IS_NOT_DELETED);
+			planPackageFromAppService.savePlan(planFromApp);
+			list.add(planFromApp);
+		}
+		
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "保存成功");
+		
+		return map;
+	}
+	
+	/**
+	 * 根据方案包获取方案列表数据
+	* @Title: getPlanFromAppDetail 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param id
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月11日 下午1:37:04 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getPlanFromAppDetail",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getPlanFromAppDetail(
+			@RequestParam(value="id",required=true) String id)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		PlanPackageFromApp planPackage = planPackageFromAppService.getPlanPackageFromAppByID(id);
+		List<PlanFromApp> planFromApps = planPackage.getPlanFromApps();
+		List<PlanFromAppDTO> appDTOs = planPackageFromAppService.toDTOsOfPlanFromApp(planFromApps);
+		
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put("dtos", appDTOs);
+		
+		return map;
+	}
+	
+	/**
+	 * 获取方案包列表
+	* @Title: getPlanPackageFromAppList 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月11日 下午1:54:43 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getPlanPackageFromAppList",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getPlanPackageFromAppList(
+			@RequestParam(value="page",required=true) int page,
+			@RequestParam(value="rows",required=true) int rows,
+			PlanPackageFromAppDTO dto)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		List<PlanPackageFromApp> list = new ArrayList<PlanPackageFromApp>();
+		
+		list = planPackageFromAppService.getPlanPackageFromAppList(page, rows, dto);
+		
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put("list", planPackageFromAppService.toDTOsOfPlanPackage(list));
 		
 		return map;
 	}
