@@ -28,7 +28,7 @@ public interface OuterInterfaceService
 	
 	public Map<String,Object> getFast3MissAnalysisData(String type,String selectnum,String groupnum,String tableName,String orderby,String endNumber,String ascOrDesc);
 
-	public String getKjNumber(String lotteryType,String province,String lotteryNumber,String issueNumber);
+	public String getKjNumber(String lotteryType,String province,String lotteryNumber,String issueNumber,String lotteryPlayId);
 	
 	/**
 	 * 获取最新一期开奖号码

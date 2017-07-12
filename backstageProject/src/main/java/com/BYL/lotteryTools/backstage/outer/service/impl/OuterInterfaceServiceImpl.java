@@ -758,16 +758,24 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	}
 
 	public String getKjNumber(String lotteryType, String province,
-			String lotteryNumber, String issueNumber) {
+			String lotteryNumber, String issueNumber,String lotteryPlayId) {
 
 		StringBuffer kjStr = new StringBuffer();
 		String execSql = "";
-		LotteryPlay lotteryPlay = lotteryPlayRepository.
-				getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(province, lotteryType, lotteryNumber);
+		LotteryPlay lotteryPlay = null;
+		if(null != lotteryPlayId &&!"".equals(lotteryPlayId))
+		{
+			lotteryPlay = lotteryPlayRepository.getLotteryPlayById(lotteryPlayId);
+		}
+		else
+		{
+			lotteryPlay = lotteryPlayRepository.
+					getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(province, lotteryType, lotteryNumber);
+		}
 		if("5".equals(lotteryPlay.getLotteryNumber()))
 		{
 			execSql = "SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 "
-					+ " FROM analysis."+lotteryPlay.getCorrespondingTable() +"   WHERE ISSUE_NUMBER = ? ";
+					+ " FROM analysis."+lotteryPlay.getCorrespondingTable() +"   WHERE ISSUE_NUMBER = ? limit 1";
 			Object[] queryParams = new Object[]{
 					issueNumber
 			};

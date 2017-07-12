@@ -781,15 +781,19 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		String lotteryType = json1.getString("lotteryType");
 		String lotteryNumber = json1.getString("lotteryNumber");
 		String provinceCode = json1.getString("provinceCode");
+		String provinceName = json1.getString("provinceName");
+		LotteryPlay lotteryPlay = lotteryPlayService.getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(provinceCode, lotteryType, lotteryNumber);
 		String stage = json1.getString("stage");
 		JSONArray planFromApps = json1.getJSONArray("list");//获取方案包内的方案
 		planPackageFromApp.setId(UUID.randomUUID().toString().replace("-", ""));
+		planPackageFromApp.setLotteryPlayId(lotteryPlay.getId());
 		planPackageFromApp.setSerialNum((countlist.size()+1)+"");
 		planPackageFromApp.setUserId(userId);
 		planPackageFromApp.setLotteryType(lotteryType);
 		planPackageFromApp.setProvinceCode(provinceCode);
 		planPackageFromApp.setLotteryNumber(lotteryNumber);
 		planPackageFromApp.setStage(stage);
+		planPackageFromApp.setProvinceName(provinceName);
 		planPackageFromApp.setIsDeleted(Constants.IS_NOT_DELETED);
 		planPackageFromApp.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		planPackageFromApp.setCreator("app");
@@ -856,7 +860,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		//获取开奖号码，将开奖号码放到返回值中
 		String kjNum = outerInterfaceService.
 				getKjNumber(planPackage.getLotteryType(), planPackage.getProvinceCode(),
-						planPackage.getLotteryNumber(), planPackage.getStage());
+						planPackage.getLotteryNumber(), planPackage.getStage(),planPackage.getLotteryPlayId());
 		for (PlanFromAppDTO planFromAppDTO : appDTOs) 
 		{
 			planFromAppDTO.setKjNum(kjNum);
@@ -891,11 +895,15 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		List<PlanPackageFromApp> list = new ArrayList<PlanPackageFromApp>();
 		
 		list = planPackageFromAppService.getPlanPackageFromAppList(page, rows, dto);
-		List<PlanPackageFromAppDTO> dtos =  planPackageFromAppService.toDTOsOfPlanPackage(list);
-		for (PlanPackageFromAppDTO planPackageFromAppDTO : dtos) {
-			planPackageFromAppDTO.setKjNumber(outerInterfaceService.
-					getKjNumber(planPackageFromAppDTO.getLotteryType(), planPackageFromAppDTO.getProvinceCode(),
-							planPackageFromAppDTO.getLotteryNumber(), planPackageFromAppDTO.getStage()));
+//		List<PlanPackageFromAppDTO> dtos =  planPackageFromAppService.toDTOsOfPlanPackage(list);
+		List<PlanPackageFromAppDTO> dtos =  new ArrayList<PlanPackageFromAppDTO>();
+		for (PlanPackageFromApp entity : list) {
+			PlanPackageFromAppDTO dto1 = new PlanPackageFromAppDTO();
+			dto1 = planPackageFromAppService.toDTOOfPlanPackage(entity);
+			dto1.setKjNumber(outerInterfaceService.
+					getKjNumber(entity.getLotteryType(), entity.getProvinceCode(),
+							entity.getLotteryNumber(), entity.getStage(),entity.getLotteryPlayId()));
+			dtos.add(dto1);
 		}
 		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.MESSAGE_STR, "获取成功");

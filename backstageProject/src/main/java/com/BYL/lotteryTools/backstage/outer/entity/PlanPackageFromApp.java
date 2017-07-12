@@ -34,6 +34,9 @@ public class PlanPackageFromApp extends BaseEntity
 	@Column(name="PROVINCE_CODE")
 	private String provinceCode;
 	
+	@Column(name="PROVINCE_NAME")
+	private String provinceName;
+	
 	@Column(name="LOTTERY_TYPE")
 	private String lotteryType;
 	
@@ -52,11 +55,30 @@ public class PlanPackageFromApp extends BaseEntity
 	@Column(name="COUNT")
 	private String count;
 	
+	@Column(name="LOTTERYPLAY_ID")
+	private String lotteryPlayId;
+	
 	@OneToMany(mappedBy = "planPackageFromApp", fetch = FetchType.LAZY)
 	private List<PlanFromApp> planFromApps;
 	
 	
 	
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getLotteryPlayId() {
+		return lotteryPlayId;
+	}
+
+	public void setLotteryPlayId(String lotteryPlayId) {
+		this.lotteryPlayId = lotteryPlayId;
+	}
 
 	public String getCost() {
 		return cost;

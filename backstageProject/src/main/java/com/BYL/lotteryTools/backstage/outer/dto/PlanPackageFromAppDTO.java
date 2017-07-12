@@ -11,6 +11,8 @@ public class PlanPackageFromAppDTO
 	
 	private String provinceCode;
 	
+	private String provinceName;
+	
 	private String lotteryType;
 	
 	private String lotteryNumber;//开奖号码个数
@@ -22,11 +24,30 @@ public class PlanPackageFromAppDTO
 	private String serialNum;
 	
 	
+	
 	private String cost;
 	
 	private String count;
 	
+	private String lotteryPlayId;
 	
+	
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getLotteryPlayId() {
+		return lotteryPlayId;
+	}
+
+	public void setLotteryPlayId(String lotteryPlayId) {
+		this.lotteryPlayId = lotteryPlayId;
+	}
 
 	public String getCost() {
 		return cost;
