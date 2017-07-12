@@ -2,6 +2,7 @@ package com.BYL.lotteryTools.backstage.outer.dto;
 
 
 
+
 public class PlanPackageFromAppDTO 
 {
 	private int id;
@@ -21,8 +22,27 @@ public class PlanPackageFromAppDTO
 	private String serialNum;
 	
 	
+	private String cost;
+	
+	private String count;
 	
 	
+
+	public String getCost() {
+		return cost;
+	}
+
+	public void setCost(String cost) {
+		this.cost = cost;
+	}
+
+	public String getCount() {
+		return count;
+	}
+
+	public void setCount(String count) {
+		this.count = count;
+	}
 
 	public String getSerialNum() {
 		return serialNum;

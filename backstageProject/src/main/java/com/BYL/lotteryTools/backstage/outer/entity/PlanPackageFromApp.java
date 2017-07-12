@@ -46,10 +46,33 @@ public class PlanPackageFromApp extends BaseEntity
 	@Column(name="KJ_NUMBER")
 	private String kjNumber;//开奖号
 	
+	@Column(name="COST")
+	private String cost;
+	
+	@Column(name="COUNT")
+	private String count;
+	
 	@OneToMany(mappedBy = "planPackageFromApp", fetch = FetchType.LAZY)
 	private List<PlanFromApp> planFromApps;
 	
 	
+	
+
+	public String getCost() {
+		return cost;
+	}
+
+	public void setCost(String cost) {
+		this.cost = cost;
+	}
+
+	public String getCount() {
+		return count;
+	}
+
+	public void setCount(String count) {
+		this.count = count;
+	}
 
 	public String getStage() {
 		return stage;

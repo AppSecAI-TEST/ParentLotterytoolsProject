@@ -797,7 +797,8 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		planPackageFromApp.setModify("app");
 		planPackageFromAppService.savePackage(planPackageFromApp);
 		
-		List<PlanFromApp> list = new ArrayList<PlanFromApp>();
+		int counts = 0;
+		int costs = 0;
 		for (int i=0;i<planFromApps.size();i++) {
 			JSONObject jobject = (JSONObject) planFromApps.get(i);
 			PlanFromApp planFromApp = new PlanFromApp();
@@ -820,9 +821,12 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			planFromApp.setModifyTime(new Timestamp(System.currentTimeMillis()));
 			planFromApp.setIsDeleted(Constants.IS_NOT_DELETED);
 			planPackageFromAppService.savePlan(planFromApp);
-			list.add(planFromApp);
+			costs += Integer.parseInt(planFromApp.getCost());
+			counts += Integer.parseInt(planFromApp.getCount());
 		}
-		
+		planPackageFromApp.setCost(costs+"");
+		planPackageFromApp.setCount(counts+"");
+		planPackageFromAppService.updatePackage(planPackageFromApp);
 		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
 		map.put(Constants.MESSAGE_STR, "保存成功");
 		
