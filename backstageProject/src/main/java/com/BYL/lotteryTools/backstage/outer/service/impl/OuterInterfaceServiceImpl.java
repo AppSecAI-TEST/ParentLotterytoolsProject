@@ -1,12 +1,21 @@
 package com.BYL.lotteryTools.backstage.outer.service.impl;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +39,8 @@ import com.BYL.lotteryTools.backstage.outer.repository.SrcthreedataDTORepository
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
 import com.BYL.lotteryTools.backstage.user.service.ProvinceService;
+import com.BYL.lotteryTools.common.util.Constants;
+import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("outerInterfaceService")
@@ -50,6 +61,9 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	
 	@Autowired
 	private Fast3WithCycleAnalysisRepository fast3WithCycleAnalysisRepository;
+	
+	@Autowired
+	private EntityManager entityManager;
 	
 	@Autowired
 	private ProvinceService provinceService;
@@ -800,13 +814,93 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		
 		return kjStr.toString();
 	}
+
+	public Map<String, Object> getNewtesKjNum(String lotteryType,
+			String lotteryNumber, String provinceCode) 
+	{
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> kjMap = new HashMap<String, Object>();
+		String execSql = "";
+		LotteryPlay lotteryPlay = lotteryPlayRepository.
+				getLotteryPlayByProvinceAndLotteryTypeAndLotteryNumber(provinceCode, lotteryType, lotteryNumber);
+		if(null != lotteryPlay &&"5".equals(lotteryPlay.getLotteryNumber()))
+		{
+			execSql = "SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,CREATE_TIME "
+					+ " FROM analysis."+lotteryPlay.getCorrespondingTable() +" order by ISSUE_NUMBER desc limit 1  ";
+			Query query =  entityManager.createNativeQuery(execSql);
+			List<Object> result = query.getResultList();
+			Object[] obj= (Object[]) result.get(0);
+			kjMap.put("currentIssueNumber", obj[1]);
+			kjMap.put("nextIssueNumber", getNextIssueNumber((String) obj[1], lotteryPlay.getLineCount()));
+//			kjMap.put("NO1", obj[2]);
+//			kjMap.put("NO2", obj[3]);
+//			kjMap.put("NO3", obj[4]);
+//			kjMap.put("NO4", obj[5]);
+//			kjMap.put("NO5", obj[6]);
+			kjMap.put("lastCreateTime", DateUtil.formatTimestampToString((Timestamp) obj[7]));
+		}
+		else
+			if(null != lotteryPlay &&"3".equals(lotteryPlay.getLotteryNumber()))
+			{
+				execSql = "SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,CREATE_TIME "
+						+ " FROM analysis."+lotteryPlay.getCorrespondingTable() +"  order by ISSUE_NUMBER desc LIMIT 1 ";
+				Query query =  entityManager.createNativeQuery(execSql);
+				List<Object> result = query.getResultList();
+				Object[] obj= (Object[]) result.get(0);
+				kjMap.put("currentIssueNumber", obj[1]);
+				kjMap.put("nextIssueNumber", getNextIssueNumber((String) obj[1], lotteryPlay.getLineCount()));
+//				kjMap.put("NO1", obj[2]);
+//				kjMap.put("NO2", obj[3]);
+//				kjMap.put("NO3", obj[4]);
+				kjMap.put("lastCreateTime", DateUtil.formatTimestampToString((Timestamp) obj[5]));
+			}
+		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		map.put(Constants.MESSAGE_STR, "获取成功");
+		map.put("kjNum", kjMap);
+		return map;
+	}
 	
 	
 	
+	 public static String getNextIssueNumber(String issueNumber,String lineCount)
+	  {
+	    String nextIssueNumber = null;
+	    String issueCode = issueNumber.substring(issueNumber.length() - 2, issueNumber.length());
+	    if (issueCode.equals(lineCount))
+	    {
+	      nextIssueNumber = getNextDay(issueNumber.substring(0, 6)) + "001";//9位开奖号码是连接001,8位开奖号码是连接01
+	    }
+	    else
+	    {
+	      int codeInt = Integer.parseInt(issueCode) + 1;
+	      if (codeInt < 10) {
+	        nextIssueNumber = issueNumber.substring(0, issueNumber.length() - 2) + "0" + codeInt;
+	      } else {
+	        nextIssueNumber = issueNumber.substring(0, issueNumber.length() - 2) + codeInt;
+	      }
+	    }
+	    return nextIssueNumber;
+	  }
 	
 	
-	
-	
+	 public static String getNextDay(String day)
+	  {
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
+	    Calendar calendar = new GregorianCalendar();
+	    String dateString = null;
+	      Date date;
+		try {
+			date = formatter.parse(day);
+			calendar.setTime(date);
+		      calendar.add(5, 1);
+		      date = calendar.getTime();
+		      dateString = formatter.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	      
+	    return dateString;
+	  }
 	
 	
 	

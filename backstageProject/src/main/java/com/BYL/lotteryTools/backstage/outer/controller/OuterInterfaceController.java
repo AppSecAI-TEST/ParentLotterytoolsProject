@@ -900,6 +900,32 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		return map;
 	}
 	
+	/**
+	 * 获取当前玩法的最新一期开奖号码
+	* @Title: getNewtesKjNum 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryType
+	* @param @param lotteryNumber
+	* @param @param provinceCode
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年7月12日 下午1:12:58 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/getNewtesKjNum",method=RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getNewtesKjNum(
+			@RequestParam(value="lotteryType",required=true) String lotteryType,
+			@RequestParam(value="lotteryNumber",required=true) String lotteryNumber,
+			@RequestParam(value="provinceCode",required=true) String provinceCode)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map = outerInterfaceService.getNewtesKjNum(lotteryType, lotteryNumber, provinceCode);
+		
+		return map;
+	}
+	
 	
 	/**
 	 * 根据省份表生成安卓需要的地区结构文件
