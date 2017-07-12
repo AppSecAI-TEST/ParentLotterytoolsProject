@@ -72,6 +72,11 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 		
  	}
 	
+//	@Scheduled(cron = "0 0 23 * * ? ") //每天pm11:00执行清理，保留当前用户一周内的方案
+    public void cleanPlanFromApp() 
+ 	{ 
+		
+ 	}
 	
 
 	//判断当前维护的所有高频彩种是否开出新一期，开出后进行推送
