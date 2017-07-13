@@ -19,6 +19,7 @@ import com.BYL.lotteryTools.backstage.outer.repository.PlanFromAppRepository;
 import com.BYL.lotteryTools.backstage.outer.repository.PlanPackageFromAppRepository;
 import com.BYL.lotteryTools.backstage.outer.service.PlanPackageFromAppService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
+import com.BYL.lotteryTools.common.util.DateUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("/planPackageFromAppService")
@@ -146,6 +147,12 @@ public class PlanPackageFromAppServiceImpl implements PlanPackageFromAppService 
 		{
 			try {
 				BeanUtil.copyBeanProperties(dto, entity);
+				
+				if(null != entity.getCreateTime())
+				{
+					dto.setCreateTimeStr(DateUtil.formatDate(entity.getCreateTime(), DateUtil.FULL_DATE_FORMAT));
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

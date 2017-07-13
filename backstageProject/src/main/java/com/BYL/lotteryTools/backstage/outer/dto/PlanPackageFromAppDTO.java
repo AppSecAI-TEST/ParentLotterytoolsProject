@@ -31,7 +31,19 @@ public class PlanPackageFromAppDTO
 	
 	private String lotteryPlayId;
 	
+	private String createTimeStr;
 	
+	
+	
+	
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
 
 	public String getProvinceName() {
 		return provinceName;
