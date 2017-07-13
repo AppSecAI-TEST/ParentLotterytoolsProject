@@ -864,6 +864,8 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		for (PlanFromAppDTO planFromAppDTO : appDTOs) 
 		{
 			planFromAppDTO.setKjNum(kjNum);
+			planFromAppDTO.setLotteryNumber(planPackage.getLotteryNumber());
+			planFromAppDTO.setLotteryType(planPackage.getLotteryType());
 		}
 		
 		map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);

@@ -27,7 +27,29 @@ public class PlanFromAppDTO
 	
 	private String kjNum;
 	
+	private String lotteryType;
 	
+	private String lotteryNumber;
+	
+	
+	
+	
+
+	public String getLotteryType() {
+		return lotteryType;
+	}
+
+	public void setLotteryType(String lotteryType) {
+		this.lotteryType = lotteryType;
+	}
+
+	public String getLotteryNumber() {
+		return lotteryNumber;
+	}
+
+	public void setLotteryNumber(String lotteryNumber) {
+		this.lotteryNumber = lotteryNumber;
+	}
 
 	public String getKjNum() {
 		return kjNum;
