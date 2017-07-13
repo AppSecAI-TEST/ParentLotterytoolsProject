@@ -1,11 +1,13 @@
 package com.BYL.lotteryTools.backstage.outer.dto;
 
+import java.util.List;
+
 
 
 
 public class PlanPackageFromAppDTO 
 {
-	private int id;
+	private String id;
     
 	private String userId;
 	
@@ -33,9 +35,19 @@ public class PlanPackageFromAppDTO
 	
 	private String createTimeStr;
 	
+	private List<PlanFromAppDTO> planFromAppDtos;
 	
 	
 	
+	
+
+	public List<PlanFromAppDTO> getPlanFromAppDtos() {
+		return planFromAppDtos;
+	}
+
+	public void setPlanFromAppDtos(List<PlanFromAppDTO> planFromAppDtos) {
+		this.planFromAppDtos = planFromAppDtos;
+	}
 
 	public String getCreateTimeStr() {
 		return createTimeStr;
@@ -93,11 +105,12 @@ public class PlanPackageFromAppDTO
 		this.stage = stage;
 	}
 
-	public int getId() {
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

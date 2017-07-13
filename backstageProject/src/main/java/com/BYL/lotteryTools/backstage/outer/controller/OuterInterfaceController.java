@@ -900,6 +900,7 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 		for (PlanPackageFromApp entity : list) {
 			PlanPackageFromAppDTO dto1 = new PlanPackageFromAppDTO();
 			dto1 = planPackageFromAppService.toDTOOfPlanPackage(entity);
+			dto1.setPlanFromAppDtos(planPackageFromAppService.toDTOsOfPlanFromApp(entity.getPlanFromApps()));
 			dto1.setKjNumber(outerInterfaceService.
 					getKjNumber(entity.getLotteryType(), entity.getProvinceCode(),
 							entity.getLotteryNumber(), entity.getStage(),entity.getLotteryPlayId()));
