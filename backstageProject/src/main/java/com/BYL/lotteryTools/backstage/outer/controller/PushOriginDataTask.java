@@ -66,7 +66,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 	
 	//需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate  
 	public void initLotteryPlays() 
-	{  
+	{//添加新彩种后需要重启服务器后才会初始化到变量中  
 		lotteryPlays = new ArrayList<LotteryPlay>();
 		lotteryPlays = lotteryPlayService.getAllLotteryPlays();
 		
