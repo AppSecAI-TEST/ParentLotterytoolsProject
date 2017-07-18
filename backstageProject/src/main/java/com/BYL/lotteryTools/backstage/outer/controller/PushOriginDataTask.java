@@ -64,7 +64,8 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 	
 	private Map<String,String> issueMap = new HashMap<String, String>();//最大期号map
 	
-	//需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate  
+	//需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate 
+	@Scheduled(cron = "0 0 0/1 * * ? ")//每小时更新一次
 	public void initLotteryPlays() 
 	{//添加新彩种后需要重启服务器后才会初始化到变量中  
 		lotteryPlays = new ArrayList<LotteryPlay>();
