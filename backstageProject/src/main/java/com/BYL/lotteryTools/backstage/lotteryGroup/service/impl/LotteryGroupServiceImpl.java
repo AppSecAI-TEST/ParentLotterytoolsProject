@@ -153,12 +153,15 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 							getLotteryPlayByProvinceAndLotteryType(entity.getProvince(), entity.getLotteryType());
 					String lnumArr[] = new String[gaopin.size()];
 					String lplayNameArr[] = new String[gaopin.size()];
+					String lplayIdArr[] = new String[gaopin.size()];
 					for (int i=0;i<gaopin.size();i++) {
 						lnumArr[i] = gaopin.get(i).getLotteryNumber();
 						lplayNameArr[i] = gaopin.get(i).getName();
+						lplayIdArr[i] = gaopin.get(i).getId();
 					}
 					dto.setLotteryNumber(lnumArr);
 					dto.setGaoPinLotteryPlay(lplayNameArr);
+					dto.setGaoPinLotteryPlayId(lplayIdArr);
 				}
 				
 				if(null != entity.getCity() && !Constants.CITY_ALL.equals(entity.getCity()))

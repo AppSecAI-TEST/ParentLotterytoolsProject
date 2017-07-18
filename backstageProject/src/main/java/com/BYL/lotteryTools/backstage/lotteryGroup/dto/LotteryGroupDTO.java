@@ -78,12 +78,21 @@ public class LotteryGroupDTO {
 	private String[] lotteryNumber;//高频彩种开奖号码个数
 	
 	private String[] gaoPinLotteryPlay;//高频彩种玩法名称
+	private String[] gaoPinLotteryPlayId;//高频彩种玩法id数组
 	
 	private List<LotterybuyerOrExpertDTO> userList;
 	
 	
 	
 	
+
+	public String[] getGaoPinLotteryPlayId() {
+		return gaoPinLotteryPlayId;
+	}
+
+	public void setGaoPinLotteryPlayId(String[] gaoPinLotteryPlayId) {
+		this.gaoPinLotteryPlayId = gaoPinLotteryPlayId;
+	}
 
 	public List<LotterybuyerOrExpertDTO> getUserList() {
 		return userList;
