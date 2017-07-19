@@ -383,6 +383,8 @@ public class LotterybuyerOrExpertServiceImpl implements
 		if(null != card)
 		{//已经有卡的，卡数加1
 			card.setNotUseCount(card.getNotUseCount()+addNum);
+			card.setModifyTime(new Timestamp(System.currentTimeMillis()));
+			this.updateRelaLBEUserAndLtcard(card);
 		}
 		else
 		{
