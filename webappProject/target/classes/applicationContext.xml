@@ -45,8 +45,10 @@
                     <entry key="hibernate.max_fetch_depth" value="2" />
                     <entry key="hibernate.generate_statistics" value="true" />
                     <entry key="hibernate.bytecode.use_reflection_optimizer" value="true" />
-                    <entry key="hibernate.cache.use_second_level_cache" value="false" />
-                    <entry key="hibernate.cache.use_query_cache" value="false" />
+                    <entry key="hibernate.cache.use_second_level_cache" value="true" /><!-- 配置是否使用二级缓存 -->
+                    <entry key="hibernate.cache.use_query_cache" value="true" /><!-- 配置是否使用查询缓存 ,使用：不经常修改的数据，且经常被以实体查询的-->
+                    <entry key="hibernate.cache.provider_configuration" value="classpath:ehcache.xml"></entry><!-- 指定ehcache配置文件位置 -->
+                    <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"></entry>
                     <entry key="hibernate.hbm2ddl.auto" value="update" /><!-- 这个标签是用来基于你配置好了实体间的关系，然后可以自动生成表的 -->
                 </map>
             </property>
@@ -67,11 +69,11 @@
             <property name="url">
                 <!-- <value>jdbc:mysql://182.92.153.8:3306/echart4?useUnicode=true&amp;amp;characterEncoding=utf-8</value> -->
                 <value>jdbc:mysql://123.56.231.50:3306/lotteryTools?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
-                <!-- <value>jdbc:mysql://123.56.231.50:3306/echart4?useUnicode=true&amp;amp;characterEncoding=utf-8</value>
-            -->
+               <!--  <value>jdbc:mysql://36.7.190.20:3306/lotteryTools?useUnicode=true&amp;amp;characterEncoding=utf-8</value> -->
+           
 		 </property>
-            <!-- <property name="username" value="root" />
-            <property name="password" value="root" /> -->
+           <!--  <property name="username" value="echart4" />
+            <property name="password" value="34banNA$#" /> -->
             <property name="username" value="analysis" />
             <property name="password" value="34songJIA$#" />
 			<!--  <property name="username" value="root" />
@@ -89,7 +91,7 @@
             <property name="removeAbandoned" value="true"/>
 
             <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
-            <property name="removeAbandonedTimeout" value="10000"/>
+            <property name="removeAbandonedTimeout" value="150"/>
 
             <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
             <property name="maxWait" value="3000"/>
@@ -129,7 +131,7 @@
             <property name="removeAbandoned" value="true"/>
 
             <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
-            <property name="removeAbandonedTimeout" value="10000"/>
+            <property name="removeAbandonedTimeout" value="150"/>
 
             <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
             <property name="maxWait" value="3000"/>

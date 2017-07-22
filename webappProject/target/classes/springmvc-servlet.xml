@@ -71,7 +71,38 @@
         <property name="maxUploadSize" value="10485760000"></property>  
         <property name="maxInMemorySize" value="40960"></property>  
    </bean>   -->
-   
-	
+   <!-- 配置拦截器，先配置 mvc:mapping，后配置mvc:exclude-mapping，否则报错-->
+	<mvc:interceptors>  
+	    <mvc:interceptor>  
+	        <mvc:mapping path="/outer/*" />
+	        <mvc:mapping path="/outerLGroup/*" />  
+	        <mvc:mapping path="/outerLbuyerOrexpert/getUserByToken"/>
+	        <mvc:mapping path="/outerLbuyerOrexpert/updatePassword"/>
+	        <mvc:mapping path="/outerLbuyerOrexpert/checkPassword"/>   
+	        <mvc:mapping path="/outerLbuyerOrexpert/updateUser"/> 
+	        <mvc:mapping path="/outerLotteryStation/*" /> 
+	        
+	        
+	        <mvc:exclude-mapping path="/outer/getLotteryList*"/> 
+	        <mvc:exclude-mapping path="/outer/getLotteryPlayListOfProvince*"/>
+	        <mvc:exclude-mapping path="/outer/getProvinceOfZST*"/>  
+	        <mvc:exclude-mapping path="/outer/getPredictiontypeOfProvince*"/>
+	        <mvc:exclude-mapping path="/outer/loggingForApp*"/><!-- 日志记录接口不进行token验证 -->
+	       <!--  <mvc:exclude-mapping path="/outer/getDipinLotteryList*"/>test open -->
+	        
+	        <mvc:exclude-mapping path="/outerLGroup/getGroupByGroupnumber*"/>    
+	        <mvc:exclude-mapping path="/outerLGroup/updateNumberOfCardForUser*"/>
+	        <mvc:exclude-mapping path="/outerLGroup/getAllLotteryChatCardsOfUser*"/>    
+	        <mvc:exclude-mapping path="/outerLGroup/updateGroupNoticeOfGroup*"/>    
+	        <mvc:exclude-mapping path="/outerLGroup/deleteGroupNotice*"/>    
+	        <mvc:exclude-mapping path="/outerLGroup/getGroupNoticeList*"/> 
+	        <mvc:exclude-mapping path="/outerLGroup/getDetailLotteryGroupNotice*"/>
+	        
+	        
+	        
+	        <bean class="com.BYL.lotteryTools.backstage.outer.controller.APIInterceptor" >
+	        </bean>  
+	    </mvc:interceptor>  
+	</mvc:interceptors>
      
 </beans>
