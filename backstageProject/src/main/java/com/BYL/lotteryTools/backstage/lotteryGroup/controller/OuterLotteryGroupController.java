@@ -1034,7 +1034,16 @@ public class OuterLotteryGroupController extends GlobalOuterExceptionHandler
 			List<LotteryGroup> list = lotteryGroupService.getLotteryGroupByGroupOwnerId(user.getId());
 			List<LotteryGroupDTO> dtos = new ArrayList<LotteryGroupDTO>();
 			for (LotteryGroup entity : list) {
-				dtos.add(lotteryGroupService.toDTO(entity));
+				//获取当前群已经加入的人
+				List<RelaBindOfLbuyerorexpertAndGroup> usersOfGroup = entity.getRelaBindOfLbuyerorexpertAndGroups();
+				List<LotterybuyerOrExpertDTO> usersDtos = new ArrayList<LotterybuyerOrExpertDTO>();
+				for (RelaBindOfLbuyerorexpertAndGroup rela : usersOfGroup) 
+				{
+					usersDtos.add(lotterybuyerOrExpertService.toDTO(rela.getLotterybuyerOrExpert()));
+				}
+				LotteryGroupDTO dto = lotteryGroupService.toDTO(entity);
+				dto.setUserList(usersDtos);
+				dtos.add(dto);
 			}
 			
 			map.put(Constants.FLAG_STR, true);
