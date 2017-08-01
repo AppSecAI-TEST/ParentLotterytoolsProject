@@ -491,7 +491,7 @@ public class LotterybuyerOrExpertServiceImpl implements
 		{
 			sessionYanzhengma = rongyunImService.verifyCode(sessionId, yanzhengma);
 			
-			if(sessionYanzhengma.getCode().toString().equals(Constants.SUCCESS_CODE) || sessionYanzhengma.getCode() == 1014)//1014:短信验证码已验证过，再次验证失效
+			if(sessionYanzhengma.getCode().toString().equals(Constants.SUCCESS_CODE)&&sessionYanzhengma.getSuccess())//|| sessionYanzhengma.getCode() == 1014，1014:短信验证码已验证过，再次验证失效
 			{
 				result.put(Constants.FLAG_STR, true);
 				result.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
