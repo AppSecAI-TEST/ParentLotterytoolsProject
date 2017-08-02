@@ -96,6 +96,7 @@ public class LotteryStationServiceImpl implements LotteryStationService {
 				{//放置站主用户id
 					dto.setUserId(entity.getLotteryBuyerOrExpert().getId());
 					dto.setStationOwner(entity.getLotteryBuyerOrExpert().getName());
+					dto.setTelephone(entity.getLotteryBuyerOrExpert().getTelephone());
 				}
 				
 				if(null != entity.getApprovalStatus())
