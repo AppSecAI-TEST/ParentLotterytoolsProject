@@ -42,7 +42,7 @@ function initDatagrid()
 		            	}
 		            	return lotteryTypeName;  
 		            }  },
-				{field:'isBylStation',title:'佰艺霖用户',width:'8%',align:'center',
+				{field:'isBylStation',title:'佰艺霖用户',width:'6%',align:'center',
 			            formatter:function(value,row,index){  
 			            	var isbyl ='';
 			            	switch(value)
@@ -54,7 +54,8 @@ function initDatagrid()
 			            }  },
 				{field:'approvalStatusName',title:'审批状态',width:'8%',align:'center'},
 				{field:'statusName',title:'彩票站状态',width:'8%',align:'center'},
-				{field:'code',title:'站主',width:'8%',align:'center'},
+				{field:'code',title:'站主',width:'6%',align:'center'},
+				{field:'telephone',title:'站主手机',width:'8%',align:'center'},
 				{field:'createTimeStr',title:'创建时间',width:'15%',align:'center'},
 				{field:'opt',title:'操作',width:'15%',align:'center',  
 			            formatter:function(value,row,index){  
