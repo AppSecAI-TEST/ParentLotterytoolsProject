@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.SysMessage;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
@@ -300,7 +302,8 @@ public class LotteryStationController
 			{//审核通过生成邀请码
 				lotteryStation.setInviteCode(lotteryStation.getStationNumber()+this.generateInviteCode());
 				
-				if("1".equals(lotteryStation.getIsBylStation()))
+				//佰艺霖用户给一张建群卡
+				/*if("1".equals(lotteryStation.getIsBylStation()))
 				{
 					LotterybuyerOrExpert owner = lotteryStation.getLotteryBuyerOrExpert();
 					//TODO:认证成功后，赠一张建群卡
@@ -310,7 +313,25 @@ public class LotteryStationController
 						if("2".equals(lotteryStation.getLotteryType()))
 							lotterybuyerOrExpertService.updateCardsOfUser(owner, LotteryStationController.CREATE_FUCAI_GROUP_CARD_ID,1);//彩种类型和建群卡id相同
 					
-				}
+				}*/
+				
+				//审核通过后，新建群,头像是上传站点信息时
+				 /*LotteryGroupDTO groupDTO = new LotteryGroupDTO();
+				 groupDTO.setId(UUID.randomUUID().toString());
+				 groupDTO.setName(lotteryStation.getStationName()+"奖聊群");
+				 groupDTO.setProvince(lotteryStation.getProvince());
+				 groupDTO.setCity(lotteryStation.getCity());
+				 groupDTO.setLotteryType(lotteryStation.getLotteryType());
+				 groupDTO.setDetailLotteryType(lotteryStation.getLotteryType());
+				 groupDTO.setFabuKj(1);
+				 groupDTO.setFabuZs(1);
+				 groupDTO.setSsKjChaxun(0);
+				 groupDTO.setSsYlChaxun(0);
+				 groupDTO.setSsZjChaxun(0);
+				 groupDTO.setNoticeReview(0);
+				 groupDTO.setJoinType(0);//0为自由加入
+				 groupDTO.setOwnerId(lotteryStation.getLotteryBuyerOrExpert().getId());
+				 lotteryGroupService.saveOrUpdateGroup(groupDTO, request);*/
 				
 				//TODO:审批成功后，将站主用户加入到中心群中
 				boolean flag  = lotteryGroupService.joinInCityCenterGroup

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.BYL.lotteryTools.backstage.lotteryGroup.controller.OuterLotteryGroupController;
 import com.BYL.lotteryTools.backstage.lotteryGroup.dto.LotteryGroupDTO;
+import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LGroupLevel;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroup;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.LotteryGroupNotice;
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaApplyOfLbuyerorexpertAndGroup;
@@ -30,6 +31,7 @@ import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaBindOfLbuyerorexpe
 import com.BYL.lotteryTools.backstage.lotteryGroup.entity.RelaGroupUpLevelRecord;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupNoticeRepository;
 import com.BYL.lotteryTools.backstage.lotteryGroup.repository.LotteryGroupRespository;
+import com.BYL.lotteryTools.backstage.lotteryGroup.service.LGroupLevelService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.LotteryGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaApplybuyerAndGroupService;
 import com.BYL.lotteryTools.backstage.lotteryGroup.service.RelaBindbuyerAndGroupService;
@@ -50,6 +52,7 @@ import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.BeanUtil;
 import com.BYL.lotteryTools.common.util.Constants;
 import com.BYL.lotteryTools.common.util.DateUtil;
+import com.BYL.lotteryTools.common.util.QRCodeUtil;
 import com.BYL.lotteryTools.common.util.QueryResult;
 
 @Service("lotteryGroupService")
@@ -90,6 +93,9 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 	
 	@Autowired
 	private LotteryPlayRepository lotteryPlayRepository;
+	
+	@Autowired
+	private LGroupLevelService lGroupLevelService;
 	
 	
 	public List<LotteryGroup> findAll()
@@ -613,6 +619,234 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		resultBean.setResultCode(Constants.SUCCESS_CODE);
 		resultBean.setMessage("退群成功");
 		return resultBean;
+	}
+
+	public ResultBean saveOrUpdateGroup(LotteryGroupDTO dto,HttpServletRequest request) 
+	{
+		ResultBean bean = new ResultBean();
+		LotteryGroup entity = this.getLotteryGroupById(dto.getId());
+		if(null != entity)
+		{//修改群信息
+			try
+			{
+				String lastName = entity.getName();
+				String lastOwnerId = entity.getLotteryBuyerOrExpert().getId();
+				
+				entity.setName(dto.getName());
+				entity.setGroupLevel(dto.getGroupLevel());
+				entity.setFabuKj(dto.getFabuKj());
+				entity.setFabuZs(dto.getFabuZs());
+				entity.setIntroduction(dto.getIntroduction());
+//				entity.setJoinType(dto.getJoinType());//前端没有修改加入方式的字段
+				entity.setLotteryType(dto.getLotteryType());
+				if(!"4".equals(dto.getLotteryType()))
+				{
+					entity.setDetailLotteryType(dto.getLotteryType());
+				}
+				entity.setProvince(dto.getProvince());
+				entity.setCity(dto.getCity());
+				entity.setSsKjChaxun(dto.getSsKjChaxun());
+				entity.setSsYlChaxun(dto.getSsYlChaxun());
+				entity.setSsZjChaxun(dto.getSsZjChaxun());
+				entity.setNoticeReview(dto.getNoticeReview());
+				if(!lastOwnerId.equals(dto.getOwnerId()))
+				{
+					LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
+							getLotterybuyerOrExpertById(dto.getOwnerId());
+					entity.setLotteryBuyerOrExpert(owner);//更改群与群主的关系
+					
+					//2017-5-16ADD：建立群主和群的加入关系
+					RelaBindOfLbuyerorexpertAndGroup rela 
+						= relaBindbuyerAndGroupService.getRelaBindOfLbuyerorexpertAndGroupByUserIdAndGroupId(lastOwnerId, dto.getId());
+					if(null != rela)
+						relaBindbuyerAndGroupService.delete(rela);
+					
+					rela = new RelaBindOfLbuyerorexpertAndGroup();
+					rela.setIsDeleted(Constants.IS_NOT_DELETED);
+					rela.setIsReceive("1");
+					rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+					rela.setIsGroupOwner("1");//群主
+					rela.setLotterybuyerOrExpert(owner);
+					rela.setLotteryGroup(entity);
+					rela.setCreator(dto.getOwnerId());
+					rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+					rela.setModify(dto.getOwnerId());
+					rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
+					//保存关联
+					relaBindbuyerAndGroupService.save(rela);
+				}
+				
+				if(!lastName.equals(entity.getName()))
+				{
+					String logo = null;//内嵌logo图片，若群头像不为空，则嵌入群头像
+					String uploadPath = "upload";
+					String path = request.getSession().getServletContext().getRealPath(uploadPath); 
+					Uploadfile uploadfile = uploadfileService.getUploadfileByNewsUuid(entity.getTouXiang());
+					if(null != uploadfile)
+						logo = path+File.separator+uploadfile.getUploadRealName();
+					
+					String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
+					entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
+				}
+				this.update(entity);
+				bean.setFlag(true);
+				bean.setMessage("修改成功");
+			}
+			catch(Exception e)
+			{
+				LOG.error("error:", e);
+				bean.setMessage("修改失败");
+				bean.setFlag(false);
+			}
+		}
+		else
+		{
+			//在服务器创建群信息
+			try 
+			{
+				entity = new LotteryGroup();
+				BeanUtil.copyBeanProperties(entity, dto);
+				entity.setId(UUID.randomUUID().toString());//生成id
+				
+				if(!"4".equals(dto.getLotteryType()))
+				{
+					entity.setDetailLotteryType(dto.getLotteryType());
+				}
+				
+				entity.setGroupNumber(this.generateGroupNumber());//放置群号
+				LotterybuyerOrExpert owner = lotterybuyerOrExpertService.
+						getLotterybuyerOrExpertById(dto.getOwnerId());
+				entity.setLotteryBuyerOrExpert(owner);//放置群与群主的关系
+				
+				//处理群头像
+				Uploadfile uploadfile =null;
+				if(null != dto.getTouXiangImg())
+				{
+					String newsUuid = UUID.randomUUID().toString();
+					try {
+							 uploadfile = uploadfileService.uploadFiles(dto.getTouXiangImg(),request,newsUuid);
+						
+					} catch (Exception e) {
+						LOG.error("error:", e);
+					}
+					if(null != uploadfile)
+						entity.setTouXiang(uploadfile.getNewsUuid());
+				}
+				else
+				{
+					if(null != dto.getTouXiang() && !"".equals(dto.getTouXiang()))
+					{
+						uploadfile = uploadfileService.getUploadfileByNewsUuid(dto.getTouXiang());
+						
+					}
+				}
+				
+				//TODO:创建群的同时创建群的机器人,如果区域彩种机器人已经存在，或者机器人加群数以及饱和，则要再创建机器人
+				String robotUserId = lotterybuyerOrExpertService.
+						createRobotUser(dto.getProvince(), dto.getCity(), dto.getLotteryType(),request);
+				
+				entity.setGroupRobotID(robotUserId);
+				
+				
+				//TODO:放置群等级
+				String level1Id = "1";//等级1群的等级id
+				entity.setMemberCount(20);//以及群
+				entity.setGroupLevel(level1Id);
+				
+				entity.setIsDeleted(Constants.IS_NOT_DELETED);
+				entity.setCreator(dto.getOwnerId());
+				entity.setCreateTime(new Timestamp((System.currentTimeMillis())));
+				entity.setModify(dto.getOwnerId());
+				entity.setModifyTime(new Timestamp((System.currentTimeMillis())));
+				
+				//生成群二维码
+				String logo = null;//内嵌logo图片，若群头像不为空，则嵌入群头像
+				String uploadPath = "upload";
+				String path = request.getSession().getServletContext().getRealPath(uploadPath); 
+				if(null != uploadfile)
+					logo = path+File.separator+uploadfile.getUploadRealName();
+				
+				String fileName = QRCodeUtil.encode(entity.getGroupNumber(), logo, path, true,entity.getGroupNumber());
+				entity.setGroupQRImg(File.separator+uploadPath+File.separator+fileName);
+				
+				//保存群信息
+				this.save(entity);
+				
+				//放置群升级记录表数据
+				RelaGroupUpLevelRecord level = new RelaGroupUpLevelRecord();
+				LGroupLevel L1 = lGroupLevelService.getLGroupLevelByID(level1Id);//获取L1等级的实体数据
+				level.setAfterLevel(L1);//一级群
+				level.setBeforeLevel(null);
+				level.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				level.setCreator(entity.getId());
+				level.setIsDeleted(Constants.IS_NOT_DELETED);
+				level.setLotteryGroup(entity);
+				level.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				level.setModify(entity.getId());
+				level.setOperator(dto.getOwnerId());
+				relaGroupUpLevelService.save(level);//保存群等级记录表数据
+				
+				//2017-5-11ADD：建立群主和群的加入关系
+				RelaBindOfLbuyerorexpertAndGroup rela = new RelaBindOfLbuyerorexpertAndGroup();
+				rela.setIsDeleted(Constants.IS_NOT_DELETED);
+				rela.setIsReceive("1");
+				rela.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				rela.setIsGroupOwner("1");//群主
+				rela.setLotterybuyerOrExpert(owner);
+				rela.setLotteryGroup(entity);
+				rela.setCreator(dto.getOwnerId());
+				rela.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				rela.setModify(dto.getOwnerId());
+				rela.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				//保存关联
+				relaBindbuyerAndGroupService.save(rela);
+				
+				//创建机器人和群的关联关系
+				LotterybuyerOrExpert robot = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(robotUserId);
+				RelaBindOfLbuyerorexpertAndGroup relaRobot = new RelaBindOfLbuyerorexpertAndGroup();
+				relaRobot.setIsDeleted(Constants.IS_NOT_DELETED);
+				relaRobot.setIsReceive("1");
+				relaRobot.setIsTop("0");//是否置顶1：置顶 0：不置顶
+				relaRobot.setIsGroupOwner("0");//群主
+				relaRobot.setLotterybuyerOrExpert(robot);
+				relaRobot.setLotteryGroup(entity);
+				relaRobot.setCreator(robotUserId);
+				relaRobot.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				relaRobot.setModify(robotUserId);
+				relaRobot.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				//保存关联
+				relaBindbuyerAndGroupService.save(relaRobot);
+				
+				//在融云创建群信息
+				String[] joinUserId = {dto.getOwnerId(),robotUserId};//群主id加入要加入群的数组中,机器人加入群组中
+				CodeSuccessResult result = rongyunImService.createGroup(joinUserId, entity.getId(), entity.getName());
+				
+				if(!OuterLotteryGroupController.SUCCESS_CODE.equals(result.getCode().toString()))
+				{//若创建失败
+					bean.setMessage( result.getErrorMessage());//创建失败返回融云端群创建失败信息
+					LOG.error("createGroup error:", result.getErrorMessage());
+					bean.setFlag(false);
+				}
+				else
+				{
+					bean.setFlag(true);
+					bean.setMessage("创建成功");
+					
+					//创建成功后，将当前群主的建群卡个数减1
+				}
+				
+				
+				
+				
+			} catch (Exception e) 
+			{
+				LOG.error("error:", e);
+				bean.setMessage("创建失败");
+				bean.setFlag(false);
+			}
+			
+		}
+		return bean;
 	}
 	
 }

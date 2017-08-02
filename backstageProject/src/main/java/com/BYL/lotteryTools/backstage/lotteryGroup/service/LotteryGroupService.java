@@ -73,4 +73,6 @@ public interface LotteryGroupService {
 			HttpServletRequest request,HttpSession httpSession);
 	
 	public List<LotteryGroup> getLotteryGroupByGroupOwnerId(String groupOwnerId);
+	
+	public ResultBean saveOrUpdateGroup(LotteryGroupDTO dto,HttpServletRequest request);
 }
