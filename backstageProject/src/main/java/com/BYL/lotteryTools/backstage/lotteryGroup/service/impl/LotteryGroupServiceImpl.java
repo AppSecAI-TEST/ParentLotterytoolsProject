@@ -832,7 +832,14 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 					bean.setFlag(true);
 					bean.setMessage("创建成功");
 					
-					//创建成功后，将当前群主的建群卡个数减1
+					/*建群成功后，使用机器人向群内发送消息*/
+					String[] group = {entity.getId()};
+					CodeSuccessResult sendResult =  rongyunImService.sendMessgeToGroups
+							(robotUserId, group, "建群成功！");
+					if(!Constants.SUCCESS_CODE.equals(sendResult.getCode().toString()))
+					{
+						LOG.error("send create group msg error:", result.getErrorMessage());
+					}
 				}
 				
 				
