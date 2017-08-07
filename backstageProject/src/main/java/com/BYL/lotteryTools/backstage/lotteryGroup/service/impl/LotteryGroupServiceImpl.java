@@ -298,18 +298,15 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 					//群人数多于3000人，需要创建新群
 					group = this.createCenterCityGroup(province, city, lotteryType);
 				}
-				/*else
-				{
-					addUserToLotteryGroup(user,group);//添加用户到群
-				}*/
-				
-				
 			}
 			else
 			{//当前符合条件群不存在，新建
 				group = this.createCenterCityGroup(province, city, lotteryType);
 			}
 			addUserToLotteryGroup(user,group);//添加用户到群
+			String[] groupIds = {group.getId()};
+			//发送小黑条消息到群内进行群成员通知
+			rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"加入"+group.getName()+"群", null);
 		}
 		
 		
