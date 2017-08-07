@@ -282,31 +282,42 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		List<LotteryGroup> lotteryGroups = lotteryGroupRespository.getLotteryGroupByProvinceAndLotteryTypeAndCityAndDetailLotteryType
 					(province, lotteryType, city, detailLotteryType);
 		LotterybuyerOrExpert user = lotterybuyerOrExpertService.getLotterybuyerOrExpertById(userId);
-		if(null != user && null != lotteryGroups && lotteryGroups.size() != 0)
+		if(null != user)
 		{
 			//每个群最多能加3000人，
-			group = lotteryGroups.get(0);//获取最近创建的群
-			//判断当前群已加入多少人
-			Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
-			QueryResult<RelaBindOfLbuyerorexpertAndGroup> lQueryResult = relaBindbuyerAndGroupService.
-					getMemberOfJoinGroup(pageable, group.getId());
-			List<RelaBindOfLbuyerorexpertAndGroup> relalist = lQueryResult.getResultList();
-			if(null != relalist)
+			if(null != lotteryGroups && lotteryGroups.size() != 0)
 			{
-				if(relalist.size()>3000)
+				//判断当前群已加入多少人
+				Pageable pageable = new PageRequest(0,Integer.MAX_VALUE);
+				QueryResult<RelaBindOfLbuyerorexpertAndGroup> lQueryResult = relaBindbuyerAndGroupService.
+						getMemberOfJoinGroup(pageable, group.getId());
+				List<RelaBindOfLbuyerorexpertAndGroup> relalist = lQueryResult.getResultList();
+				if(null == relalist ||(null != relalist &&relalist.size()<3000))
 				{
-					//群人数多于3000人，需要创建新群
+					group = lotteryGroups.get(0);//获取最近创建的群
+				}
+				else
+				{
 					group = this.createCenterCityGroup(province, city, lotteryType);
 				}
 			}
 			else
-			{//当前符合条件群不存在，新建
+			{
 				group = this.createCenterCityGroup(province, city, lotteryType);
 			}
-			addUserToLotteryGroup(user,group);//添加用户到群
-			String[] groupIds = {group.getId()};
-			//发送小黑条消息到群内进行群成员通知
-			rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"加入"+group.getName()+"群", null);
+		
+			String resultCode = addUserToLotteryGroup(user,group);//添加用户到群
+			if(Constants.SUCCESS_CODE.equals(resultCode))
+			{
+				String[] groupIds = {group.getId()};
+				//发送小黑条消息到群内进行群成员通知
+				rongyunImService.sendInfoNtfMessageToGroups(userId,groupIds , "用户"+user.getName()+"加入"+group.getName()+"群", null);
+			}
+			else
+			{
+				LOG.error("用户加入中心群失败：", resultCode);
+			}
+			
 		}
 		
 		
