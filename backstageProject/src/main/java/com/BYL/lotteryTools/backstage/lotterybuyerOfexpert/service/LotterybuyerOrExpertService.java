@@ -77,6 +77,8 @@ public interface LotterybuyerOrExpertService {
 	
 	public Map<String,Object> saveFromApp(
 			LotterybuyerOrExpertDTO lotterybuyerOrExpertDTO,HttpServletRequest request);
+	
+	public LotterybuyerOrExpert getLotterybuyerOrExpertByWxOpenId(String wxOpenId);
 			
 	
 }

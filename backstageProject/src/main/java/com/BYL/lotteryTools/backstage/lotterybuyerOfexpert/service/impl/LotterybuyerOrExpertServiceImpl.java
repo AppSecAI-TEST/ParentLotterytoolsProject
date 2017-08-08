@@ -619,4 +619,9 @@ public class LotterybuyerOrExpertServiceImpl implements
 		
 		return result;
 	}
+
+	public LotterybuyerOrExpert getLotterybuyerOrExpertByWxOpenId(
+			String wxOpenId) {
+		return lotterybuyerOrExpertRepository.getLotterybuyerOrExpertByWxOpenId(wxOpenId);
+	}
 }

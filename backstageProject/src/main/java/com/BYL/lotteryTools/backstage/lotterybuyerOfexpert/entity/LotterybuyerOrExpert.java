@@ -135,6 +135,9 @@ public class LotterybuyerOrExpert extends BaseEntity
 	@Column(name="ALREADY_LOGIN")
 	private Integer alreadyLogin;
 	
+	@Column(name="WX_OPEN_ID")
+	private String wxOpenId;//微信openid
+	
 //	public Timestamp getTokenModifyTime() {
 //		return tokenModifyTime;
 //	}
@@ -187,6 +190,14 @@ public class LotterybuyerOrExpert extends BaseEntity
 	private List<RelaLBEUserAndLtcard> relaLBEUserAndLtcards ;
 	
 	
+
+	public String getWxOpenId() {
+		return wxOpenId;
+	}
+
+	public void setWxOpenId(String wxOpenId) {
+		this.wxOpenId = wxOpenId;
+	}
 
 	public Integer getAlreadyLogin() {
 		return alreadyLogin;

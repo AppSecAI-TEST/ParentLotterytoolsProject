@@ -40,4 +40,18 @@ public interface UploadfileService {
 	* @throws
 	 */
 	public void deleteUploadFile(List<Uploadfile> uploadfiles,HttpSession httpSession);
+	
+	/**
+	 * 从url下载图片
+	* @Title: downloadFileFromURL 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param url
+	* @param @param newsUuid
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月7日 下午1:53:01 
+	* @return Uploadfile    返回类型 
+	* @throws
+	 */
+	public Uploadfile downloadFileFromURL(String url,String newsUuid,HttpServletRequest request);
 }

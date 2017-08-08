@@ -84,9 +84,18 @@ public class LotterybuyerOrExpertDTO {
 	
 	private Integer alreadyLogin;
 	
+	private String wxOpenId;//微信openId
+	
 	
 	
 
+	public String getWxOpenId() {
+		return wxOpenId;
+	}
+
+	public void setWxOpenId(String wxOpenId) {
+		this.wxOpenId = wxOpenId;
+	}
 
 	public Integer getAlreadyLogin() {
 		return alreadyLogin;

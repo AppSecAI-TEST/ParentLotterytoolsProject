@@ -18,5 +18,6 @@ public interface LotterybuyerOrExpertRepository extends GenericRepository<Lotter
 	@Query("select u from LotterybuyerOrExpert u where u.isDeleted = 1 and u.cailiaoName = ?1")
 	public List<LotterybuyerOrExpert> getLotterybuyerOrExpertByCailiaoName(String cailiaoName);
 	
-	
+	@Query("select u from LotterybuyerOrExpert u where u.isDeleted = 1 and u.wxOpenId = ?1")
+	public LotterybuyerOrExpert getLotterybuyerOrExpertByWxOpenId(String wxOpenId);
 }

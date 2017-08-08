@@ -1,6 +1,11 @@
 package com.BYL.lotteryTools.common.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +26,6 @@ import com.BYL.lotteryTools.common.entity.Uploadfile;
 import com.BYL.lotteryTools.common.repository.UploadfileRepository;
 import com.BYL.lotteryTools.common.service.UploadfileService;
 import com.BYL.lotteryTools.common.util.Constants;
-import com.BYL.lotteryTools.common.util.LoginUtils;
 
 @Service("/uploadfileService")
 @Transactional(propagation = Propagation.REQUIRED)
@@ -208,6 +212,68 @@ public class UploadfileServiceImpl implements UploadfileService {
 			
 		 }
 	}
+
+
+	public Uploadfile downloadFileFromURL(String url, String newsUuid,HttpServletRequest request)  {
+		Uploadfile uploadfile = null;
+		if(null != url &&!"".equals(url))
+		{
+			uploadfile = new Uploadfile();
+			uploadfile.setNewsUuid(newsUuid);
+			
+			String path = request.getSession().getServletContext().getRealPath("upload");  
+	        String fileName = "微信头像";
+	        String extName="";//扩展名
+	        //扩展名格式：
+	        extName = "jpg";
+	        String uploadRealName = UUID.randomUUID().toString()+"."+extName;
+	        try {
+				this.download(url,path+File.separator+uploadRealName);
+			} catch (Exception e) {
+				LOG.error("downloadFileFromURL-error:", e);
+			}
+	        uploadfile.setCreateTime(new Timestamp(System.currentTimeMillis()));
+	        uploadfile.setCreator("app");
+	        uploadfile.setIsDeleted(Constants.IS_NOT_DELETED);
+	        uploadfile.setModify("app");
+	        uploadfile.setModifyTime(new Timestamp(System.currentTimeMillis()));
+//	        uploadfile.setNewsUuid(UUID.randomUUID().toString());
+	        uploadfile.setNewsUuid(newsUuid);
+	        uploadfile.setUploadContentType(extName);
+	        uploadfile.setUploadFileName(fileName);
+	        uploadfile.setUploadfilepath("/upload/");
+	        uploadfile.setUploadRealName(uploadRealName);//真是存储文件名
+	        this.save(uploadfile);
+		}
+		else
+		{
+			LOG.error("微信图片为空");
+		}
+		
+		return uploadfile;
+	}
 	
+	private void download(String urlString, String filename) throws Exception {
+	    // 构造URL
+	    URL url = new URL(urlString);
+	    // 打开连接
+	    URLConnection con = url.openConnection();
+	    // 输入流
+	    InputStream is = con.getInputStream();
+	    // 1K的数据缓冲
+	    byte[] bs = new byte[1024];
+	    // 读取到的数据长度
+	    int len;
+	    // 输出的文件流
+	    OutputStream os = new FileOutputStream(filename);
+	    // 开始读取
+	    while ((len = is.read(bs)) != -1) {
+	      os.write(bs, 0, len);
+	    }
+	    // 完毕，关闭所有链接
+	    os.close();
+	    is.close();
+	}   
+
 
 }

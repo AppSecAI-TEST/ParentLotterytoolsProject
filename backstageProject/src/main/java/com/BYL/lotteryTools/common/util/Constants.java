@@ -84,6 +84,7 @@ public class Constants {
 	public static final String CODE_STR="resultCode";
 	
 	public static final String SUCCESS_CODE="200";//操作成功
+	public static final String SUCCESS_CODE_OF_BIND_WEIXIN="2001";//绑定微信成功
 	
 	public static final String TOKEN_IS_PASS_CODE="301";//token过期
 	public static final String TOKEN_IS_NOT_EXIST_CODE="302";//token不存在
@@ -105,6 +106,8 @@ public class Constants {
 	public static final String FAIL_CODE_OF_JOINGROUP_APPLY_IS_NOT_FIND="414";//加群申请不存在
 	public static final String FAIL_CODE_OF_USER_IS_ALREADY_JOIN_GROUP="415";//用户已加入群
 	public static final String FAIL_CODE_OF_NOT_FOUNT_DIPIN_PLAY="416";//根据低频玩法code没有找到低频玩法
+	public static final String FAIL_CODE_OF_NOT_FOUNT_OPEN_ID="4117";//openId不存在
+	public static final String FAIL_CODE_OF_NOT_FOUD_USER_BY_OPEN_ID="4118";//根据openId找不到用户
 	
 	public static final String SERVER_FAIL_CODE="500";//服务器异常，服务器异常抛出
 	

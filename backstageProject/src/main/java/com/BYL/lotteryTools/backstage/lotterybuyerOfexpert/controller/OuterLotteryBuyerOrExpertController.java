@@ -614,9 +614,146 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 		return map;
 	}
 	
+	/**
+	 * 微信登录
+	* @Title: weixinLogin 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月7日 下午1:30:08 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/weixinLogin")
+	public @ResponseBody Map<String,Object> weixinLogin(
+			LotterybuyerOrExpertDTO dto,
+			HttpServletRequest request,HttpSession httpSession)
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		if(null != dto.getWxOpenId()&&!"".equals(dto.getWxOpenId()))
+		{
+			LotterybuyerOrExpert user = lotterybuyerOrExpertService.
+					getLotterybuyerOrExpertByWxOpenId(dto.getWxOpenId());
+			if(null != user)
+			{
+				map.put(Constants.FLAG_STR, true);
+				dto = lotterybuyerOrExpertService.toDTO(user);
+				dto.setUserToken(TokenUtil.generateToken(dto.getTelephone(), dto.getPassword()));
+				map.put("userDto",dto);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+				map.put(Constants.MESSAGE_STR, "登录成功");//请注册后使用微信登录
+			}
+			else
+			{//当前用户未使用微信注册
+				map.put(Constants.FLAG_STR, false);
+				map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NOT_FOUD_USER_BY_OPEN_ID);
+				map.put(Constants.MESSAGE_STR, "当前用户未使用微信注册");//请注册后使用微信登录
+			}
+		}
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NOT_FOUNT_OPEN_ID);
+			map.put(Constants.MESSAGE_STR, "缺少参数:OPENID,无法获取微信授权的openid");
+		}
+		
+		return map;
+	}
 	
-	
-	
-	
+	/**
+	 * 微信注册
+	* @Title: weixinRegister 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param dto
+	* @param @param request
+	* @param @param httpSession
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月7日 下午1:38:26 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/weixinRegister")
+	public @ResponseBody Map<String,Object> weixinRegister(
+			LotterybuyerOrExpertDTO dto,
+			@RequestParam(value = "wxHeadImgUrl",required = false) String wxHeadImgUrl,
+			HttpServletRequest request,HttpSession httpSession) throws Exception
+	{
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		if(null != dto.getWxOpenId()&&!"".equals(dto.getWxOpenId()))
+		{
+			LotterybuyerOrExpert entity = lotterybuyerOrExpertService.getLotterybuyerOrExpertByTelephone(dto.getTelephone());
+			if(null != entity)
+			{
+				entity.setWxOpenId(dto.getWxOpenId());
+				entity.setModify(entity.getId());
+				entity.setModifyTime(new Timestamp(System.currentTimeMillis()));
+				lotterybuyerOrExpertService.update(entity);
+				dto = lotterybuyerOrExpertService.toDTO(entity);
+				dto.setUserToken(TokenUtil.generateToken(dto.getTelephone(), dto.getPassword()));
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE_OF_BIND_WEIXIN);
+				map.put(Constants.MESSAGE_STR, "微信绑定成功");
+			}
+			else
+			{
+				entity = new LotterybuyerOrExpert();
+				dto.setHandSel(new BigDecimal(0));
+				dto.setColorCoins(new BigDecimal(0));
+				dto.setAlreadyLogin(0);//注册后还没用登录
+				BeanUtil.copyBeanProperties(entity, dto);
+				entity.setId(UUID.randomUUID().toString());
+				//对密码进行加密
+				entity.setPassword(MyMD5Util.getEncryptedPwd(dto.getPassword()));
+				//TODO:下载微信头像
+				StringBuffer imguri = new StringBuffer();//头像uri（注册时默认不进行头像的上传）
+				Uploadfile uploadfile = uploadfileService.downloadFileFromURL(wxHeadImgUrl, UUID.randomUUID().toString(), request);
+				//绑定新头像
+				if(null != uploadfile)
+				{
+					entity.setTouXiang(uploadfile.getNewsUuid());//关联新头像
+				}
+				//刷新融云用户信息,将图片信息同步
+				imguri.append(OuterLotteryBuyerOrExpertController.DOMAIN)
+						.append(request.getContextPath()).append(uploadfile.getUploadfilepath()).append(uploadfile.getUploadRealName());
+				//创建融云用户id
+				String rongyunToken = rongyunImService.getUserToken(entity.getId(),
+						entity.getName(), imguri.toString());
+				entity.setToken(rongyunToken);
+				
+				entity.setIsPhone("1");//从app端走注册接口的一定是手机用户
+				entity.setIsExpert("0");//注册时用户的默认身份是彩民
+				entity.setIsVirtual("0");//是否为虚拟用户（虚拟用户是由公司来创建的，没有实际意义）
+				entity.setIsRobot("0");//从app端注册的用户都不是机器人用户
+				entity.setIsStationOwner("0");//在注册时默认都不是站主
+				entity.setFromApp("1");//app注册入口进入则为app用户
+				
+				entity.setIsDeleted(Constants.IS_NOT_DELETED);
+				entity.setCreator(entity.getId());
+				entity.setCreateTime(new Timestamp((System.currentTimeMillis())));
+				entity.setModify(entity.getId());
+				entity.setModifyTime(new Timestamp((System.currentTimeMillis())));
+				lotterybuyerOrExpertService.save(entity);
+				dto = lotterybuyerOrExpertService.toDTO(entity);
+				dto.setUserToken(TokenUtil.generateToken(dto.getTelephone(), dto.getPassword()));
+				map.put("userDto",dto);
+				map.put(Constants.FLAG_STR, true);
+				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+				map.put(Constants.MESSAGE_STR, "微信注册成功");
+			}
+		}
+		else
+		{
+			map.put(Constants.FLAG_STR, false);
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NOT_FOUNT_OPEN_ID);
+			map.put(Constants.MESSAGE_STR, "缺少参数:OPENID,无法获取微信授权的openid");
+		}
+		return map;
+	}
 	
 }
