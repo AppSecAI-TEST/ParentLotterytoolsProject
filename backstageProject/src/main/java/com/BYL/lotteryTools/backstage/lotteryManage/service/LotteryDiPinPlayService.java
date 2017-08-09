@@ -27,11 +27,14 @@ public interface LotteryDiPinPlayService {
 	public LotteryDiPinPlay getLotteryDiPinPlayByPlanCode(String planCode);
 	
 	//获取3d开奖号
-	public List<ThreeD> get3DNumKaijiang(String tableName);
+	public List<ThreeD> get3DNumKaijiang(String tableName,String issueNumber);
 	//获取5个开奖号码的数据（排列5）
-	public List<PailieFive> getPailie5NumKaijiang(String tableName);
+	public List<PailieFive> getPailie5NumKaijiang(String tableName,String issueNumber);
 	//获取7个开奖号码的数据(双色球，大乐透)
-	public List<ShuangSQ> getSevenNumberKaijiang(String tableName);
+	public List<ShuangSQ> getSevenNumberKaijiang(String tableName,String issueNumber);
 	//获取8个开奖号码的数据
-	public List<QiLeCai> getEightNumberKaijiang(String tableName);
+	public List<QiLeCai> getEightNumberKaijiang(String tableName,String issueNumber);
+	//添加补录数据
+	public boolean addLpBuluPlan(String lotteryPlay,String  issueNum,String numJ);
+	
 }

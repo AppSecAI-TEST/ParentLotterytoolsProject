@@ -231,4 +231,109 @@ public class LotteryDiPinPlayController extends GlobalExceptionHandler
 		return resultBean;
 		
 	}
+	/**
+	 * 校验当前期号数据是否已存在
+	* @Title: checkIssueNum 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param id
+	* @param @param issueNum
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月9日 上午9:16:17 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value="/checkIssueNum",method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> checkIssueNum(
+			@RequestParam(value="id",required=false) String id,
+			@RequestParam(value="issueNum",required=false) String issueNum)
+	{
+		Map<String,Object> map  =  new HashMap<String, Object>();
+		
+		LotteryDiPinPlay entity = lotteryDiPinPlayService.getLotteryDiPinPlayById(id);
+		
+		if(null != entity)
+		{
+			String lotteryNumber = entity.getLotteryNumber();//获取开奖号码个数
+			List<?> result = null;
+			int ln = Integer.parseInt(lotteryNumber);
+			switch(ln)
+			{
+				case 3:
+						result = lotteryDiPinPlayService.get3DNumKaijiang(entity.getCorrespondingTable(),issueNum);
+						break;
+				case 5:
+						result = lotteryDiPinPlayService.getPailie5NumKaijiang(entity.getCorrespondingTable(),issueNum);
+						break;
+				case 7:
+						result = lotteryDiPinPlayService.getSevenNumberKaijiang(entity.getCorrespondingTable(),issueNum);
+						break;
+				case 8:
+						result = lotteryDiPinPlayService.getEightNumberKaijiang(entity.getCorrespondingTable(),issueNum);
+						break;
+			}
+			
+			map.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+			map.put(Constants.MESSAGE_STR, "获取成功");
+			map.put("flag", result.size()>0?false:true);//有数据则不可以补录
+		}
+		else
+		{
+			map.put(Constants.CODE_STR, Constants.FAIL_CODE_OF_NOT_FOUNT_DIPIN_PLAY);
+			map.put(Constants.MESSAGE_STR, "根据playCode未找到低频玩法");
+			map.put("flag", false);
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * 提交补录方案
+	* @Title: submitBuluMsg 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryPlay
+	* @param @param issueNum
+	* @param @param numJ
+	* @param @param model
+	* @param @param httpSession
+	* @param @return
+	* @param @throws Exception    设定文件 
+	* @author banna
+	* @date 2017年8月9日 上午10:38:25 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/submitBuluMsg", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> submitBuluMsg(
+			@RequestParam(value="lotteryPlay",required=false) String lotteryPlay,
+			@RequestParam(value="issueNum",required=false) String issueNum,
+			@RequestParam(value="numJ",required=false) String numJ,//以空格隔断
+			ModelMap model,HttpSession httpSession) throws Exception
+	{
+		Map<String,Object> result = new HashMap<String, Object>();
+		
+		Map<String,Object> couldSubmit = this.checkIssueNum(lotteryPlay, issueNum);
+		
+		boolean couldSubmitFlag = (Boolean) couldSubmit.get("flag");
+		
+		boolean flag = false;
+		if(couldSubmitFlag)
+		{
+			flag = lotteryDiPinPlayService.addLpBuluPlan(lotteryPlay, issueNum,numJ);
+		}
+		 
+		if(flag)
+		{
+			result.put("message", "补录成功!");
+		}
+		else
+		{
+			result.put("message", "补录失败!");
+		}
+		result.put("success", flag);
+		
+		
+		return result;
+	}	
+	
 }

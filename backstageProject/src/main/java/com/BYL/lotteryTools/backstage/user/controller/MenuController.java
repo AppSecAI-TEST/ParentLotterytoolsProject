@@ -456,6 +456,15 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	@RequestMapping(value = "/numberOfMakeup.action", method = RequestMethod.GET)
+	public String numberOfMakeup()
+	{
+		String indexPage = "lotteryTools/numberOfMakeup";
+		
+		
+		return indexPage;
+	}
+	
 	
 	/**
 	 * 跳转到错误页

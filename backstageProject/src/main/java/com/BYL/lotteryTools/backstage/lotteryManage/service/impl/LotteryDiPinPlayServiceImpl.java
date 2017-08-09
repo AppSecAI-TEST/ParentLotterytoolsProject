@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.BYL.lotteryTools.backstage.lotteryManage.dao.WeixinDao;
 import com.BYL.lotteryTools.backstage.lotteryManage.dto.LotteryDiPinPlayDTO;
 import com.BYL.lotteryTools.backstage.lotteryManage.entity.LotteryDiPinPlay;
 import com.BYL.lotteryTools.backstage.lotteryManage.repository.LotteryDiPinPlayPlanRepository;
@@ -45,6 +46,9 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 	
 	@Autowired
 	private QiLeCaiRepository qiLeCaiRepository;
+	
+	@Autowired
+	private WeixinDao weixinDao;
 
 	public void save(LotteryDiPinPlay entity) {
 		lotteryDiPinPlayPlanRepository.save(entity);		
@@ -81,6 +85,12 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 		{
 			params.add(dto.getPlanCode());
 			buffer.append(" and planCode = ?").append(params.size());
+		}
+		
+		if(null != dto.getLotteryType() && !"".equals(dto.getLotteryType()))
+		{
+			params.add(dto.getLotteryType());
+			buffer.append(" and lotteryType = ?").append(params.size());
 		}
 		
 		
@@ -144,45 +154,96 @@ public class LotteryDiPinPlayServiceImpl implements LotteryDiPinPlayService {
 		return lotteryDiPinPlayPlanRepository.getLotteryDiPinPlayByPlanCode(planCode);
 	}
 
-	public List<ThreeD> get3DNumKaijiang(String tableName) {
+	public List<ThreeD> get3DNumKaijiang(String tableName,String issueNumber) {
 		int limit =300;
+		Object[] queryParams = null;
 		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,TEST_NUM FROM analysis."+tableName+" ");
+		if(null != issueNumber && !"".equals(issueNumber))
+		{
+			execSql.append(" where ISSUE_NUMBER=? ");
+			queryParams = new Object[]{
+					issueNumber
+			};
+		}
+		else
+		{
+			queryParams = new Object[]{
+			};
+		}
 		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
-		Object[] queryParams = new Object[]{
-		};
+		
 		List<ThreeD> threeDList =threeDRepository.getEntityListBySql(ThreeD.class,execSql.toString(), queryParams);
 		return threeDList;
 	}
 
-	public List<PailieFive> getPailie5NumKaijiang(String tableName) {
+	public List<PailieFive> getPailie5NumKaijiang(String tableName,String issueNumber) {
 		int limit =300;
+		Object[] queryParams = null;
 		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5 FROM analysis."+tableName+" ");
+		if(null != issueNumber && !"".equals(issueNumber))
+		{
+			execSql.append(" where ISSUE_NUMBER=? ");
+			queryParams = new Object[]{
+					issueNumber
+			};
+		}
+		else
+		{
+			queryParams = new Object[]{
+			};
+		}
 		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
-		Object[] queryParams = new Object[]{
-		};
 		List<PailieFive> datalist =pailieFiveRepository.getEntityListBySql(PailieFive.class,execSql.toString(), queryParams);
 		return datalist;
 	}
 
-	public List<ShuangSQ> getSevenNumberKaijiang(String tableName) {
+	public List<ShuangSQ> getSevenNumberKaijiang(String tableName,String issueNumber) {
 		int limit =300;
+		Object[] queryParams = null;
 		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,NO6,NO7 FROM analysis."+tableName+" ");
+		if(null != issueNumber && !"".equals(issueNumber))
+		{
+			execSql.append(" where ISSUE_NUMBER=? ");
+			queryParams = new Object[]{
+					issueNumber
+			};
+		}
+		else
+		{
+			queryParams = new Object[]{
+			};
+		}
 		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
-		Object[] queryParams = new Object[]{
-		};
 		List<ShuangSQ> datalist =shuangSQRepository.getEntityListBySql(ShuangSQ.class,execSql.toString(), queryParams);
 		return datalist;
 	}
 
-	public List<QiLeCai> getEightNumberKaijiang(String tableName) {
+	public List<QiLeCai> getEightNumberKaijiang(String tableName,String issueNumber) {
 		int limit =300;
+		Object[] queryParams = null;
 		StringBuffer execSql = new StringBuffer("SELECT ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,NO6,NO7,NO8 FROM analysis."+tableName+" ");
+		if(null != issueNumber && !"".equals(issueNumber))
+		{
+			execSql.append(" where ISSUE_NUMBER=? ");
+			queryParams = new Object[]{
+					issueNumber
+			};
+		}
+		else
+		{
+			queryParams = new Object[]{
+			};
+		}
 		execSql.append(" ORDER BY ISSUE_NUMBER DESC LIMIT "+limit);
-		Object[] queryParams = new Object[]{
-		};
 		List<QiLeCai> datalist =qiLeCaiRepository.getEntityListBySql(QiLeCai.class,execSql.toString(), queryParams);
 		return datalist;
 	}
+
+	public boolean addLpBuluPlan(String lotteryPlay, String issueNum,
+			String numJ) {
+		return weixinDao.addLpBuluPlan(lotteryPlay, issueNum, numJ);
+	}
+
 
 	
 	
