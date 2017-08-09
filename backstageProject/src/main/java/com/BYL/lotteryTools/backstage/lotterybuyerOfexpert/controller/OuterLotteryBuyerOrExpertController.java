@@ -696,6 +696,7 @@ public class OuterLotteryBuyerOrExpertController extends GlobalOuterExceptionHan
 				lotterybuyerOrExpertService.update(entity);
 				dto = lotterybuyerOrExpertService.toDTO(entity);
 				dto.setUserToken(TokenUtil.generateToken(dto.getTelephone(), dto.getPassword()));
+				map.put("userDto",dto);
 				map.put(Constants.FLAG_STR, true);
 				map.put(Constants.CODE_STR, Constants.SUCCESS_CODE_OF_BIND_WEIXIN);
 				map.put(Constants.MESSAGE_STR, "微信绑定成功");
