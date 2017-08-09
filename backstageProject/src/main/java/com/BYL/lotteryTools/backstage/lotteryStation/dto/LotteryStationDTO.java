@@ -90,9 +90,39 @@ public class LotteryStationDTO
 	
 	private String userToken;//用户token
 	
+	private Integer groupJoinType;//加入方式，1：验证加入 0：自由加入
+	
+	private String groupIntroduction;//群简介
+	
+	private MultipartFile groupTouXiangImg;//群头像图片
 	
 	
 	
+	
+	public Integer getGroupJoinType() {
+		return groupJoinType;
+	}
+
+	public void setGroupJoinType(Integer groupJoinType) {
+		this.groupJoinType = groupJoinType;
+	}
+
+	public String getGroupIntroduction() {
+		return groupIntroduction;
+	}
+
+	public void setGroupIntroduction(String groupIntroduction) {
+		this.groupIntroduction = groupIntroduction;
+	}
+
+	public MultipartFile getGroupTouXiangImg() {
+		return groupTouXiangImg;
+	}
+
+	public void setGroupTouXiangImg(MultipartFile groupTouXiangImg) {
+		this.groupTouXiangImg = groupTouXiangImg;
+	}
+
 	public String getUserToken() {
 		return userToken;
 	}

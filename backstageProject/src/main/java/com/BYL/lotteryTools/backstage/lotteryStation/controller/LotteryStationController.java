@@ -315,29 +315,6 @@ public class LotteryStationController
 					
 				}*/
 				
-				//审核通过后，新建群,头像是上传站点信息时
-				 /*LotteryGroupDTO groupDTO = new LotteryGroupDTO();
-				 groupDTO.setId(UUID.randomUUID().toString());
-				 groupDTO.setName(lotteryStation.getStationName()+"奖聊群");
-				 groupDTO.setProvince(lotteryStation.getProvince());
-				 groupDTO.setCity(lotteryStation.getCity());
-				 groupDTO.setLotteryType(lotteryStation.getLotteryType());
-				 groupDTO.setDetailLotteryType(lotteryStation.getLotteryType());
-				 groupDTO.setFabuKj(1);
-				 groupDTO.setFabuZs(1);
-				 groupDTO.setSsKjChaxun(0);
-				 groupDTO.setSsYlChaxun(0);
-				 groupDTO.setSsZjChaxun(0);
-				 groupDTO.setNoticeReview(0);
-				 groupDTO.setJoinType(0);//0为自由加入
-				 groupDTO.setOwnerId(lotteryStation.getLotteryBuyerOrExpert().getId());
-				 lotteryGroupService.saveOrUpdateGroup(groupDTO, request);*/
-				
-				//TODO:审批成功后，将站主用户加入到中心群中
-				boolean flag  = lotteryGroupService.joinInCityCenterGroup
-						(lotteryStation.getProvince(), "4", lotteryStation.getCity(), lotteryStation.getLotteryType(),lotteryStation.getLotteryBuyerOrExpert().getId());
-				LOG.info("加入中心群:"+flag);
-				
 			}
 			
 			
@@ -372,6 +349,39 @@ public class LotteryStationController
 			
 			//更新彩票站的认证状态信息
 			lotteryStationService.update(lotteryStation);
+			
+			//若审核通过后，则新建站主群
+			if(null != lotteryStation && "1".equals(lotteryStationDTO.getStatus()))
+			{
+				//审核通过后，新建群,头像是上传站点信息时
+				 LotteryGroupDTO groupDTO = new LotteryGroupDTO();
+				 groupDTO.setId(UUID.randomUUID().toString());
+				 groupDTO.setName(lotteryStation.getStationName()+"奖聊群");
+				 groupDTO.setProvince(lotteryStation.getProvince());
+				 groupDTO.setCity(lotteryStation.getCity());
+				 groupDTO.setLotteryType(lotteryStation.getLotteryType());
+				 groupDTO.setDetailLotteryType(lotteryStation.getLotteryType());
+				 groupDTO.setFabuKj(1);
+				 groupDTO.setFabuZs(1);
+				 groupDTO.setSsKjChaxun(0);
+				 groupDTO.setSsYlChaxun(0);
+				 groupDTO.setSsZjChaxun(0);
+				 groupDTO.setNoticeReview(0);
+				 groupDTO.setJoinType(0);//0为自由加入
+				 groupDTO.setOwnerId(lotteryStation.getLotteryBuyerOrExpert().getId());
+				 //提交彩票站审核信息时提交的信息
+				 groupDTO.setTouXiang(lotteryStation.getGroupTouXiang());
+				 groupDTO.setJoinType(lotteryStation.getGroupJoinType());
+				 groupDTO.setIntroduction(lotteryStation.getGroupIntroduction());
+				 lotteryGroupService.saveOrUpdateGroup(groupDTO, request);
+				
+				//TODO:审批成功后，将站主用户加入到中心群中
+				boolean flag  = lotteryGroupService.joinInCityCenterGroup
+						(lotteryStation.getProvince(), lotteryStation.getCity(), "4", lotteryStation.getLotteryType(),lotteryStation.getLotteryBuyerOrExpert().getId());
+				LOG.info("加入中心群:"+flag);
+				
+			}
+			
 			resultBean.setStatus("success");
 			resultBean.setMessage("审核成功");
 		}

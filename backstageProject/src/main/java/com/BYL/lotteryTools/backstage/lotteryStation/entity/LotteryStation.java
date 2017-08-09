@@ -114,6 +114,18 @@ public class LotteryStation extends BaseEntity
 	@Column(name="CLOSEDOOR_TIME",length=100)
 	private Timestamp closeDoorTime;//停止营业时间
 	
+	/**群相关属性**/
+	
+	@Column(name="GROUP_JOIN_TYPE")
+	private Integer groupJoinType;//加入方式，1：验证加入 0：自由加入
+	
+	@Column(name="GROUP_INTRODUCTION", length=45)
+	private String groupIntroduction;//群简介
+	
+	@Column(name="GROUP_TOU_XIANG", length=45)
+	private String groupTouXiang;//群头像图片
+	
+	
 	@ManyToOne
 	@JoinColumn(name="managerId",referencedColumnName="id")
 	private LotterybuyerOrExpert lotteryBuyerOrExpert;
@@ -139,6 +151,30 @@ public class LotteryStation extends BaseEntity
 	
 	
 	
+
+	public Integer getGroupJoinType() {
+		return groupJoinType;
+	}
+
+	public void setGroupJoinType(Integer groupJoinType) {
+		this.groupJoinType = groupJoinType;
+	}
+
+	public String getGroupIntroduction() {
+		return groupIntroduction;
+	}
+
+	public void setGroupIntroduction(String groupIntroduction) {
+		this.groupIntroduction = groupIntroduction;
+	}
+
+	public String getGroupTouXiang() {
+		return groupTouXiang;
+	}
+
+	public void setGroupTouXiang(String groupTouXiang) {
+		this.groupTouXiang = groupTouXiang;
+	}
 
 	public String getIdNumberFrontImg() {
 		return idNumberFrontImg;

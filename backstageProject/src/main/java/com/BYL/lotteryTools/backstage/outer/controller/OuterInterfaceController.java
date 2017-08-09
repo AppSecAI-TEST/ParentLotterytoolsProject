@@ -731,16 +731,16 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 			switch(ln)
 			{
 				case 3:
-						result = lotteryDiPinPlayService.get3DNumKaijiang(entity.getCorrespondingTable());
+						result = lotteryDiPinPlayService.get3DNumKaijiang(entity.getCorrespondingTable(),null);
 						break;
 				case 5:
-						result = lotteryDiPinPlayService.getPailie5NumKaijiang(entity.getCorrespondingTable());
+						result = lotteryDiPinPlayService.getPailie5NumKaijiang(entity.getCorrespondingTable(),null);
 						break;
 				case 7:
-						result = lotteryDiPinPlayService.getSevenNumberKaijiang(entity.getCorrespondingTable());
+						result = lotteryDiPinPlayService.getSevenNumberKaijiang(entity.getCorrespondingTable(),null);
 						break;
 				case 8:
-						result = lotteryDiPinPlayService.getEightNumberKaijiang(entity.getCorrespondingTable());
+						result = lotteryDiPinPlayService.getEightNumberKaijiang(entity.getCorrespondingTable(),null);
 						break;
 			}
 			

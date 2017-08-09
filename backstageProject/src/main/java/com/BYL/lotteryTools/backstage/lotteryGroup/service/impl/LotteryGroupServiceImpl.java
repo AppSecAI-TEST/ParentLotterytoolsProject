@@ -331,8 +331,8 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		StringBuffer groupName = new StringBuffer();
 		Province pro = provinceService.getProvinceByPcode(province);
 		City cityname = cityService.getCityByCcode(city);
-		groupName.append(pro.getPname()).
-			append(cityname.getCname()).
+		groupName.append(null!=pro.getPname()?pro.getPname():"").
+			append(null!=cityname?cityname.getCname():"").
 			append("1".equals(lotteryType)?"体彩中心群":"福彩中心群");
 		
 		group.setId(UUID.randomUUID().toString());
@@ -384,6 +384,12 @@ public class LotteryGroupServiceImpl implements LotteryGroupService
 		{
 			LOG.error("融云群加入用户报错", result.getErrorMessage());
 		}
+		else
+		{
+			String[] groupIds = {group.getId()};
+			rongyunImService.sendInfoNtfMessageToGroups(user.getId(),groupIds , "用户"+user.getName()+"加入"+group.getName()+"群", null);
+		}
+		
 		return result.getCode().toString();
 	}
 

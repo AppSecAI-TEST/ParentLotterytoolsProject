@@ -183,6 +183,21 @@ public class OuterLotteryStationController extends GlobalOuterExceptionHandler
 							lotteryStation.setIdNumberBackImg(uploadfile.getNewsUuid());
 					}
 					
+					/**彩票站群头像 2017-8-8 Add by banna**/
+					if(null != lotteryStationDTO.getGroupTouXiangImg())
+					{
+						Uploadfile uploadfile =null;
+						String newsUuid = UUID.randomUUID().toString();
+						try {
+								 uploadfile = uploadfileService.uploadFiles(lotteryStationDTO.getGroupTouXiangImg(),request,newsUuid);
+							
+						} catch (Exception e) {
+							LOG.error("error:", e);
+						}
+						if(null != uploadfile)
+							lotteryStation.setGroupTouXiang(uploadfile.getNewsUuid());
+					}
+					
 					//将站主和彩票站关联
 					lotteryStation.setLotteryBuyerOrExpert(lotterybuyerOrExpert);
 					//保存彩票站信息
