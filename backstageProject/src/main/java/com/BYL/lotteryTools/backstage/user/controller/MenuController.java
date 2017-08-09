@@ -456,6 +456,16 @@ public class MenuController {
 		return indexPage;
 	}
 	
+	/**
+	 * 低频补录页面
+	* @Title: numberOfMakeup 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月9日 下午1:23:47 
+	* @return String    返回类型 
+	* @throws
+	 */
 	@RequestMapping(value = "/numberOfMakeup.action", method = RequestMethod.GET)
 	public String numberOfMakeup()
 	{
@@ -464,6 +474,45 @@ public class MenuController {
 		
 		return indexPage;
 	}
+	
+	/**
+	 * 用户隐私协议跳转页面
+	* @Title: userPrivateArticle 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月9日 下午1:23:20 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/userPrivateArticle.action", method = RequestMethod.GET)
+	public String userPrivateArticle()
+	{
+		String indexPage = "lotteryTools/userPrivateArticle";
+		
+		
+		return indexPage;
+	}
+	
+	/**
+	 * 奖聊用户服务协议
+	* @Title: serviceProtocolForUser 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月9日 下午1:25:32 
+	* @return String    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/serviceProtocolForUser.action", method = RequestMethod.GET)
+	public String serviceProtocolForUser()
+	{
+		String indexPage = "lotteryTools/serviceProtocolForUser";
+		
+		
+		return indexPage;
+	}
+	
 	
 	
 	/**
