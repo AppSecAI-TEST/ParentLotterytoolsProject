@@ -107,6 +107,12 @@
             </property>
         </bean>
         
+         <!-- jdbcTemplate配置（号码补录使用） -->
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" 
+            lazy-init="false" >  
+     	   <property name = "dataSource" ref="analysisDataSource"/>  
+		</bean> 
+        
         <!-- analysis数据源(数据分析) -->
         <bean name="analysisDataSource" class="org.apache.commons.dbcp.BasicDataSource">
             <property name="driverClassName">
