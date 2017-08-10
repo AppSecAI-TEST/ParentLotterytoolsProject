@@ -559,6 +559,46 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 	}
 	
 	/**
+	 * 获取当前遗漏更新的期号
+	* @Title: getMaxIssueOfMissAnalysisData 
+	* @Description: TODO(这里用一句话描述这个方法的作用) 
+	* @param @param lotteryPlayId
+	* @param @param type
+	* @param @param selectnum
+	* @param @param groupnumarr
+	* @param @param orderby
+	* @param @param userToken
+	* @param @param ascOrDesc
+	* @param @return    设定文件 
+	* @author banna
+	* @date 2017年8月10日 上午9:45:19 
+	* @return Map<String,Object>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/getMaxIssueOfMissAnalysisData", method = RequestMethod.GET)
+	public @ResponseBody Map<String,Object> getMaxIssueOfMissAnalysisData(
+			@RequestParam(value="lotteryPlayId",required=false)String lotteryPlayId)
+	{
+		Map<String,Object> returnMap = new HashMap<String, Object>();
+		
+		LotteryPlay lotteryPlay = lotteryPlayService.getLotteryPlayById(lotteryPlayId);//获取补录信息数据，使用这个数据中的表名和开奖数字个数的信息
+		
+		String tableName = lotteryPlay.getCorrespondingTable();//获取关联表
+		
+		String[] tableNameStart = tableName.split("_");
+		
+		String yilouTableEnd = "MISSANALYSIS";
+		//0：T 1：省份 2：玩法名称
+		tableName = tableNameStart[0] + "_" + tableNameStart[1] + "_" + tableNameStart[2] + "_" + yilouTableEnd; 
+		
+		returnMap = outerInterfaceService.getMaxIssueOfMissAnalysisData(tableName);
+		
+		returnMap.put(Constants.CODE_STR, Constants.SUCCESS_CODE);
+		returnMap.put(Constants.MESSAGE_STR, "获取成功");
+		return returnMap;
+	}
+	
+	/**
 	 * 根据推送目标获取系统消息
 	* @Title: getSysMessageForTarget 
 	* @Description: TODO(这里用一句话描述这个方法的作用) 

@@ -909,6 +909,22 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	      
 	    return dateString;
 	  }
+
+	public Map<String, Object> getMaxIssueOfMissAnalysisData(String tbName) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		String execSql = "SELECT ID,ISSUE_NUMBER,GROUP_NUMBER,CURRENT_MISS,MAX_MISS,TYPE "
+				+ " FROM analysis."+tbName +" limit 1";
+		
+		Object[] queryParams = new Object[]{
+		};
+		List<Fast3Analysis> list = fast3AnalysisRepository.getEntityListBySql(Fast3Analysis.class, execSql.toString(), queryParams);
+		if(null != list&&list.size()>0)
+		{
+			map.put("issueNumber", list.get(0).getIssueNumber());
+		}
+		return map;
+	}
 	
 	
 	

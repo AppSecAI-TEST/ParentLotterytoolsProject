@@ -44,4 +44,6 @@ public interface OuterInterfaceService
 	* @throws
 	 */
 	public Map<String,Object> getNewtesKjNum(String lotteryType,String lotteryNumber,String provinceCode);
+	
+	public Map<String,Object> getMaxIssueOfMissAnalysisData(String tbName);
 }
