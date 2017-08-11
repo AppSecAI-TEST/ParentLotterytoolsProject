@@ -25,6 +25,7 @@ import com.BYL.lotteryTools.backstage.lotteryManage.service.LotteryPlayService;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.controller.OuterLotteryBuyerOrExpertController;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.entity.LotterybuyerOrExpert;
 import com.BYL.lotteryTools.backstage.lotterybuyerOfexpert.service.LotterybuyerOrExpertService;
+import com.BYL.lotteryTools.backstage.outer.entity.HappyTenOfHLJDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
 import com.BYL.lotteryTools.backstage.outer.repository.rongYunCloud.io.rong.models.CodeSuccessResult;
@@ -81,7 +82,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 	
 
 	//判断当前维护的所有高频彩种是否开出新一期，开出后进行推送
-	@Scheduled(cron = "0/10 * * * * ? ") //30s执行1次
+//	@Scheduled(cron = "0/10 * * * * ? ") //30s执行1次
     //需要注意@Scheduled这个注解，它可配置多个属性：cron\fixedDelay\fixedRate  
     public void tuisongMethod() 
  	{ 
@@ -95,6 +96,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 				{//判断当前彩种是否开奖
 					SrcfivedataDTO maxdto =  null;//开奖号码为5个号码的彩种实体
 					SrcthreedataDTO maxThreedto = null;//开奖号码为3个号码的彩种实体
+					HappyTenOfHLJDTO maxHappy10Dto = null;//开奖号码为16个号码的彩种实体
 					boolean tuisongFlag= true;
 					if(null !=issueMap.get(buffer.toString()))
 					{//当前期号组合中有最大期号,获取比当前最大期号大的数据
@@ -125,6 +127,20 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 									 issueMap.put(buffer.toString(), maxThreedto.getIssueNumber());//存储最大期号
 								 }
 							}
+							else//2017-8-11Add 黑龙江快乐十分数据推送
+								if("16".equals(lotteryPlay.getLotteryNumber()))
+								{
+									maxHappy10Dto = outerInterfaceService.getMaxHappy10Lottery
+												(lotteryPlay.getCorrespondingTable(), issueMap.get(buffer.toString()));
+									 if(null == maxHappy10Dto )
+									 {//当前最大期号就是最大的数据
+										 tuisongFlag = false;
+									 }
+									 else
+									 {
+										 issueMap.put(buffer.toString(), maxHappy10Dto.getIssueNumber());//存储最大期号
+									 }
+								}
 						
 					}
 					else
@@ -142,6 +158,13 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 										(lotteryPlay.getCorrespondingTable(), null);
 								issueMap.put(buffer.toString(), maxThreedto.getIssueNumber());//存储最大期号
 							}
+							else//2017-8-11Add 黑龙江快乐十分数据推送
+								if("16".equals(lotteryPlay.getLotteryNumber()))
+								{
+									maxHappy10Dto = outerInterfaceService.getMaxHappy10Lottery
+											(lotteryPlay.getCorrespondingTable(), null);
+									issueMap.put(buffer.toString(), maxHappy10Dto.getIssueNumber());//存储最大期号
+								}
 						
 						
 					}
@@ -152,7 +175,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 						String extra = "推送内容类型";
 						//Add by banna in 2017/6/6 推送tag多加一个开奖号码个数tag，用来区分同一彩种类型的不同彩种，例如辽宁12选5和辽宁快三
 						String[] tagsand = {lotteryPlay.getProvince(),lotteryPlay.getLotteryType(),lotteryPlay.getLotteryNumber()};
-						StringBuffer msgContent = new StringBuffer();
+						StringBuffer msgContent = new StringBuffer();//推送新开奖号码内容
 						StringBuffer imgContent = new StringBuffer();//图片内容content
 						String imgFile = "";//走势图缩略图
 						StringBuffer issueNumContent = new StringBuffer();//期号内容
@@ -206,8 +229,52 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 								imgFile = "/home/server/webappProject/webapps/webappProject/images/kuai3ImgBase.png";//服务器版本
 								imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/kuai3Img.png");//拼接走势图图片
 							}
+							else//2017-8-11Add 黑龙江快乐十分数据推送
+								if("16".equals(lotteryPlay.getLotteryNumber()))
+								{
+									issueNumContent.append(lotteryPlay.getName()+" ").
+									append(maxHappy10Dto.getIssueNumber()+"开奖号码:").
+									append(maxHappy10Dto.getNo1()+",").
+									append(maxHappy10Dto.getNo2()+",").
+									append(maxHappy10Dto.getNo3()+",").
+									append(maxHappy10Dto.getNo4()+",").
+									append(maxHappy10Dto.getNo5()+",").
+									append(maxHappy10Dto.getNo6()+",").
+									append(maxHappy10Dto.getNo7()+",").
+									append(maxHappy10Dto.getNo8()+"").
+									append("/").
+									append(maxHappy10Dto.getNo1MJ()+",").
+									append(maxHappy10Dto.getNo2MJ()+",").
+									append(maxHappy10Dto.getNo3MJ()+",").
+									append(maxHappy10Dto.getNo4MJ()+",").
+									append(maxHappy10Dto.getNo5MJ()+",").
+									append(maxHappy10Dto.getNo6MJ()+",").
+									append(maxHappy10Dto.getNo7MJ()+",").
+									append(maxHappy10Dto.getNo8MJ()+",");
+									
+									msgContent.append(maxHappy10Dto.getIssueNumber()).append(",");
+									msgContent.append(maxHappy10Dto.getNo1()).append(",");
+									msgContent.append(maxHappy10Dto.getNo2()).append(",");
+									msgContent.append(maxHappy10Dto.getNo3()).
+									append(maxHappy10Dto.getNo4()+",").
+									append(maxHappy10Dto.getNo5()+",").
+									append(maxHappy10Dto.getNo6()+",").
+									append(maxHappy10Dto.getNo7()+",").
+									append(maxHappy10Dto.getNo8()+",").
+									append(maxHappy10Dto.getNo1MJ()+",").
+									append(maxHappy10Dto.getNo2MJ()+",").
+									append(maxHappy10Dto.getNo3MJ()+",").
+									append(maxHappy10Dto.getNo4MJ()+",").
+									append(maxHappy10Dto.getNo5MJ()+",").
+									append(maxHappy10Dto.getNo6MJ()+",").
+									append(maxHappy10Dto.getNo7MJ()+",").
+									append(maxHappy10Dto.getNo8MJ()+",");
+									extra = "happy10";
+									imgFile = "/home/server/webappProject/webapps/webappProject/images/happy10ImgBase.jpg";//服务器版本
+									imgContent.append(OuterLotteryBuyerOrExpertController.DOMAIN+"/webappProject/images/5in11Img.png");//拼接走势图图片
+								}
 						//extra:0:
-						PushController.sendPushWithCallback(tagsand, null, msgContent.toString(), extra);
+						PushController.sendPushWithCallback(tagsand, null, msgContent.toString(), extra);//推送开奖号码
 						
 						
 						//2.向群发送开奖消息
