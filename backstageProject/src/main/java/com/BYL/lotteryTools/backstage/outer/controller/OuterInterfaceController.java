@@ -237,6 +237,11 @@ public class OuterInterfaceController extends GlobalOuterExceptionHandler
 				{//获取3个开奖号码的开奖数据
 					list = outerInterfaceService.getLotteryListOfThree(tbName, maxIssueId, minIssueId);
 				}
+				else
+					if("16".equals(lotteryPlay.getLotteryNumber()))//黑龙江快乐十分
+					{//获取3个开奖号码的开奖数据
+						list = outerInterfaceService.getHLJHappy10Data(tbName, maxIssueId, minIssueId);
+					}
 			map.put("list", list);
 			map.put(Constants.FLAG_STR, true);
 			map.put(Constants.MESSAGE_STR, "获取成功");

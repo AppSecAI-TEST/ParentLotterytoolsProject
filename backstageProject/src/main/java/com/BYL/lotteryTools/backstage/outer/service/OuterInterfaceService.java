@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
+import com.BYL.lotteryTools.backstage.outer.entity.HappyTenOfHLJDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
 import com.BYL.lotteryTools.backstage.user.entity.Province;
@@ -46,4 +47,9 @@ public interface OuterInterfaceService
 	public Map<String,Object> getNewtesKjNum(String lotteryType,String lotteryNumber,String provinceCode);
 	
 	public Map<String,Object> getMaxIssueOfMissAnalysisData(String tbName);
+	
+	//快乐十分相关数据接口
+	public List<HappyTenOfHLJDTO> getHLJHappy10Data(String tbName,String maxIssueId, String minIssueId);
+	//快乐十分相关数据接口
+	public HappyTenOfHLJDTO getMaxHappy10Lottery(String tbName,String maxIssueId);
 }

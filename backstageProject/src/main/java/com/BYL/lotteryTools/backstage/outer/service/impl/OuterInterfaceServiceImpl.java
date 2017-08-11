@@ -30,10 +30,12 @@ import com.BYL.lotteryTools.backstage.outer.controller.OuterInterfaceController;
 import com.BYL.lotteryTools.backstage.outer.dto.LotteryPlayOfProvince;
 import com.BYL.lotteryTools.backstage.outer.entity.Fast3Analysis;
 import com.BYL.lotteryTools.backstage.outer.entity.Fast3WithCycleAnalysis;
+import com.BYL.lotteryTools.backstage.outer.entity.HappyTenOfHLJDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcfivedataDTO;
 import com.BYL.lotteryTools.backstage.outer.entity.SrcthreedataDTO;
 import com.BYL.lotteryTools.backstage.outer.repository.Fast3AnalysisRepository;
 import com.BYL.lotteryTools.backstage.outer.repository.Fast3WithCycleAnalysisRepository;
+import com.BYL.lotteryTools.backstage.outer.repository.HappyTenOfHLJDTORepository;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcfivedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.repository.SrcthreedataDTORepository;
 import com.BYL.lotteryTools.backstage.outer.service.OuterInterfaceService;
@@ -61,6 +63,9 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 	
 	@Autowired
 	private Fast3WithCycleAnalysisRepository fast3WithCycleAnalysisRepository;
+	
+	@Autowired
+	private HappyTenOfHLJDTORepository happyTenOfHLJDTORepository;
 	
 	@Autowired
 	private EntityManager entityManager;
@@ -178,6 +183,38 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		
 		return dto;
 	}
+	
+	public HappyTenOfHLJDTO getMaxHappy10Lottery(String tbName,String maxIssueId) 
+	{
+		List<HappyTenOfHLJDTO> list = new ArrayList<HappyTenOfHLJDTO>();
+		HappyTenOfHLJDTO dto = null;
+		int limit = 1;
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,NO6,NO7,NO8,NO1_MJ,NO2_MJ,NO3_MJ,NO4_MJ,NO5_MJ,"
+				+ "NO6_MJ,NO7_MJ,NO8_MJ from analysis."+tbName+" ");
+		
+		if(null != maxIssueId &&!"".equals(maxIssueId))
+		{
+			sql.append(" where ISSUE_NUMBER>"+maxIssueId+"  order by ISSUE_NUMBER asc  ");
+		}
+		else
+		{
+			sql.append(" order by ISSUE_NUMBER desc ");
+		}
+		
+		Pageable pageable = new PageRequest(0,limit);
+		QueryResult<HappyTenOfHLJDTO> queryResult = happyTenOfHLJDTORepository.
+				getScrollDataByGroupBySql(HappyTenOfHLJDTO.class, sql.toString(), null,pageable );
+		list = queryResult.getResultList();
+		if(null != list &&list.size()>0)
+		{
+			dto = list.get(0);
+		}
+		
+		return dto;
+	}
 
 	public List<Province> getLotteryPlayListOfProvince()
 	{
@@ -258,6 +295,43 @@ public class OuterInterfaceServiceImpl implements OuterInterfaceService
 		Pageable pageable = new PageRequest(0,limit);
 		QueryResult<SrcthreedataDTO> queryResult = srcthreedataDTORepository.
 				getScrollDataByGroupBySql(SrcthreedataDTO.class, sql.toString(), null,pageable );
+		list = queryResult.getResultList();
+		
+		return list;
+	}
+	
+	public List<HappyTenOfHLJDTO> getHLJHappy10Data(String tbName,String maxIssueId, String minIssueId) 
+	{
+		List<HappyTenOfHLJDTO> list = new ArrayList<HappyTenOfHLJDTO>();
+		int limit = 300;
+		
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select ID,ISSUE_NUMBER,NO1,NO2,NO3,NO4,NO5,NO6,NO7,NO8,NO1_MJ,NO2_MJ,NO3_MJ,NO4_MJ,NO5_MJ,"
+				+ "NO6_MJ,NO7_MJ,NO8_MJ from analysis."+tbName+" ");
+		if(null != maxIssueId &&!"".equals(maxIssueId))
+		{
+			limit = 40;
+			sql.append(" where ISSUE_NUMBER>"+maxIssueId+" order by ISSUE_NUMBER asc");
+		}
+		else
+			if(null != minIssueId &&!"".equals(minIssueId))
+			{
+				limit = 40;
+				sql.append(" where ISSUE_NUMBER<"+minIssueId+" order by ISSUE_NUMBER desc");
+			}
+			else
+			{
+				sql.append(" order by ISSUE_NUMBER desc ");
+			}
+		
+		
+		
+		
+		Pageable pageable = new PageRequest(0,limit);
+		QueryResult<HappyTenOfHLJDTO> queryResult = happyTenOfHLJDTORepository.
+				getScrollDataByGroupBySql(HappyTenOfHLJDTO.class, sql.toString(), null,pageable );
 		list = queryResult.getResultList();
 		
 		return list;
