@@ -255,7 +255,7 @@ public class PushOriginDataTask extends GlobalExceptionHandler
 									msgContent.append(maxHappy10Dto.getIssueNumber()).append(",");
 									msgContent.append(maxHappy10Dto.getNo1()).append(",");
 									msgContent.append(maxHappy10Dto.getNo2()).append(",");
-									msgContent.append(maxHappy10Dto.getNo3()).
+									msgContent.append(maxHappy10Dto.getNo3()).append(",").
 									append(maxHappy10Dto.getNo4()+",").
 									append(maxHappy10Dto.getNo5()+",").
 									append(maxHappy10Dto.getNo6()+",").
